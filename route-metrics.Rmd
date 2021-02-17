@@ -648,8 +648,14 @@ ggplot(data=trj,
 
 In terms of categorising turns in a way that's meaningful in a rally context, let's have a recap on what sorts of thing a rally navigator or co-driver is likely to be saying:
 
-```{r}
-embed_url("https://www.youtube.com/watch?v=KFjRj25uclQ%5D")
+```{r rally-notes-codriver}
+embed_url("https://www.youtube.com/watch?v=KFjRj25uclQ")
+```
+
+And let's review what we actually mean by a corner...
+
+```{r chain-bear-corner-video}
+embed_url("https://www.youtube.com/watch?v=YXOYckDATWE")
 ```
 
 The instantaneous angle is okay for trying to identify particularly tight turns, but to identify whether a corner increase the angle in the same step direction, which is to say, whether the corner *tightens*, for example, we need process the data a bit further.

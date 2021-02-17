@@ -1019,35 +1019,42 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb70-9"><a href="stage-route-analysis.html#cb70-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">data=</span><span class="fu">start_location</span>(<span class="dv">1</span>))</span></code></pre></div>
 <p><img src="images/route-metrics-trajr-tight-turns-1.png" width="672" /></p>
 <p>In terms of categorising turns in a way that’s meaningful in a rally context, let’s have a recap on what sorts of thing a rally navigator or co-driver is likely to be saying:</p>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="stage-route-analysis.html#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">embed_url</span>(<span class="st">&quot;https://www.youtube.com/watch?v=KFjRj25uclQ%5D&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="stage-route-analysis.html#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">embed_url</span>(<span class="st">&quot;https://www.youtube.com/watch?v=KFjRj25uclQ&quot;</span>)</span></code></pre></div>
 <div class="vembedr">
 <div>
-<iframe src="https://www.youtube.com/embed/KFjRj25uclQ]" width="533" height="300" frameborder="0" allowfullscreen=""></iframe>
+<iframe src="https://www.youtube.com/embed/KFjRj25uclQ" width="533" height="300" frameborder="0" allowfullscreen=""></iframe>
+</div>
+</div>
+<p>And let’s review what we actually mean by a corner…</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="stage-route-analysis.html#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">embed_url</span>(<span class="st">&quot;https://www.youtube.com/watch?v=YXOYckDATWE&quot;</span>)</span></code></pre></div>
+<div class="vembedr">
+<div>
+<iframe src="https://www.youtube.com/embed/YXOYckDATWE" width="533" height="300" frameborder="0" allowfullscreen=""></iframe>
 </div>
 </div>
 <p>The instantaneous angle is okay for trying to identify particularly tight turns, but to identify whether a corner increase the angle in the same step direction, which is to say, whether the corner <em>tightens</em>, for example, we need process the data a bit further.</p>
 <p>One way of doing this is to determine the gradient of the accumulated angle using the <a href="https://www.rdocumentation.org/packages/pracma/versions/1.9.9/topics/gradient"><code>pracma::gradient</code> function</a>.</p>
-<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="stage-route-analysis.html#cb72-1" aria-hidden="true" tabindex="-1"></a>trj<span class="sc">$</span>step_gradient <span class="ot">=</span> pracma<span class="sc">::</span><span class="fu">gradient</span>(trj<span class="sc">$</span>cumstepangle, trj<span class="sc">$</span>cum_dist)</span></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="stage-route-analysis.html#cb73-1" aria-hidden="true" tabindex="-1"></a>trj<span class="sc">$</span>step_gradient <span class="ot">=</span> pracma<span class="sc">::</span><span class="fu">gradient</span>(trj<span class="sc">$</span>cumstepangle, trj<span class="sc">$</span>cum_dist)</span></code></pre></div>
 <p>The sign of the gradient then identifies the turn direction but the magnitude of the gradient is harder to parse because the step sizes are not constant.</p>
 <p>A plot using colour to depict gradient sign may help identify whether a route involves turn predominantly to the left or to the right. We could use a related approach to display a table of locations labeled as tight right or left corners, for example:</p>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="stage-route-analysis.html#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>trj,</span>
-<span id="cb73-2"><a href="stage-route-analysis.html#cb73-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span> <span class="fu">geom_path</span>(<span class="at">color=</span><span class="st">&#39;grey&#39;</span>)<span class="sc">+</span></span>
-<span id="cb73-3"><a href="stage-route-analysis.html#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>( <span class="at">size=</span><span class="fl">0.2</span>, <span class="at">color=</span><span class="st">&#39;blue&#39;</span>,</span>
-<span id="cb73-4"><a href="stage-route-analysis.html#cb73-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">data=</span>trj[trj<span class="sc">$</span>step_gradient<span class="sc">&gt;</span><span class="fl">0.2</span>,]) <span class="sc">+</span></span>
-<span id="cb73-5"><a href="stage-route-analysis.html#cb73-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size=</span><span class="fl">0.2</span>,</span>
-<span id="cb73-6"><a href="stage-route-analysis.html#cb73-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">data=</span>trj[trj<span class="sc">$</span>step_gradient<span class="sc">&lt;=-</span><span class="fl">0.2</span>,],</span>
-<span id="cb73-7"><a href="stage-route-analysis.html#cb73-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">&#39;red&#39;</span>) <span class="sc">+</span></span>
-<span id="cb73-8"><a href="stage-route-analysis.html#cb73-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>() <span class="sc">+</span> </span>
-<span id="cb73-9"><a href="stage-route-analysis.html#cb73-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>X, <span class="at">y=</span>Y), <span class="at">size=</span><span class="dv">1</span>, <span class="at">col=</span><span class="st">&#39;black&#39;</span>,</span>
-<span id="cb73-10"><a href="stage-route-analysis.html#cb73-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">data=</span><span class="fu">start_location</span>(<span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="stage-route-analysis.html#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>trj,</span>
+<span id="cb74-2"><a href="stage-route-analysis.html#cb74-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span> <span class="fu">geom_path</span>(<span class="at">color=</span><span class="st">&#39;grey&#39;</span>)<span class="sc">+</span></span>
+<span id="cb74-3"><a href="stage-route-analysis.html#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>( <span class="at">size=</span><span class="fl">0.2</span>, <span class="at">color=</span><span class="st">&#39;blue&#39;</span>,</span>
+<span id="cb74-4"><a href="stage-route-analysis.html#cb74-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">data=</span>trj[trj<span class="sc">$</span>step_gradient<span class="sc">&gt;</span><span class="fl">0.2</span>,]) <span class="sc">+</span></span>
+<span id="cb74-5"><a href="stage-route-analysis.html#cb74-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size=</span><span class="fl">0.2</span>,</span>
+<span id="cb74-6"><a href="stage-route-analysis.html#cb74-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">data=</span>trj[trj<span class="sc">$</span>step_gradient<span class="sc">&lt;=-</span><span class="fl">0.2</span>,],</span>
+<span id="cb74-7"><a href="stage-route-analysis.html#cb74-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">&#39;red&#39;</span>) <span class="sc">+</span></span>
+<span id="cb74-8"><a href="stage-route-analysis.html#cb74-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>() <span class="sc">+</span> </span>
+<span id="cb74-9"><a href="stage-route-analysis.html#cb74-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>X, <span class="at">y=</span>Y), <span class="at">size=</span><span class="dv">1</span>, <span class="at">col=</span><span class="st">&#39;black&#39;</span>,</span>
+<span id="cb74-10"><a href="stage-route-analysis.html#cb74-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">data=</span><span class="fu">start_location</span>(<span class="dv">1</span>))</span></code></pre></div>
 <p><img src="images/route-metrics-trajr-gradient-lr-1.png" width="672" /></p>
 <p>If nothing else, however, this approach also gives us an immediate way of detecting stationary points in the gradient. As a consequence, we can identify directional changes from left to right, or <em>vice versa</em>.</p>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="stage-route-analysis.html#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trj,<span class="fu">aes</span>(<span class="at">x=</span>cum_dist)) <span class="sc">+</span> </span>
-<span id="cb74-2"><a href="stage-route-analysis.html#cb74-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="dv">0</span>, <span class="at">color=</span><span class="st">&#39;grey&#39;</span> ) <span class="sc">+</span></span>
-<span id="cb74-3"><a href="stage-route-analysis.html#cb74-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="sc">-</span><span class="dv">500</span>, <span class="at">color=</span><span class="st">&#39;grey&#39;</span> ) <span class="sc">+</span></span>
-<span id="cb74-4"><a href="stage-route-analysis.html#cb74-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>( <span class="at">y=</span>cumstepangle)) <span class="sc">+</span></span>
-<span id="cb74-5"><a href="stage-route-analysis.html#cb74-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>( <span class="at">y=</span><span class="sc">-</span><span class="dv">500</span><span class="sc">+</span><span class="dv">50</span> <span class="sc">*</span> step_gradient),</span>
-<span id="cb74-6"><a href="stage-route-analysis.html#cb74-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">color=</span><span class="st">&#39;red&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="stage-route-analysis.html#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(trj,<span class="fu">aes</span>(<span class="at">x=</span>cum_dist)) <span class="sc">+</span> </span>
+<span id="cb75-2"><a href="stage-route-analysis.html#cb75-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="dv">0</span>, <span class="at">color=</span><span class="st">&#39;grey&#39;</span> ) <span class="sc">+</span></span>
+<span id="cb75-3"><a href="stage-route-analysis.html#cb75-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="sc">-</span><span class="dv">500</span>, <span class="at">color=</span><span class="st">&#39;grey&#39;</span> ) <span class="sc">+</span></span>
+<span id="cb75-4"><a href="stage-route-analysis.html#cb75-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>( <span class="at">y=</span>cumstepangle)) <span class="sc">+</span></span>
+<span id="cb75-5"><a href="stage-route-analysis.html#cb75-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>( <span class="at">y=</span><span class="sc">-</span><span class="dv">500</span><span class="sc">+</span><span class="dv">50</span> <span class="sc">*</span> step_gradient),</span>
+<span id="cb75-6"><a href="stage-route-analysis.html#cb75-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">color=</span><span class="st">&#39;red&#39;</span>)</span></code></pre></div>
 <p><img src="images/route-metrics-trajr-gradient-1.png" width="672" /></p>
 <p>By creating simple rules, we might be able to identify features like <em>tightens</em> (for example, if we have three angles in the same direction with increasing magnitude and the final angle exceeding some threshold limit). We might similarly be able to create rules around elevation data, for example to identify <em>crests</em> (for example, a maximum in elevation, found by finding stationary points of elevation / first derivative).</p>
 <p>Finally, it’s worth briefly mentioning a couple more <code>trajr</code> functions that may be useful when it comes to analysing telemetry data: <code>trajr::TrajVelocity</code> and <code>trajr:TrajAcceleration</code>, which estimate velocity and acceleration as vectors at each point along a trajectory. But that’s for another book…</p>
@@ -1058,11 +1065,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <code>track_xyt</code> track type has a timestamp associated to each coordinate pair.</p>
 <p>An additional <em>burst</em> column, <code>burst_</code>, provides us with a potential grouping parameter that lets us perform analyses on sections of the track. This could be used to identify segments of the route between split points, for example, if we can apply appropriate burst labels to each part of the track.</p>
 <p>For our purposes here, it is clear to see how we might imagine a mapping the X and Y co-ordinates from a route linestring in a UTM/meters based projection directly into a a track tibble. The <code>amt::make_track()</code> function provides a straightforward way of doing this:</p>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="stage-route-analysis.html#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(amt)</span>
-<span id="cb75-2"><a href="stage-route-analysis.html#cb75-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb75-3"><a href="stage-route-analysis.html#cb75-3" aria-hidden="true" tabindex="-1"></a>amt_track <span class="ot">=</span> <span class="fu">make_track</span>(<span class="fu">st_coordinates</span>(utm_routes[<span class="dv">1</span>,]), X, Y)</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="stage-route-analysis.html#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(amt)</span>
+<span id="cb76-2"><a href="stage-route-analysis.html#cb76-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-3"><a href="stage-route-analysis.html#cb76-3" aria-hidden="true" tabindex="-1"></a>amt_track <span class="ot">=</span> <span class="fu">make_track</span>(<span class="fu">st_coordinates</span>(utm_routes[<span class="dv">1</span>,]), X, Y)</span></code></pre></div>
 <pre><code>## .t missing, creating `track_xy`.</code></pre>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="stage-route-analysis.html#cb77-1" aria-hidden="true" tabindex="-1"></a>amt_track</span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="stage-route-analysis.html#cb78-1" aria-hidden="true" tabindex="-1"></a>amt_track</span></code></pre></div>
 <pre><code>## # A tibble: 419 x 2
 ##         x_       y_
 ##  *   &lt;dbl&gt;    &lt;dbl&gt;
@@ -1082,9 +1089,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">17.5.11</span> Creating Tracks</h3>
 <p>The <code>make_track</code> function has a further optional argument (<code>crs</code>), which allows the user to set a coordinate reference system (CRS) of the track. The CRS needs to be provided as valid proj4string, see the documentation of sp::CRS for further details; see also <a href="https://proj.org/usage/projections.html"><em>proj4</em> projections</a>.</p>
 <p>We can segment the track into a series of straightline steps from one point to the next, also returning the step distance (<code>sl</code>) and angle (<code>direction_p</code> radians):</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="stage-route-analysis.html#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a &quot;steps&quot; object from each sample</span></span>
-<span id="cb79-2"><a href="stage-route-analysis.html#cb79-2" aria-hidden="true" tabindex="-1"></a>amt_steps <span class="ot">=</span> <span class="fu">steps</span>(amt_track)</span>
-<span id="cb79-3"><a href="stage-route-analysis.html#cb79-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(amt_steps)</span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="stage-route-analysis.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a &quot;steps&quot; object from each sample</span></span>
+<span id="cb80-2"><a href="stage-route-analysis.html#cb80-2" aria-hidden="true" tabindex="-1"></a>amt_steps <span class="ot">=</span> <span class="fu">steps</span>(amt_track)</span>
+<span id="cb80-3"><a href="stage-route-analysis.html#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(amt_steps)</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 7
 ##       x1_     x2_      y1_      y2_   sl_ direction_p     ta_
 ## *   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;
@@ -1099,7 +1106,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">17.5.12</span> Converting to Other Track Formats</h3>
 <p>The <code>amt</code> package provides a range of tools that allow us to <em>coerce</em> <code>amt</code> tracks to other movement analysis packages.</p>
 <p>For example, we can cast a <code>track_xy</code> object to a <em>Spatial</em> object:</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="stage-route-analysis.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as_sp</span>(amt_track)</span></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="stage-route-analysis.html#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as_sp</span>(amt_track)</span></code></pre></div>
 <pre><code>## class       : SpatialPoints 
 ## features    : 419 
 ## extent      : 728265.7, 732502.2, 4957658, 4967115  (xmin, xmax, ymin, ymax)
@@ -1109,29 +1116,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="using-amt-for-stage-route-analysis" class="section level3" number="17.5.13">
 <h3><span class="header-section-number">17.5.13</span> Using <code>amt</code> for Stage Route Analysis</h3>
 <p>We can also obtain step lengths directly from the track via the <code>amt::step_lengths()</code> function:</p>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="stage-route-analysis.html#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the step lengths and omit / drop the final NA value</span></span>
-<span id="cb83-2"><a href="stage-route-analysis.html#cb83-2" aria-hidden="true" tabindex="-1"></a>amt_step_lengths <span class="ot">=</span> <span class="fu">head</span>(<span class="fu">step_lengths</span>(amt_track), <span class="sc">-</span><span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="stage-route-analysis.html#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the step lengths and omit / drop the final NA value</span></span>
+<span id="cb84-2"><a href="stage-route-analysis.html#cb84-2" aria-hidden="true" tabindex="-1"></a>amt_step_lengths <span class="ot">=</span> <span class="fu">head</span>(<span class="fu">step_lengths</span>(amt_track), <span class="sc">-</span><span class="dv">1</span>)</span></code></pre></div>
 <p>Directions can be determined absolutely, e.g. with reference to a North, South, East or West basis, using <code>amt::direction_abs()</code> or relatively to the previous step using `<code>amt::direction_rel()</code>:</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="stage-route-analysis.html#cb84-1" aria-hidden="true" tabindex="-1"></a>absolute_step_directions <span class="ot">=</span> <span class="fu">direction_abs</span>(amt_track)</span>
-<span id="cb84-2"><a href="stage-route-analysis.html#cb84-2" aria-hidden="true" tabindex="-1"></a>relative_step_directions <span class="ot">=</span> <span class="fu">direction_rel</span>(amt_track)</span></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="stage-route-analysis.html#cb85-1" aria-hidden="true" tabindex="-1"></a>absolute_step_directions <span class="ot">=</span> <span class="fu">direction_abs</span>(amt_track)</span>
+<span id="cb85-2"><a href="stage-route-analysis.html#cb85-2" aria-hidden="true" tabindex="-1"></a>relative_step_directions <span class="ot">=</span> <span class="fu">direction_rel</span>(amt_track)</span></code></pre></div>
 <p>In terms of route complexity measures, the <code>amt</code> package provides functions for calculating single number metrics of <em>sinuosity</em> (<code>amt::sinuosity()</code>),
 <em>straightness</em> (<code>amt::straightness()</code>), <em>accumulated track distance</em> (<code>amt::cum_dist()</code>) and <em>total straightline distance</em> (<code>amt::tot_dist()</code>). The <em>intensity use</em> metric is calculated by dividing the total movement distance (<code>tot_dist</code>) by the square of the area of movement:</p>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="stage-route-analysis.html#cb85-1" aria-hidden="true" tabindex="-1"></a>amt<span class="sc">::</span><span class="fu">sinuosity</span>(amt_track)</span></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="stage-route-analysis.html#cb86-1" aria-hidden="true" tabindex="-1"></a>amt<span class="sc">::</span><span class="fu">sinuosity</span>(amt_track)</span></code></pre></div>
 <pre><code>## [1] 0.001697952</code></pre>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="stage-route-analysis.html#cb87-1" aria-hidden="true" tabindex="-1"></a>amt<span class="sc">::</span><span class="fu">straightness</span>(amt_track)</span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="stage-route-analysis.html#cb88-1" aria-hidden="true" tabindex="-1"></a>amt<span class="sc">::</span><span class="fu">straightness</span>(amt_track)</span></code></pre></div>
 <pre><code>## [1] 0.4734154</code></pre>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="stage-route-analysis.html#cb89-1" aria-hidden="true" tabindex="-1"></a>amt<span class="sc">::</span><span class="fu">cum_dist</span>(amt_track)</span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="stage-route-analysis.html#cb90-1" aria-hidden="true" tabindex="-1"></a>amt<span class="sc">::</span><span class="fu">cum_dist</span>(amt_track)</span></code></pre></div>
 <pre><code>## [1] 21074.92</code></pre>
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="stage-route-analysis.html#cb91-1" aria-hidden="true" tabindex="-1"></a>amt<span class="sc">::</span><span class="fu">tot_dist</span>(amt_track)</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="stage-route-analysis.html#cb92-1" aria-hidden="true" tabindex="-1"></a>amt<span class="sc">::</span><span class="fu">tot_dist</span>(amt_track)</span></code></pre></div>
 <pre><code>## [1] 9977.189</code></pre>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="stage-route-analysis.html#cb93-1" aria-hidden="true" tabindex="-1"></a>amt<span class="sc">::</span><span class="fu">intensity_use</span>(amt_track)</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="stage-route-analysis.html#cb94-1" aria-hidden="true" tabindex="-1"></a>amt<span class="sc">::</span><span class="fu">intensity_use</span>(amt_track)</span></code></pre></div>
 <pre><code>## [1] 4.710567</code></pre>
 <p>Let’s generate a list of tracks, one for each stage:</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="stage-route-analysis.html#cb95-1" aria-hidden="true" tabindex="-1"></a>to_amt_track <span class="ot">=</span> <span class="cf">function</span>(route){</span>
-<span id="cb95-2"><a href="stage-route-analysis.html#cb95-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_track</span>(<span class="fu">st_coordinates</span>(route<span class="sc">$</span>geometry), X, Y)</span>
-<span id="cb95-3"><a href="stage-route-analysis.html#cb95-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb95-4"><a href="stage-route-analysis.html#cb95-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb95-5"><a href="stage-route-analysis.html#cb95-5" aria-hidden="true" tabindex="-1"></a>amt_tracks <span class="ot">=</span> <span class="fu">apply</span>(utm_routes, <span class="dv">1</span>, to_amt_track)</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="stage-route-analysis.html#cb96-1" aria-hidden="true" tabindex="-1"></a>to_amt_track <span class="ot">=</span> <span class="cf">function</span>(route){</span>
+<span id="cb96-2"><a href="stage-route-analysis.html#cb96-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_track</span>(<span class="fu">st_coordinates</span>(route<span class="sc">$</span>geometry), X, Y)</span>
+<span id="cb96-3"><a href="stage-route-analysis.html#cb96-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb96-4"><a href="stage-route-analysis.html#cb96-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-5"><a href="stage-route-analysis.html#cb96-5" aria-hidden="true" tabindex="-1"></a>amt_tracks <span class="ot">=</span> <span class="fu">apply</span>(utm_routes, <span class="dv">1</span>, to_amt_track)</span></code></pre></div>
 <pre><code>## .t missing, creating `track_xy`.
 ## .t missing, creating `track_xy`.
 ## .t missing, creating `track_xy`.
@@ -1142,13 +1149,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## .t missing, creating `track_xy`.
 ## .t missing, creating `track_xy`.</code></pre>
 <p>Now we can generate reports for all the stages:</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="stage-route-analysis.html#cb97-1" aria-hidden="true" tabindex="-1"></a>utm_routes[<span class="st">&#39;amt_sin&#39;</span>] <span class="ot">=</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(amt_tracks, amt<span class="sc">::</span>sinuosity))</span>
-<span id="cb97-2"><a href="stage-route-analysis.html#cb97-2" aria-hidden="true" tabindex="-1"></a>utm_routes[<span class="st">&#39;amt_str&#39;</span>] <span class="ot">=</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(amt_tracks, amt<span class="sc">::</span>straightness))</span>
-<span id="cb97-3"><a href="stage-route-analysis.html#cb97-3" aria-hidden="true" tabindex="-1"></a>utm_routes[<span class="st">&#39;amt_cumd&#39;</span>] <span class="ot">=</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(amt_tracks, amt<span class="sc">::</span>cum_dist))</span>
-<span id="cb97-4"><a href="stage-route-analysis.html#cb97-4" aria-hidden="true" tabindex="-1"></a>utm_routes[<span class="st">&#39;amt_totd&#39;</span>] <span class="ot">=</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(amt_tracks, amt<span class="sc">::</span>tot_dist))</span>
-<span id="cb97-5"><a href="stage-route-analysis.html#cb97-5" aria-hidden="true" tabindex="-1"></a>utm_routes[<span class="st">&#39;amt_int&#39;</span>] <span class="ot">=</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(amt_tracks, amt<span class="sc">::</span>intensity_use))</span>
-<span id="cb97-6"><a href="stage-route-analysis.html#cb97-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb97-7"><a href="stage-route-analysis.html#cb97-7" aria-hidden="true" tabindex="-1"></a>utm_routes[, <span class="fu">c</span>(<span class="st">&#39;amt_sin&#39;</span>,<span class="st">&#39;amt_str&#39;</span>,<span class="st">&#39;amt_cumd&#39;</span>,<span class="st">&#39;amt_totd&#39;</span>,<span class="st">&#39;amt_int&#39;</span>)]</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="stage-route-analysis.html#cb98-1" aria-hidden="true" tabindex="-1"></a>utm_routes[<span class="st">&#39;amt_sin&#39;</span>] <span class="ot">=</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(amt_tracks, amt<span class="sc">::</span>sinuosity))</span>
+<span id="cb98-2"><a href="stage-route-analysis.html#cb98-2" aria-hidden="true" tabindex="-1"></a>utm_routes[<span class="st">&#39;amt_str&#39;</span>] <span class="ot">=</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(amt_tracks, amt<span class="sc">::</span>straightness))</span>
+<span id="cb98-3"><a href="stage-route-analysis.html#cb98-3" aria-hidden="true" tabindex="-1"></a>utm_routes[<span class="st">&#39;amt_cumd&#39;</span>] <span class="ot">=</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(amt_tracks, amt<span class="sc">::</span>cum_dist))</span>
+<span id="cb98-4"><a href="stage-route-analysis.html#cb98-4" aria-hidden="true" tabindex="-1"></a>utm_routes[<span class="st">&#39;amt_totd&#39;</span>] <span class="ot">=</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(amt_tracks, amt<span class="sc">::</span>tot_dist))</span>
+<span id="cb98-5"><a href="stage-route-analysis.html#cb98-5" aria-hidden="true" tabindex="-1"></a>utm_routes[<span class="st">&#39;amt_int&#39;</span>] <span class="ot">=</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(amt_tracks, amt<span class="sc">::</span>intensity_use))</span>
+<span id="cb98-6"><a href="stage-route-analysis.html#cb98-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-7"><a href="stage-route-analysis.html#cb98-7" aria-hidden="true" tabindex="-1"></a>utm_routes[, <span class="fu">c</span>(<span class="st">&#39;amt_sin&#39;</span>,<span class="st">&#39;amt_str&#39;</span>,<span class="st">&#39;amt_cumd&#39;</span>,<span class="st">&#39;amt_totd&#39;</span>,<span class="st">&#39;amt_int&#39;</span>)]</span></code></pre></div>
 <pre><code>## Simple feature collection with 9 features and 5 fields
 ## geometry type:  LINESTRING
 ## dimension:      XY
@@ -1180,17 +1187,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">17.5.14</span> Using `rLFT`` for Profiling Along a Stage Route</h3>
 <p>The <a href="https://cran.r-project.org/web//packages/rLFT/vignettes/rLFT_Introduction.html"><code>rLFT</code> (Linear Feature Tools) <em>R</em> package</a> was developed in order to support the processing of simple linear features.</p>
 <p>The boundary convexity tool function, <code>rLFT::bct()</code> generates a convexity measure for a sliding window of points along a route; the route must be provided in a projected (<em>not</em> geographic) coordinate system. The sign of the convexity measure identifies whether the curve is concave (negative) or convex (positive), the increasing values identifying tightness of the curve. A normalised convexity index and a sinuosity measure are also created.</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="stage-route-analysis.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rLFT)</span>
-<span id="cb99-2"><a href="stage-route-analysis.html#cb99-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb99-3"><a href="stage-route-analysis.html#cb99-3" aria-hidden="true" tabindex="-1"></a>outputTable <span class="ot">&lt;-</span> <span class="fu">bct</span>(utm_routes[<span class="dv">1</span>,],</span>
-<span id="cb99-4"><a href="stage-route-analysis.html#cb99-4" aria-hidden="true" tabindex="-1"></a>                   <span class="co"># distance between measurements </span></span>
-<span id="cb99-5"><a href="stage-route-analysis.html#cb99-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">step =</span> <span class="dv">10</span>,</span>
-<span id="cb99-6"><a href="stage-route-analysis.html#cb99-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">window =</span> <span class="dv">20</span>, <span class="at">ridName =</span> <span class="st">&quot;Name&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="stage-route-analysis.html#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rLFT)</span>
+<span id="cb100-2"><a href="stage-route-analysis.html#cb100-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-3"><a href="stage-route-analysis.html#cb100-3" aria-hidden="true" tabindex="-1"></a>outputTable <span class="ot">&lt;-</span> <span class="fu">bct</span>(utm_routes[<span class="dv">1</span>,],</span>
+<span id="cb100-4"><a href="stage-route-analysis.html#cb100-4" aria-hidden="true" tabindex="-1"></a>                   <span class="co"># distance between measurements </span></span>
+<span id="cb100-5"><a href="stage-route-analysis.html#cb100-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">step =</span> <span class="dv">10</span>,</span>
+<span id="cb100-6"><a href="stage-route-analysis.html#cb100-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">window =</span> <span class="dv">20</span>, <span class="at">ridName =</span> <span class="st">&quot;Name&quot;</span>)</span></code></pre></div>
 <pre><code>##    user  system elapsed 
 ##   0.175   0.029   0.205 
 ## [1] &quot;Features skipped due to size: &quot;
 ## logical(0)</code></pre>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="stage-route-analysis.html#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(outputTable)</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="stage-route-analysis.html#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(outputTable)</span></code></pre></div>
 <pre><code>##   FID  RID MidMeas WindowSize RawConvexity ConvexityIndex Sinuosity Midpoint_X
 ## 1   1 SS 1      10         20        0.000          0.000     0.500   729181.8
 ## 2   1 SS 1      20         20       -0.040         -0.004     0.500   729186.1
@@ -1206,25 +1213,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 5    4957703
 ## 6    4957713</code></pre>
 <p>By filtering the table to rows with with a large absolute <em>ConvexityIndex</em> we can identify and label tight corners. The <code>ggrepel::geom_text_repel()</code> function attempts to minimise the extent to which labels overlap, using arrows to identify points referenced by the label where the label location is dodged away from the point:</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="stage-route-analysis.html#cb103-1" aria-hidden="true" tabindex="-1"></a>tight_corners <span class="ot">=</span> outputTable[<span class="fu">abs</span>(outputTable<span class="sc">$</span>ConvexityIndex)<span class="sc">&gt;</span><span class="fl">0.45</span>,]</span>
-<span id="cb103-2"><a href="stage-route-analysis.html#cb103-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-3"><a href="stage-route-analysis.html#cb103-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb103-4"><a href="stage-route-analysis.html#cb103-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>utm_routes[<span class="dv">1</span>,]) <span class="sc">+</span></span>
-<span id="cb103-5"><a href="stage-route-analysis.html#cb103-5" aria-hidden="true" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_text_repel</span>(<span class="at">data=</span>tight_corners,</span>
-<span id="cb103-6"><a href="stage-route-analysis.html#cb103-6" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">aes</span>(<span class="at">label =</span> ConvexityIndex,</span>
-<span id="cb103-7"><a href="stage-route-analysis.html#cb103-7" aria-hidden="true" tabindex="-1"></a>                               <span class="at">x=</span>Midpoint_X, <span class="at">y=</span>Midpoint_Y,</span>
-<span id="cb103-8"><a href="stage-route-analysis.html#cb103-8" aria-hidden="true" tabindex="-1"></a>                               <span class="at">color=</span> (ConvexityIndex<span class="sc">&gt;</span><span class="dv">0</span>) ),</span>
-<span id="cb103-9"><a href="stage-route-analysis.html#cb103-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">size=</span><span class="dv">2</span>,</span>
-<span id="cb103-10"><a href="stage-route-analysis.html#cb103-10" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nudge_x =</span> <span class="dv">2000</span>, <span class="at">nudge_y =</span> <span class="dv">500</span>) <span class="sc">+</span></span>
-<span id="cb103-11"><a href="stage-route-analysis.html#cb103-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>tight_corners,</span>
-<span id="cb103-12"><a href="stage-route-analysis.html#cb103-12" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x=</span>Midpoint_X, <span class="at">y=</span>Midpoint_Y,</span>
-<span id="cb103-13"><a href="stage-route-analysis.html#cb103-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span> (ConvexityIndex<span class="sc">&gt;</span><span class="dv">0</span>) ), <span class="at">size=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb103-14"><a href="stage-route-analysis.html#cb103-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="stage-route-analysis.html#cb104-1" aria-hidden="true" tabindex="-1"></a>tight_corners <span class="ot">=</span> outputTable[<span class="fu">abs</span>(outputTable<span class="sc">$</span>ConvexityIndex)<span class="sc">&gt;</span><span class="fl">0.45</span>,]</span>
+<span id="cb104-2"><a href="stage-route-analysis.html#cb104-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-3"><a href="stage-route-analysis.html#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb104-4"><a href="stage-route-analysis.html#cb104-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>utm_routes[<span class="dv">1</span>,]) <span class="sc">+</span></span>
+<span id="cb104-5"><a href="stage-route-analysis.html#cb104-5" aria-hidden="true" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_text_repel</span>(<span class="at">data=</span>tight_corners,</span>
+<span id="cb104-6"><a href="stage-route-analysis.html#cb104-6" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">aes</span>(<span class="at">label =</span> ConvexityIndex,</span>
+<span id="cb104-7"><a href="stage-route-analysis.html#cb104-7" aria-hidden="true" tabindex="-1"></a>                               <span class="at">x=</span>Midpoint_X, <span class="at">y=</span>Midpoint_Y,</span>
+<span id="cb104-8"><a href="stage-route-analysis.html#cb104-8" aria-hidden="true" tabindex="-1"></a>                               <span class="at">color=</span> (ConvexityIndex<span class="sc">&gt;</span><span class="dv">0</span>) ),</span>
+<span id="cb104-9"><a href="stage-route-analysis.html#cb104-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">size=</span><span class="dv">2</span>,</span>
+<span id="cb104-10"><a href="stage-route-analysis.html#cb104-10" aria-hidden="true" tabindex="-1"></a>                           <span class="at">nudge_x =</span> <span class="dv">2000</span>, <span class="at">nudge_y =</span> <span class="dv">500</span>) <span class="sc">+</span></span>
+<span id="cb104-11"><a href="stage-route-analysis.html#cb104-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data=</span>tight_corners,</span>
+<span id="cb104-12"><a href="stage-route-analysis.html#cb104-12" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x=</span>Midpoint_X, <span class="at">y=</span>Midpoint_Y,</span>
+<span id="cb104-13"><a href="stage-route-analysis.html#cb104-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span> (ConvexityIndex<span class="sc">&gt;</span><span class="dv">0</span>) ), <span class="at">size=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb104-14"><a href="stage-route-analysis.html#cb104-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div>
 <p><img src="images/route-metrics-rLFT-route-1.png" width="672" /></p>
 <p>We can also get the output table as a <em>simple features</em> object where the midpoint co-ordinates are cast to a point geometry type:</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="stage-route-analysis.html#cb104-1" aria-hidden="true" tabindex="-1"></a>outSF <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(outputTable,</span>
-<span id="cb104-2"><a href="stage-route-analysis.html#cb104-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;Midpoint_X&quot;</span>, <span class="st">&quot;Midpoint_Y&quot;</span>), </span>
-<span id="cb104-3"><a href="stage-route-analysis.html#cb104-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="stage-route-analysis.html#cb105-1" aria-hidden="true" tabindex="-1"></a>outSF <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(outputTable,</span>
+<span id="cb105-2"><a href="stage-route-analysis.html#cb105-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;Midpoint_X&quot;</span>, <span class="st">&quot;Midpoint_Y&quot;</span>), </span>
+<span id="cb105-3"><a href="stage-route-analysis.html#cb105-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <p>The convexity measures are defined in *Albeke, S.E. et al. <a href="https://www.d.umn.edu/biology/documents/Nibbelink2_000.pdf">Measuring boundary convexity at multiple spatial scales using a linear ‘moving window’ analysis: an application to coastal river otter habitat selection</a> Landscape Ecology 25 (2010): 1575-1587.</p>
 
 </div>
