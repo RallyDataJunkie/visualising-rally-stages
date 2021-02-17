@@ -196,7 +196,7 @@ shadow_mapper = function(sunpos){
 So let's see if we can render an early morning view:
 
 ```{r}
-
+# Create a dtae time string
 date_time = "2021-01-22 07:30:00 UTC"
 
 sun_pos = sun_alt_angle(date=date_time,
@@ -283,14 +283,17 @@ for (i in 8:16) {
 raster_stack <- stack(shadow_rasters) 
 nlayers(raster_stack)
 ```
-```{r}
+
+Let's preview one of the frames:
+
+```{r animated-shade-frame}
 plot(shadow_rasters[[3]],
      col = grey.colors(10, start=0, end=1))
 ```
 
 We can animate the raster stack as an animated gif using the `animation::saveGIF()` function:
 
-```{r}
+```{r animated-shade}
 shadow_gif = "shadowmovie.gif"
 
 animation::saveGIF({
@@ -304,6 +307,5 @@ animation::saveGIF({
 
 knitr::include_graphics(shadow_gif)
 ```
-
 
 

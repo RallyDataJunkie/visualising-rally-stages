@@ -198,7 +198,6 @@ stage_osm_g_utm =  stage_osm_g %>%
 stage_osm_g_utm
 ```
 
-
 ### Filtering an `sfnetworks` Graph
 
 Can we view the network in the buffered area around the stage route?
@@ -218,7 +217,6 @@ plot(st_geometry(route_utm), col='red', add=TRUE)
 A couple of things to note here. Firstly, the stage route points may not lay exactly on the OSM highway route, even if the routes are supposed to correspond to the same bit of road. Secondly, the rally stage route may go onto track surfaces that are not recorded by OSM as highways lines.
 
 The challenge now is this: can we map out original route on the OSM network, and return a filtered part of the network that show the original route and the road junctions along it? If so, then we have the basis of a tulip diagrammer.
-
 
 ### Viewing a Buffered Area Around a Junction Node
 
@@ -241,7 +239,7 @@ plot(filtered2, cex=0.5, col = 'grey', lwd = 6)
 
 If we crop our route to the buffered area, we should be able to overlay it on the road network visually at least:
 
-```{r}
+```{r cropped-route}
 # Crop the route to the buffered area
 filtered3 = st_crop(route_utm, 
                      buffered_n)
@@ -274,7 +272,7 @@ pois_points = st_cast(x = pois_mp, to = "POINT")
 
 Let's see what happens if we try to snap those route points onto the road network:
 
-```{r}
+```{r blended-network}
 blended = st_network_blend(filtered2, pois_points)
 
 plot(filtered2, cex=0.5, col = 'grey', lwd = 6)
@@ -285,7 +283,7 @@ Okay, they seem to have snapped new nodes onto the route network.
 
 What happens if we now buffer around that route fragment and just show the route snapped to the road network:
 
-```{r}
+```{r buffered-blended}
 # Buffered area around the route
 filtered3_buffered = st_buffer(filtered3,  units::set_units(15, m))
 
@@ -302,7 +300,7 @@ In the above example we see the snapped nodes are what the `sfnetworks` docs ref
 
 The `sfnetworks` package provides a converter that can be applied via the `tidygraph::convert` function for cleaning ("smoothing") these pseudo nodes, `sfnetworks::to_spatial_smoot`, so let's see how that works:
 
-```{r message=FALSE}
+```{r smoothed-network, message=FALSE}
 library(tidygraph)
 
 smoothed = convert(filtered4, to_spatial_smooth) %>%
@@ -321,7 +319,7 @@ Can we plot also somehow fettle the layout algorithm so that the nodes along the
 
 What happens now if we try that recipe with the full route?
 
-```{r}
+```{r full-smoothed}
 # Get a buffered region round the route
 #buffer_margin_1km = units::set_units(1000, m)
 buffered_route_utm <- st_buffer(route_utm, buffer_margin_200m)
@@ -354,7 +352,7 @@ So this *isn't* what we want. When we do the intersection, we drop the nodes out
 
 This is perhaps a cropping function rather than a filter? Although cropping cuts to a rectangle, which is also not what we want...
 
-```{r warning=FALSE}
+```{r cropped-full-smoothed, warning=FALSE}
 # Crop the road network to the buffered area
 # https://luukvdmeer.github.io/sfnetworks/articles/join_filter.html
 full_cropped =  st_crop(stage_osm_g_utm, buffered_route_utm)
@@ -388,7 +386,7 @@ buffered_net = net %>%
 
 We can plot the lines using `ggplot2`:
 
-```{r}
+```{r dodgr-lines}
 library(ggplot2)
 
 ggplot(net$osm_lines) + geom_sf()

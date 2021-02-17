@@ -93,7 +93,7 @@ We can also disable the display of the base to give a view similar to the sort o
 
 There are several approaches we can use to grabbing a flat image capture of a model. One is to the use an `rgl::rglwidget(snapshot=TRUE)` call which in headless mode uses `webshot2` to launch a browser in the background, render the model inside a widget in that browser, and then grab a screenshot...
 
-```{r message=FALSE}
+```{r rendered-map-yellow-route, message=FALSE}
 rgl::rgl.open()
 rgl::clear3d()
 
@@ -117,10 +117,9 @@ rgl::rgl.close()
 knitr::include_graphics(render_fn)
 ```
 
-
 The `rayshader::render_snapshot()` and `rayshader::render_highquality()`` functions provide alternative ways of rendering the current scene:
 
-```{r}
+```{r rendered-snapshot-yellow-route}
 rgl::rgl.open()
 rgl::clear3d()
 mapped_route_yellow %>%
@@ -150,7 +149,7 @@ overlay_image_terrain <- slippy_overlay(elev_img,
 
 Add the terrain to a model and render it in 2D:
 
-```{r}
+```{r mapped-yellow-terrain}
 mapped_terrain_yellow = mapped_route_yellow %>%
                           add_overlay(overlay_image_terrain) %>%
                           add_overlay(yellow_route)
@@ -160,7 +159,7 @@ mapped_terrain_yellow %>% plot_map()
 
 And now, how about the 3D version?
 
-```{r}
+```{r mapped-yellow-terrain-widget}
 rgl::clear3d()
 
 mapped_terrain_yellow %>%
@@ -219,9 +218,3 @@ rgl::rglwidget()
 ```
 
 
-TO DO 
-```{r}
-
-
-
-```

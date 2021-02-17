@@ -105,7 +105,6 @@ adding-contours-to-rayshader-stage-maps
 overlaying-image-tiles
 plotting-route-layers-on-rayshader-maps
 rendering-the-image-directly-from-ggplot2
-rendering-a-movie
 introducing-3d-rayshader-models
 rendering-the-3d-maps-in-rstudio-and-knitrable-rmd-documents
 rendering-a-3d-view
@@ -160,7 +159,7 @@ creating-tracks
 converting-to-other-track-formats
 using-amt-for-stage-route-analysis
 using-rlft-for-profiling-along-a-stage-route
-allow-knitr-to-continue-to-execute-even-in-the-presence-of-errors
+elevation-data-revisited
 load-in-base-data-9
 generating-elevation-maps
 accessing-elevation-values-along-a-route-from-an-elevation-raster
@@ -194,6 +193,3 @@ snapping-a-route-to-a-road-network
 snapping-a-full-stage-route-to-the-road-network
 using-dodgr-to-represent-routes-and-road-networks
 where-next
-revisiting-elevation-data
-index
-elevation-data-revisited

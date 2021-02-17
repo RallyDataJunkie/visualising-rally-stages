@@ -1,9 +1,8 @@
 ```{r cache = T, echo = F, message=F}
-# 19Allow knitr to continue to execute even in the presence of errors
+# 6Allow knitr to continue to execute even in the presence of errors
 knitr::opts_chunk$set(error = TRUE)
-knitr::opts_chunk$set(fig.path = "revisiting-elevation-data-")
+knitr::opts_chunk$set(fig.path = "images/revisiting-elevation-")
 ```
-
 # Elevation Data Revisited
 
 Having access to elevation data is essential for rendering 3D terrain maps. But we can also plot elevation data along a single dimension: the *distance along route*.
@@ -145,7 +144,7 @@ g
 
 We can get a 3D plot from the ribbon chart via the `rayshader::plot_gg()` function:
 
-```{r}
+```{r 3d-ribbon-widget}
 options(rgl.useNULL = TRUE,
         rgl.printRglwidget = TRUE)
 
@@ -211,8 +210,6 @@ Embed the HTML back in an iframe:
 htmltools::includeHTML(widget_fn)
 ```
 
-```
-
 ### Making a 3D Print File of the Model
 
 As well as making movies of the stage route it is also worth reminding ourselves that we can also export the model as a 3D printer ready model. The `rayshader::save_3dprint()` function will export an `.stl` format model file directly from our model:
@@ -229,7 +226,7 @@ With model file in hand,it can then be uploaded to 3D print on demand service su
 
 Render a 3D movie to provide a rotating view of the 3D rendered line char showing the route path and elevation:
 
-```{r message=FALSE, warning=FALSE}
+```{r elevation-movie, message=FALSE, warning=FALSE}
 library(av)
 
 options(rgl.useNULL = FALSE,
@@ -248,7 +245,8 @@ video_fn = 'demo_stage_line.mp4'
 #render_movie(video_fn, progbar=FALSE)
 rgl::rgl.close()
 
-embedr::embed_video(video_fn, width = "256", height = "256")
+embedr::embed_video(video_fn, type ="mp4",
+                    width = "256", height = "256")
 ```
 
 
