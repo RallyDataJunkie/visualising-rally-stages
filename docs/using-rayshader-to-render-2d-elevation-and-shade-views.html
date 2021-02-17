@@ -50,6 +50,55 @@
 
 
 
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.3.9000/leaflet.js"></script>
+<script src="libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
+<script src="libs/leaflet-providers-plugin-2.0.3.9000/leaflet-providers-plugin.js"></script>
+<link href="libs/leaflet-awesomemarkers-2.0.3/leaflet.awesome-markers.css" rel="stylesheet" />
+<script src="libs/leaflet-awesomemarkers-2.0.3/leaflet.awesome-markers.min.js"></script>
+<link href="libs/fontawesome-4.7.0/font-awesome.min.css" rel="stylesheet" />
+<link href="libs/leaflet-minimap-3.3.1/Control.MiniMap.min.css" rel="stylesheet" />
+<script src="libs/leaflet-minimap-3.3.1/Control.MiniMap.min.js"></script>
+<script src="libs/leaflet-minimap-3.3.1/Minimap-binding.js"></script>
+<script src="libs/FlatGeoBuf-3.3.3/fgb.js"></script>
+<script src="libs/FlatGeoBuf-3.3.3/flatgeobuf-geojson.min.js"></script>
+<script src="libs/chromajs-2.1.0/chroma.min.js"></script>
+<link id="geojson_sf-1-attachment" rel="attachment" href="libs/geojson_sf-0.0.1/geojson_sf_layer.fgb"/>
+<link href="libs/HomeButton-0.0.1/home-button.css" rel="stylesheet" />
+<script src="libs/HomeButton-0.0.1/home-button.js"></script>
+<script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
+<script src="libs/clipboard-0.0.1/setClipboardText.js"></script>
+<link href="libs/mapviewCSS-0.0.1/mapview-popup.css" rel="stylesheet" />
+<link href="libs/mapviewCSS-0.0.1/mapview.css" rel="stylesheet" />
+<link href="libs/style-1/style.css" rel="stylesheet" />
+<script src="libs/plainView-binding-2.9.0/plainView.js"></script>
+<link id="image-1-attachment" rel="attachment" href="libs/image-1/img.png"/>
+<script src="libs/elev_img-1/data_stars_elev_imgdacf38.txt"></script>
+<script src="libs/joda-0.0.1/joda.js"></script>
+<script src="libs/joda-0.0.1/addImageQuery-bindings.js"></script>
+<script src="libs/rglWebGL-binding-0.105.14/rglWebGL.js"></script>
+<link href="libs/rglwidgetClass-0.105.14/rgl.css" rel="stylesheet" />
+<script src="libs/rglwidgetClass-0.105.14/rglClass.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/utils.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/subscenes.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/shaders.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/textures.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/projection.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/mouse.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/init.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/pieces.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/draw.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/controls.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/selection.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/rglTimer.src.js"></script>
+<script src="libs/CanvasMatrix4-0.105.14/CanvasMatrix.src.js"></script>
+<link href="libs/vembedr-0.1.4/css/vembedr.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -373,8 +422,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.4" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#identifying-road-type"><i class="fa fa-check"></i><b>18.4</b> Identifying Road Type</a></li>
 <li class="chapter" data-level="18.5" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#displaying-route-twistiness-and-elevation"><i class="fa fa-check"></i><b>18.5</b> Displaying Route Twistiness and Elevation</a>
 <ul>
-<li class="chapter" data-level="18.5.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#making-a-3d-print-file-of-the-model"><i class="fa fa-check"></i><b>18.5.1</b> Making a 3D Print File of the Model</a></li>
-<li class="chapter" data-level="18.5.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#rendering-a-3d-movie-of-the-model"><i class="fa fa-check"></i><b>18.5.2</b> Rendering a 3D movie of the Model</a></li>
+<li class="chapter" data-level="18.5.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#rendering-a-3d-movie-of-the-model"><i class="fa fa-check"></i><b>18.5.1</b> Rendering a 3D movie of the Model</a></li>
 </ul></li>
 <li class="chapter" data-level="18.6" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-the-slopes-package-to-analyse-stage-elevation-data"><i class="fa fa-check"></i><b>18.6</b> Using the <code>slopes</code> Package to Analyse Stage Elevation Data</a></li>
 <li class="chapter" data-level="18.7" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#analysing-route-elevation-from-first-principles"><i class="fa fa-check"></i><b>18.7</b> Analysing Route Elevation from First Principles</a></li>
@@ -436,48 +484,47 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="load-in-base-data-1" class="section level2" number="9.1">
 <h2><span class="header-section-number">9.1</span> Load in Base Data</h2>
 <p>As ever, let’s load in our stage data:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb1-1" aria-hidden="true" tabindex="-1"></a>geojson_filename <span class="ot">=</span> <span class="st">&#39;montecarlo_2021.geojson&#39;</span></span>
-<span id="cb1-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb1-2" aria-hidden="true" tabindex="-1"></a>geojson_sf <span class="ot">=</span> sf<span class="sc">::</span><span class="fu">st_read</span>(geojson_filename)</span></code></pre></div>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb199-1" aria-hidden="true" tabindex="-1"></a>geojson_filename <span class="ot">=</span> <span class="st">&#39;montecarlo_2021.geojson&#39;</span></span>
+<span id="cb199-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb199-2" aria-hidden="true" tabindex="-1"></a>geojson_sf <span class="ot">=</span> sf<span class="sc">::</span><span class="fu">st_read</span>(geojson_filename)</span></code></pre></div>
 <pre><code>## Reading layer `montecarlo_2021&#39; from data source `/Users/tonyhirst/Documents/GitHub/visualising-rally-stages/montecarlo_2021.geojson&#39; using driver `GeoJSON&#39;
 ## Simple feature collection with 9 features and 2 fields
 ## geometry type:  LINESTRING
 ## dimension:      XY
 ## bbox:           xmin: 5.243488 ymin: 43.87633 xmax: 6.951953 ymax: 44.81973
 ## geographic CRS: WGS 84</code></pre>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb3-1" aria-hidden="true" tabindex="-1"></a>stage_bbox <span class="ot">=</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(geojson_sf)</span></code></pre></div>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb201-1" aria-hidden="true" tabindex="-1"></a>stage_bbox <span class="ot">=</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(geojson_sf)</span></code></pre></div>
 </div>
 <div id="rendering-imagery-from-the-dem-raster" class="section level2" number="9.2">
 <h2><span class="header-section-number">9.2</span> Rendering imagery from the DEM raster</h2>
 <p>As well as overlaying the elevation model raster on a leaflet map, we can also render topographic models from the data using the <code>raytracer</code> package.</p>
 <p>The packages works with a matrix of raster values, so having saved the download raster to a tif file, let’s load the data back in from that raster image tif file (to demonstrate round tripping!), and then convert the data to a matrix using the<code># And convert it to a matrix using the</code>rayshader::raster_to_matrix()` function:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rayshader)</span>
-<span id="cb4-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raster)</span>
-<span id="cb4-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Previously downloaded TIF digital elevation model (DEM) file</span></span>
-<span id="cb4-5"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb4-5" aria-hidden="true" tabindex="-1"></a>stage_tif <span class="ot">=</span> <span class="st">&quot;stage_elevation.tif&quot;</span></span>
-<span id="cb4-6"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load in the previously saved image raster</span></span>
-<span id="cb4-8"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb4-8" aria-hidden="true" tabindex="-1"></a>elev_img <span class="ot">=</span> <span class="fu">raster</span>(stage_tif)</span>
-<span id="cb4-9"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Note we can pass in a file name or a raster object</span></span>
-<span id="cb4-11"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># rayshader::raster_to_matrix</span></span>
-<span id="cb4-12"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb4-12" aria-hidden="true" tabindex="-1"></a>elmat <span class="ot">=</span> <span class="fu">raster_to_matrix</span>(stage_tif) </span></code></pre></div>
-<pre><code>## [1] &quot;Dimensions of matrix are: 382x565.&quot;</code></pre>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb202-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rayshader)</span>
+<span id="cb202-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb202-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raster)</span>
+<span id="cb202-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb202-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb202-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb202-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Previously downloaded TIF digital elevation model (DEM) file</span></span>
+<span id="cb202-5"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb202-5" aria-hidden="true" tabindex="-1"></a>stage_tif <span class="ot">=</span> <span class="st">&quot;stage_elevation.tif&quot;</span></span>
+<span id="cb202-6"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb202-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb202-7"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb202-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load in the previously saved image raster</span></span>
+<span id="cb202-8"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb202-8" aria-hidden="true" tabindex="-1"></a>elev_img <span class="ot">=</span> <span class="fu">raster</span>(stage_tif)</span>
+<span id="cb202-9"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb202-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb202-10"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb202-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Note we can pass in a file name or a raster object</span></span>
+<span id="cb202-11"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb202-11" aria-hidden="true" tabindex="-1"></a><span class="co"># rayshader::raster_to_matrix</span></span>
+<span id="cb202-12"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb202-12" aria-hidden="true" tabindex="-1"></a>elmat <span class="ot">=</span> <span class="fu">raster_to_matrix</span>(stage_tif) </span></code></pre></div>
 <p>We can now render a raytraced 2D image using that data with the <code>rayshader</code> package:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#We use another one of rayshader&#39;s built-in textures:</span></span>
-<span id="cb6-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb6-2" aria-hidden="true" tabindex="-1"></a>elmat <span class="sc">%&gt;%</span></span>
-<span id="cb6-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sphere_shade</span>(<span class="at">texture =</span> <span class="st">&quot;desert&quot;</span>, <span class="at">progbar=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb6-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
-<p><img src="images/rayshader-2d-desert-2d-1.png" width="672" /></p>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="co">#We use another one of rayshader&#39;s built-in textures:</span></span>
+<span id="cb203-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb203-2" aria-hidden="true" tabindex="-1"></a>elmat <span class="sc">%&gt;%</span></span>
+<span id="cb203-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb203-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sphere_shade</span>(<span class="at">texture =</span> <span class="st">&quot;desert&quot;</span>, <span class="at">progbar=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb203-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb203-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
+<p><img src="images/terrain-features-raster-desert-2d-1.png" width="672" /></p>
 <p>Alternatively, save to a png image file:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb7-1" aria-hidden="true" tabindex="-1"></a>image_fn <span class="ot">=</span> <span class="st">&#39;demo_2d_stage.png&#39;</span></span>
-<span id="cb7-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#We use another one of rayshader&#39;s built-in textures:</span></span>
-<span id="cb7-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb7-4" aria-hidden="true" tabindex="-1"></a>elmat <span class="sc">%&gt;%</span></span>
-<span id="cb7-5"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sphere_shade</span>(<span class="at">texture =</span> <span class="st">&quot;desert&quot;</span>, <span class="at">progbar=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-6"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">save_png</span>(<span class="at">filename=</span>image_fn)</span></code></pre></div>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb204-1" aria-hidden="true" tabindex="-1"></a>image_fn <span class="ot">=</span> <span class="st">&#39;demo_2d_stage.png&#39;</span></span>
+<span id="cb204-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb204-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb204-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb204-3" aria-hidden="true" tabindex="-1"></a><span class="co">#We use another one of rayshader&#39;s built-in textures:</span></span>
+<span id="cb204-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb204-4" aria-hidden="true" tabindex="-1"></a>elmat <span class="sc">%&gt;%</span></span>
+<span id="cb204-5"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb204-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sphere_shade</span>(<span class="at">texture =</span> <span class="st">&quot;desert&quot;</span>, <span class="at">progbar=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb204-6"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb204-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">save_png</span>(<span class="at">filename=</span>image_fn)</span></code></pre></div>
 <p>And then view the image file via markdown:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb8-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(image_fn)</span></code></pre></div>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb205-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(image_fn)</span></code></pre></div>
 <p><img src="demo_2d_stage.png" width="191" /></p>
 </div>
 <div id="roundtripping-rayshader-rasters-and-matrices" class="section level2" number="9.3">
@@ -503,110 +550,110 @@ The <code>rayshader::add_shadow(hillshade, shadowmap)</code> function takes an a
 <p><code>shadowmap</code>: a two dimensional array that indicates the intensity of the shadow at that point. 0 is full darkness, 1 is full light.</p>
 </blockquote>
 <p>If we inspect the dimensions of this associated matrices we see that not only does the RGB array have three values associated with each location (the red, green and blue values) but the matrix is also rotated compared to the input matrix. The <code>ray_shade</code> array, with just two dimensions, has values limited to the range 0..1.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of heightmap elevation matrix</span></span>
-<span id="cb9-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;heightmap:&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb206-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of heightmap elevation matrix</span></span>
+<span id="cb206-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb206-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;heightmap:&quot;</span></span></code></pre></div>
 <pre><code>## [1] &quot;heightmap:&quot;</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb11-1" aria-hidden="true" tabindex="-1"></a>heightmap <span class="ot">=</span> elmat</span>
-<span id="cb11-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(heightmap)</span></code></pre></div>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb208-1" aria-hidden="true" tabindex="-1"></a>heightmap <span class="ot">=</span> elmat</span>
+<span id="cb208-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb208-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(heightmap)</span></code></pre></div>
 <pre><code>## [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(heightmap)</span></code></pre></div>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb210-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(heightmap)</span></code></pre></div>
 <pre><code>## [1]  663 2055</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(heightmap)</span></code></pre></div>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb212-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(heightmap)</span></code></pre></div>
 <pre><code>## [1] 382 565</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;hillshade (sphere):&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb214-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;hillshade (sphere):&quot;</span></span></code></pre></div>
 <pre><code>## [1] &quot;hillshade (sphere):&quot;</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb19-1" aria-hidden="true" tabindex="-1"></a>hillshade <span class="ot">=</span> <span class="fu">sphere_shade</span>(heightmap, <span class="at">progbar=</span><span class="cn">FALSE</span>)</span>
-<span id="cb19-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(hillshade)</span></code></pre></div>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb216-1" aria-hidden="true" tabindex="-1"></a>hillshade <span class="ot">=</span> <span class="fu">sphere_shade</span>(heightmap, <span class="at">progbar=</span><span class="cn">FALSE</span>)</span>
+<span id="cb216-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb216-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(hillshade)</span></code></pre></div>
 <pre><code>## [1] &quot;array&quot;</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(hillshade)</span></code></pre></div>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb218-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(hillshade)</span></code></pre></div>
 <pre><code>## [1] 565 382   3</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;hillshade (ray):&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb220-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;hillshade (ray):&quot;</span></span></code></pre></div>
 <pre><code>## [1] &quot;hillshade (ray):&quot;</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb25-1" aria-hidden="true" tabindex="-1"></a>hillshade2 <span class="ot">=</span> <span class="fu">ray_shade</span>(heightmap, <span class="at">progbar=</span><span class="cn">FALSE</span>)</span>
-<span id="cb25-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(hillshade)</span></code></pre></div>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb222-1" aria-hidden="true" tabindex="-1"></a>hillshade2 <span class="ot">=</span> <span class="fu">ray_shade</span>(heightmap, <span class="at">progbar=</span><span class="cn">FALSE</span>)</span>
+<span id="cb222-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb222-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(hillshade)</span></code></pre></div>
 <pre><code>## [1] &quot;array&quot;</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(hillshade2)</span></code></pre></div>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb224-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(hillshade2)</span></code></pre></div>
 <pre><code>## [1] 0 1</code></pre>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(hillshade2)</span></code></pre></div>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb226-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(hillshade2)</span></code></pre></div>
 <pre><code>## [1] 382 565</code></pre>
 <p>So let’s see what each of those elements looks like and how we map between them.</p>
 <p>To begin with, we can view the elevation image raster:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(elev_img)</span></code></pre></div>
-<p><img src="images/rayshader-2d-sketch-elev_img-raster-1.png" width="672" /></p>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb228-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(elev_img)</span></code></pre></div>
+<p><img src="images/terrain-features-raster-sketch-elev_img-raster-1.png" width="672" /></p>
 <p>Let’s now create the <code>heightmap</code> matrix:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Render the &#39;rayshader&#39; scene </span></span>
-<span id="cb32-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for some reason, we do a rotate rayshader</span></span>
-<span id="cb32-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb32-4" aria-hidden="true" tabindex="-1"></a>heightmap <span class="ot">=</span> <span class="fu">matrix</span>(</span>
-<span id="cb32-5"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb32-5" aria-hidden="true" tabindex="-1"></a>  raster<span class="sc">::</span><span class="fu">extract</span>(elev_img, raster<span class="sc">::</span><span class="fu">extent</span>(elev_img), <span class="at">method =</span> <span class="st">&#39;bilinear&#39;</span>),</span>
-<span id="cb32-6"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="fu">ncol</span>(elev_img),</span>
-<span id="cb32-7"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="fu">nrow</span>(elev_img)</span>
-<span id="cb32-8"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb32-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb229-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Render the &#39;rayshader&#39; scene </span></span>
+<span id="cb229-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb229-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb229-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb229-3" aria-hidden="true" tabindex="-1"></a><span class="co"># for some reason, we do a rotate rayshader</span></span>
+<span id="cb229-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb229-4" aria-hidden="true" tabindex="-1"></a>heightmap <span class="ot">=</span> <span class="fu">matrix</span>(</span>
+<span id="cb229-5"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb229-5" aria-hidden="true" tabindex="-1"></a>  raster<span class="sc">::</span><span class="fu">extract</span>(elev_img, raster<span class="sc">::</span><span class="fu">extent</span>(elev_img), <span class="at">method =</span> <span class="st">&#39;bilinear&#39;</span>),</span>
+<span id="cb229-6"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb229-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="fu">ncol</span>(elev_img),</span>
+<span id="cb229-7"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb229-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="fu">nrow</span>(elev_img)</span>
+<span id="cb229-8"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb229-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>And render the matrix as a simple greyscale raster:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">raster</span>(heightmap))</span></code></pre></div>
-<p><img src="images/rayshader-2d-sketch-raster-heightmap-1.png" width="672" />
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb230-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">raster</span>(heightmap))</span></code></pre></div>
+<p><img src="images/terrain-features-raster-sketch-raster-heightmap-1.png" width="672" />
 We note that this is rotated compared to the original elevation raster image.</p>
 <p>In passing, let’s note the following function from the <code>rayshader</code> repository also the means of flipping the matrix from left to right to right to left orientation:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">#https://github.com/tylermorganwall/rayshader/blob/master/R/flipfunctions.R</span></span>
-<span id="cb34-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb34-2" aria-hidden="true" tabindex="-1"></a>fliplr <span class="ot">=</span> <span class="cf">function</span>(x) {</span>
-<span id="cb34-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(<span class="fu">dim</span>(x)) <span class="sc">==</span> <span class="dv">2</span>) {</span>
-<span id="cb34-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb34-4" aria-hidden="true" tabindex="-1"></a>    x[,<span class="fu">ncol</span>(x)<span class="sc">:</span><span class="dv">1</span>]</span>
-<span id="cb34-5"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb34-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb34-6"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb34-6" aria-hidden="true" tabindex="-1"></a>    x[,<span class="fu">ncol</span>(x)<span class="sc">:</span><span class="dv">1</span>,]</span>
-<span id="cb34-7"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb34-7" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb34-8"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb34-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb231-1" aria-hidden="true" tabindex="-1"></a><span class="co">#https://github.com/tylermorganwall/rayshader/blob/master/R/flipfunctions.R</span></span>
+<span id="cb231-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb231-2" aria-hidden="true" tabindex="-1"></a>fliplr <span class="ot">=</span> <span class="cf">function</span>(x) {</span>
+<span id="cb231-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb231-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">length</span>(<span class="fu">dim</span>(x)) <span class="sc">==</span> <span class="dv">2</span>) {</span>
+<span id="cb231-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb231-4" aria-hidden="true" tabindex="-1"></a>    x[,<span class="fu">ncol</span>(x)<span class="sc">:</span><span class="dv">1</span>]</span>
+<span id="cb231-5"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb231-5" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb231-6"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb231-6" aria-hidden="true" tabindex="-1"></a>    x[,<span class="fu">ncol</span>(x)<span class="sc">:</span><span class="dv">1</span>,]</span>
+<span id="cb231-7"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb231-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb231-8"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb231-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>We can find the transpose of the heightmap matrix to reorient it in accordance with the original raster image:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Transpose the matrix, then generate the raster</span></span>
-<span id="cb35-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb35-2" aria-hidden="true" tabindex="-1"></a>heightmap_raster  <span class="ot">=</span> <span class="fu">raster</span>( <span class="fu">t</span>(heightmap) )</span>
-<span id="cb35-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(heightmap_raster)</span></code></pre></div>
-<p><img src="images/rayshader-2d-sketch-raster-heightmap-flip-1.png" width="672" /></p>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb232-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Transpose the matrix, then generate the raster</span></span>
+<span id="cb232-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb232-2" aria-hidden="true" tabindex="-1"></a>heightmap_raster  <span class="ot">=</span> <span class="fu">raster</span>( <span class="fu">t</span>(heightmap) )</span>
+<span id="cb232-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb232-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb232-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb232-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(heightmap_raster)</span></code></pre></div>
+<p><img src="images/terrain-features-raster-sketch-raster-heightmap-flip-1.png" width="672" /></p>
 <p>If required, we can render the image as a greyscale image:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(heightmap_raster,</span>
-<span id="cb36-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb36-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">grey.colors</span>(<span class="dv">10</span>, <span class="at">start=</span><span class="dv">0</span>, <span class="at">end=</span><span class="dv">1</span>) )</span></code></pre></div>
-<p><img src="images/rayshader-2d-sketch-raster-heightmap-flip-bw-1.png" width="672" /></p>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb233-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(heightmap_raster,</span>
+<span id="cb233-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb233-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">grey.colors</span>(<span class="dv">10</span>, <span class="at">start=</span><span class="dv">0</span>, <span class="at">end=</span><span class="dv">1</span>) )</span></code></pre></div>
+<p><img src="images/terrain-features-raster-sketch-raster-heightmap-flip-bw-1.png" width="672" /></p>
 <p>One thing we notice about these array based raster plots is that they do not retain the original projection since they were created from simple matrices. To fully describe the raster, we need to add an appropriate extent and CRS projection. We can get the details of these from the original raster image:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">extent</span>(elev_img)</span></code></pre></div>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb234-1" aria-hidden="true" tabindex="-1"></a><span class="fu">extent</span>(elev_img)</span></code></pre></div>
 <pre><code>## class      : Extent 
 ## xmin       : 5.883827 
 ## xmax       : 5.94068 
 ## ymin       : 44.73566 
 ## ymax       : 44.81975</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crs</span>(elev_img)</span></code></pre></div>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb236-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crs</span>(elev_img)</span></code></pre></div>
 <pre><code>## CRS arguments: +proj=longlat +datum=WGS84 +no_defs</code></pre>
 <p>We can then assign these properties to our matrix originated raster:</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">extent</span>(heightmap_raster) <span class="ot">=</span> <span class="fu">extent</span>(elev_img)</span>
-<span id="cb41-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">crs</span>(heightmap_raster) <span class="ot">=</span> <span class="fu">crs</span>(elev_img)</span>
-<span id="cb41-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(heightmap_raster)</span></code></pre></div>
-<p><img src="images/rayshader-2d-sketch-height-raster-1.png" width="672" /></p>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb238-1" aria-hidden="true" tabindex="-1"></a><span class="fu">extent</span>(heightmap_raster) <span class="ot">=</span> <span class="fu">extent</span>(elev_img)</span>
+<span id="cb238-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb238-2" aria-hidden="true" tabindex="-1"></a><span class="fu">crs</span>(heightmap_raster) <span class="ot">=</span> <span class="fu">crs</span>(elev_img)</span>
+<span id="cb238-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb238-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb238-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb238-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(heightmap_raster)</span></code></pre></div>
+<p><img src="images/terrain-features-raster-sketch-height-raster-1.png" width="672" /></p>
 <p>If we now look at the <code>plot_map()</code> function, recall how we can use it to render terrain features created via the application of the <code>sphere_shade()</code> function:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb42-1" aria-hidden="true" tabindex="-1"></a>heightmap <span class="sc">%&gt;%</span></span>
-<span id="cb42-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sphere_shade</span>(<span class="at">texture =</span> <span class="st">&quot;desert&quot;</span>, <span class="at">progbar=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb42-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
-<p><img src="images/rayshader-2d-sketch-shade-1.png" width="672" /></p>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb239-1" aria-hidden="true" tabindex="-1"></a>heightmap <span class="sc">%&gt;%</span></span>
+<span id="cb239-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb239-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sphere_shade</span>(<span class="at">texture =</span> <span class="st">&quot;desert&quot;</span>, <span class="at">progbar=</span><span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb239-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb239-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
+<p><img src="images/terrain-features-raster-sketch-shade-1.png" width="672" /></p>
 <p>We can also view a greyscale shadow layer:</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb43-1" aria-hidden="true" tabindex="-1"></a>ray_shade_array <span class="ot">=</span> <span class="fu">ray_shade</span>(heightmap, <span class="at">progbar=</span><span class="cn">FALSE</span>)</span>
-<span id="cb43-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb43-3" aria-hidden="true" tabindex="-1"></a>ray_shade_array <span class="sc">%&gt;%</span> </span>
-<span id="cb43-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
-<p><img src="images/rayshader-2d-sketch-rayshade-array-1.png" width="672" />
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb240-1" aria-hidden="true" tabindex="-1"></a>ray_shade_array <span class="ot">=</span> <span class="fu">ray_shade</span>(heightmap, <span class="at">progbar=</span><span class="cn">FALSE</span>)</span>
+<span id="cb240-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb240-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb240-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb240-3" aria-hidden="true" tabindex="-1"></a>ray_shade_array <span class="sc">%&gt;%</span> </span>
+<span id="cb240-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb240-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
+<p><img src="images/terrain-features-raster-sketch-rayshade-array-1.png" width="672" />
 If we want to get the shadow layer as a raster, we can do so using the following function that pulls together some of the previous steps and adds an additional left-right flip :</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-1" aria-hidden="true" tabindex="-1"></a>rasterify_rayshade <span class="ot">=</span> <span class="cf">function</span>(rayshade, original_raster){</span>
-<span id="cb44-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Transpose and flip the shade matrix</span></span>
-<span id="cb44-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-3" aria-hidden="true" tabindex="-1"></a>  reorient_rayshade <span class="ot">=</span> <span class="fu">fliplr</span>(<span class="fu">t</span>( rayshade ))</span>
-<span id="cb44-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generate the raster</span></span>
-<span id="cb44-5"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-5" aria-hidden="true" tabindex="-1"></a>  rayshade_raster  <span class="ot">=</span> <span class="fu">raster</span>( reorient_rayshade )</span>
-<span id="cb44-6"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set the extent</span></span>
-<span id="cb44-7"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extent</span>(rayshade_raster) <span class="ot">=</span> <span class="fu">extent</span>(original_raster)</span>
-<span id="cb44-8"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set the CRS</span></span>
-<span id="cb44-9"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crs</span>(rayshade_raster) <span class="ot">=</span> <span class="fu">crs</span>(original_raster)</span>
-<span id="cb44-10"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb44-11"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-11" aria-hidden="true" tabindex="-1"></a>  rayshade_raster</span>
-<span id="cb44-12"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb44-13"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-14"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-14" aria-hidden="true" tabindex="-1"></a>ray_shade_raster <span class="ot">=</span> <span class="fu">rasterify_rayshade</span>(ray_shade_array, elev_img)</span>
-<span id="cb44-15"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb44-15" aria-hidden="true" tabindex="-1"></a>ray_shade_raster</span></code></pre></div>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-1" aria-hidden="true" tabindex="-1"></a>rasterify_rayshade <span class="ot">=</span> <span class="cf">function</span>(rayshade, original_raster){</span>
+<span id="cb241-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Transpose and flip the shade matrix</span></span>
+<span id="cb241-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-3" aria-hidden="true" tabindex="-1"></a>  reorient_rayshade <span class="ot">=</span> <span class="fu">fliplr</span>(<span class="fu">t</span>( rayshade ))</span>
+<span id="cb241-4"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generate the raster</span></span>
+<span id="cb241-5"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-5" aria-hidden="true" tabindex="-1"></a>  rayshade_raster  <span class="ot">=</span> <span class="fu">raster</span>( reorient_rayshade )</span>
+<span id="cb241-6"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set the extent</span></span>
+<span id="cb241-7"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extent</span>(rayshade_raster) <span class="ot">=</span> <span class="fu">extent</span>(original_raster)</span>
+<span id="cb241-8"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set the CRS</span></span>
+<span id="cb241-9"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crs</span>(rayshade_raster) <span class="ot">=</span> <span class="fu">crs</span>(original_raster)</span>
+<span id="cb241-10"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb241-11"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-11" aria-hidden="true" tabindex="-1"></a>  rayshade_raster</span>
+<span id="cb241-12"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb241-13"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb241-14"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-14" aria-hidden="true" tabindex="-1"></a>ray_shade_raster <span class="ot">=</span> <span class="fu">rasterify_rayshade</span>(ray_shade_array, elev_img)</span>
+<span id="cb241-15"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb241-15" aria-hidden="true" tabindex="-1"></a>ray_shade_raster</span></code></pre></div>
 <pre><code>## class      : RasterLayer 
 ## dimensions : 565, 382, 215830  (nrow, ncol, ncell)
 ## resolution : 0.0001488281, 0.0001488281  (x, y)
@@ -616,19 +663,19 @@ If we want to get the shadow layer as a raster, we can do so using the following
 ## names      : layer 
 ## values     : 0, 1  (min, max)</code></pre>
 <p>We can plot the raster using <code>plot_map()</code>:</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_map</span>(ray_shade_raster)</span></code></pre></div>
-<p><img src="images/rayshader-2d-sketch-rayshade-raster-map-1.png" width="672" /></p>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb243-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_map</span>(ray_shade_raster)</span></code></pre></div>
+<p><img src="images/terrain-features-raster-sketch-rayshade-raster-map-1.png" width="672" /></p>
 <p>Or plot the raster naively using a simple base <code>plot()</code>:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ray_shade_raster)</span></code></pre></div>
-<p><img src="images/rayshader-2d-sketch-rayshade-rasterified-1.png" width="672" /></p>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb244-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ray_shade_raster)</span></code></pre></div>
+<p><img src="images/terrain-features-raster-sketch-rayshade-rasterified-1.png" width="672" /></p>
 <p>Or with a grey scale mapping:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ray_shade_raster,</span>
-<span id="cb48-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb48-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">grey.colors</span>(<span class="dv">10</span>, <span class="at">start=</span><span class="dv">0</span>, <span class="at">end=</span><span class="dv">1</span>))</span></code></pre></div>
-<p><img src="images/rayshader-2d-sketch-rayshade-rasterified-bw-1.png" width="672" /></p>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb245-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ray_shade_raster,</span>
+<span id="cb245-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb245-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">grey.colors</span>(<span class="dv">10</span>, <span class="at">start=</span><span class="dv">0</span>, <span class="at">end=</span><span class="dv">1</span>))</span></code></pre></div>
+<p><img src="images/terrain-features-raster-sketch-rayshade-rasterified-bw-1.png" width="672" /></p>
 <p>Let’s save that shadow raster to a file:</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb49-1" aria-hidden="true" tabindex="-1"></a>shadow_tif <span class="ot">=</span> <span class="st">&quot;stage_shadow.tif&quot;</span></span>
-<span id="cb49-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb49-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb49-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(ray_shade_raster, shadow_tif, <span class="at">overwrite=</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb246-1" aria-hidden="true" tabindex="-1"></a>shadow_tif <span class="ot">=</span> <span class="st">&quot;stage_shadow.tif&quot;</span></span>
+<span id="cb246-2"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb246-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb246-3"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#cb246-3" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(ray_shade_raster, shadow_tif, <span class="at">overwrite=</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <p>We could then use this raster as a “shade raster” to identify shade levels at particular time and date in the same way we can use the elevation raster to identify elevation levels.</p>
 
 </div>

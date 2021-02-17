@@ -173,7 +173,7 @@ gg_pr2 = ggplot(df2, aes(x,y)) +
 gg_pr2
 ```
 
-## Rendering a Movie
+## Rendering a Movie {-}
 
 How can we best show off the 3d rendering of the elevated image? One way is to plot the `ggplot()` image as a 3D model using the `rayshader::plot_gg()` function and then render a movie from it using a custom shooting script to drive the camera:
 

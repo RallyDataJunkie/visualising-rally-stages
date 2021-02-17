@@ -1,5 +1,5 @@
-```{r, cache = T, echo = F, message=F}
-# Allow knitr to continue to execute even in the presence of errors
+```{r cache = T, echo = F, message=F}
+# 15Allow knitr to continue to execute even in the presence of errors
 knitr::opts_chunk$set(error = TRUE)
 knitr::opts_chunk$set(fig.path = "images/creating-road-book-")
 knitr::opts_chunk$set(engine.path = list(python = '/usr/local/bin/python3'))

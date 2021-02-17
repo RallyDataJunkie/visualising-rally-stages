@@ -1,5 +1,5 @@
-```{r, cache = T, echo = F, message=F}
-# Allow knitr to continue to execute even in the presence of errors
+```{r cache = T, echo = F, message=F}
+# 14Allow knitr to continue to execute even in the presence of errors
 #knitr::opts_chunk$set(error = TRUE)
 knitr::opts_chunk$set(fig.path = "images/intro-map-projections-")
 ```

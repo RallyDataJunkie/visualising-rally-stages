@@ -1,5 +1,5 @@
 ```{r cache = F, echo = F, message=F}
-# Allow knitr to continue to execute even in the presence of errors
+# 2Allow knitr to continue to execute even in the presence of errors
 knitr::opts_chunk$set(error = TRUE)
 knitr::opts_chunk$set(fig.path = "images/stage-route-import-")
 ```

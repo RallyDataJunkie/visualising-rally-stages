@@ -1,10 +1,10 @@
-```{r, cache = T, echo = F, message=F}
-# Allow knitr to continue to execute even in the presence of errors
+```{r cache = T, echo = F, message=F}
+# 19Allow knitr to continue to execute even in the presence of errors
 knitr::opts_chunk$set(error = TRUE)
-knitr::opts_chunk$set(fig.path = "images/revisiting-elevation-data-")
+knitr::opts_chunk$set(fig.path = "revisiting-elevation-data-")
 ```
 
-# Revisiting Elevation Data
+# Elevation Data Revisited
 
 Having access to elevation data is essential for rendering 3D terrain maps. But we can also plot elevation data along a single dimension: the *distance along route*.
 
