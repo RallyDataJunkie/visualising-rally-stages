@@ -4,4 +4,6 @@
 .Ruserdata
 .DS_Store
 _bookdown_files
-images
+rally-stage-route-book_cache
+rally-stage-route-book_files
+/images/
