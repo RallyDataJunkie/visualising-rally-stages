@@ -12,7 +12,6 @@ To a certain extent, stage route analysis could be considered as a static analys
 
 ```{r}
 library("vembedr")
-
 # Hayden Paddon describes pace notes
 embed_url("https://www.youtube.com/watch?v=9q7EYVJL9XU")
 
@@ -645,6 +644,12 @@ ggplot(data=trj,
   coord_sf() + 
   geom_point(aes(x=X, y=Y), size=1, col='black',
              data=start_location(1))
+```
+
+In terms of categorising turns in a way that's meaningful in a rally context, let's have a recap on what sorts of thing a rally navigator or co-driver is likely to be saying:
+
+```{r}
+embed_url("https://www.youtube.com/watch?v=KFjRj25uclQ%5D")
 ```
 
 The instantaneous angle is okay for trying to identify particularly tight turns, but to identify whether a corner increase the angle in the same step direction, which is to say, whether the corner *tightens*, for example, we need process the data a bit further.

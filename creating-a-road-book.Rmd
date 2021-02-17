@@ -8,7 +8,7 @@ options(rgl.useNULL = TRUE,
 ```
 # Creating A Road Book
 
-A rally road book describes the route to be taken in a rally. Road books describe the route in terms of road sections, lengths of road between road junctions encountered along the route ([example](https://www.therallyco-driver.com/road-book/)). At each junction, the route to be taken is clearly identified.
+A rally road book describes the route to be taken in a rally. Road books describe the route in terms of road sections, lengths of road between road junctions encountered along the route ([example](https://www.therallyco-driver.com/road-book/); see also [Everything you ever wanted to know about: rally notes](https://rallynotes.com/2008/01/everything-you-ever-wanted-to-know-about-rally-notes/)). At each junction, the route to be taken is clearly identified.
 
 One exciting possibility is that we can recover route information from OpenStreetMap and cast it as a graph (network) using the `sfnetworks` package and then identify all the road junctions along a route.
 
@@ -21,6 +21,16 @@ So the question is: *can we find junctions on a route snapped to a road network?
 A secondary question might be: *can we transform a graph layout so that a spatially curved route is depicted as a straight line with junction turns off the route: a) depicted; b) depicted at their angle to the route?*
 
 *Again, I haven't currently found a way to do this.*
+
+It might also be worth considering what we can learn from the [*FIA Rally Safety Guidelines 2020*](https://www.fia.com/sites/default/files/2printable_rally_safety_guidelines_1.pdf) [h/t `WRCStan`] about stage design and selection when evaluating rally stage routes metrics as well as road networks.
+
+## Jemba Inertia Notes System
+
+In a section entitled *Using data to assess the suitability of a special stage*, the *FIA Rally Safety Guidelines 2020* suggest that as well as using historic information, the "Jemba System" for recording terrain data, including "the inclines, the dips, the bends and crests". By also taking the road terrain (for example, gravel or asphalt) into account, and likely car classes, average speeds over the stage as well as highest speed  and heaviest braking areas can also be determined. THe system [can also report](https://jemba.se/inertia.htm) the *margin for critical braking dist before stop* ("how far you may carry on at competitive speed until you have to start braking to be able to stop at the stop control") and the Jemba Safety Index (J/kg), the average kinetic energy of a car going through the corners.
+
+The FIA Safety Guidelines illustrate how speeds might be visualised over a Google Earth map using a three colour scale (purple:over 150kph; red: over 90kph; yellow – 7590kph). The report also suggests that the Jemba system can predict the maximum cornering speed for any particular bend.
+
+A Wikipedia page describing the [*Jemba Inertia Notes System*](https://en.wikipedia.org/wiki/Jemba_Inertia_Notes_System) gives examples of the descriptive and numerical labels that the Jemba system can generate as it converts odemtery and interal accelerometer data into something rather more human understandable. A [visual grading](http://www.jemba.se/GradeUSA.jpg) shows how descriptive labels correspond to turn angle.
 
 ## Load in Base Data 
 
