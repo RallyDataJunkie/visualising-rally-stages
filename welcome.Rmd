@@ -1,0 +1,13 @@
+# In the beginning... {-}
+
+*... was a rally stage route map in the form of a KML file. This was all well and good, but what could you do with it, exactly?*
+
+This book is an exploration of just that: what you can do with a digital file containing the geographical co-ordinates of a rally stage route map and a handful of R packages to help us on our way.
+
+So get strapped in, and we'll be off... There's a lot to take in, with the occasional *don't cut* and *caution* along the way, but there are ruts we can follow and a flying finish to look forward to...
+
+# Acknowledgements {-}
+
+This book would not have been possible without the wide range of packages developed and supported by the R community, not least (but certainly no limited to) those responsible for developing the `raster`, `ggplot2`, `leaflet`, `rayshader`, `rgl` and `htmlwidgets` packages. The `sf`, `sp`  and `regeos `packages provide many of the foundational components I used to reporesent and manipulate spatial data.
+
+I also benefited greatly from package documentation and vignettes, tutorials, blog post and Stack Overflow questions and answers.

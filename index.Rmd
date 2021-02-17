@@ -1,0 +1,14 @@
+---
+title: "Visualising WRC Rally Stages With `rayshader` and R"
+subtitle: "A RallyDataJunkie Adventure"
+author: "Tony Hirst"
+description: "Rally stage maps often appear on rally websites displayed via interactive web maps. The data used to generate the routes is often available as a digital data file of some sort. This book takes one such file and embarks on an adventure into the wilds of geocomputing using the R programming language to see just where such a file may take us. From web maps and elevation maps to interactive 3D displays, let the exploration commence..."
+knit: "bookdown::render_book"
+site: bookdown::bookdown_site
+always_allow_html: yes
+new_session: no
+---
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+knitr::opts_chunk$set(cache = T)
+library(tidyr)
+```

@@ -1,0 +1,18 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Preface {-}
+
+Idly skimming through my news feeds, I was reminded by some stunning mountain views of the `rayshader` R package for creating 3D visualisations of map terrain.
+
+I've been sketching various ways of displaying rally stage results for some time (see the forthcoming *Rally Data Junkie Guide to Visualising Rally Results Data*), but geo data is another beast entirely. I already had a pile of half-started recipes for visualising and stage routes and car telemetry data, so maybe this was the reason I needed to write up those notes and finish them off with a recipe for creating 3D stage maps.
+
+As it turned out, I dumped my original stage route analysis code, which was written in the Python programming language, and moved to the R language. In part, this was because it gave a more direct route to working with `rayshader` (although we can, if we have to, be quite promiscuous in what language we use, because we can, if we want to, run Python code from R). In part, it also allowed me to update my R knowledge from my original learning journey into that language several years ago, previously written up as [*Wrangling F1 Data With R*](https://leanpub.com/wranglingf1datawithr).
+
+Along the way, I started to make a bit more sense of the data structure minefield surrounding geodata representations, although always with a focus of *getting stuff done* and solving practical problems associated with generating particular map views, rather than immersing myself in abstract academic conceptualisations.
+
+So this book is the result of that journey, a journey that started with a single XML downloaded from the WRC website. The XML file contained the stage routes for the 2021 *Rallye Monte Carlo* and the book is record of the next 10 days, a period that started out with the goal of visualising the route on a 3D map generated using `rayshader`, but took in many more views along the way. I didn't get quite as far as making a start on the telemetry data either. That will have to wait for another day, another learning journey, and perhaps another book.
+
+*--tony.hirst, Isle of Wight, February, 2021*

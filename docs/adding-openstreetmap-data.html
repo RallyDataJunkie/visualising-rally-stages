@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>19 Adding OpenStreetMap Data | Visualising WRC Rally Stages With rayshader and R</title>
+  <meta name="description" content="Rally stage maps often appear on rally websites displayed via interactive web maps. The data used to generate the routes is often available as a digital data file of some sort. This book takes one such file and embarks on an adventure into the wilds of geocomputing using the R programming language to see just where such a file may take us. From web maps and elevation maps to interactive 3D displays, let the exploration commence…" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="19 Adding OpenStreetMap Data | Visualising WRC Rally Stages With rayshader and R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Rally stage maps often appear on rally websites displayed via interactive web maps. The data used to generate the routes is often available as a digital data file of some sort. This book takes one such file and embarks on an adventure into the wilds of geocomputing using the R programming language to see just where such a file may take us. From web maps and elevation maps to interactive 3D displays, let the exploration commence…" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="19 Adding OpenStreetMap Data | Visualising WRC Rally Stages With rayshader and R" />
+  
+  <meta name="twitter:description" content="Rally stage maps often appear on rally websites displayed via interactive web maps. The data used to generate the routes is often available as a digital data file of some sort. This book takes one such file and embarks on an adventure into the wilds of geocomputing using the R programming language to see just where such a file may take us. From web maps and elevation maps to interactive 3D displays, let the exploration commence…" />
+  
+
+<meta name="author" content="Tony Hirst" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="revisiting-elevation-data.html"/>
+<link rel="next" href="creating-a-road-book.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="in-the-beginning.html"><a href="in-the-beginning.html"><i class="fa fa-check"></i>In the beginning…</a></li>
+<li class="chapter" data-level="" data-path="acknowledgements.html"><a href="acknowledgements.html"><i class="fa fa-check"></i>Acknowledgements</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#who-this-book-is-for"><i class="fa fa-check"></i><b>1.1</b> Who This Book Is For</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-this-book-isnt"><i class="fa fa-check"></i><b>1.2</b> What This Book Isn’t</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#structure-of-the-book"><i class="fa fa-check"></i><b>1.3</b> Structure of the Book</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#further-reading"><i class="fa fa-check"></i><b>1.4</b> Further Reading</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="getting-started.html"><a href="getting-started.html"><i class="fa fa-check"></i><b>2</b> Getting Started</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="getting-started.html"><a href="getting-started.html#setting-up-a-working-code-execution-environment"><i class="fa fa-check"></i><b>2.1</b> Setting Up a Working Code Execution Environment</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="getting-started.html"><a href="getting-started.html#installing-the-docker-environment"><i class="fa fa-check"></i><b>2.1.1</b> Installing the Docker Environment</a></li>
+<li class="chapter" data-level="2.1.2" data-path="getting-started.html"><a href="getting-started.html#installing-the-required-r-packages-manually"><i class="fa fa-check"></i><b>2.1.2</b> Installing the Required R Packages Manually</a></li>
+<li class="chapter" data-level="2.1.3" data-path="getting-started.html"><a href="getting-started.html#other-installation-dependencies"><i class="fa fa-check"></i><b>2.1.3</b> Other Installation Dependencies</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="getting-started.html"><a href="getting-started.html#using-the-rstudio-environment"><i class="fa fa-check"></i><b>2.2</b> Using the RStudio Environment</a></li>
+<li class="chapter" data-level="2.3" data-path="getting-started.html"><a href="getting-started.html#using-a-jupyter-notebook-environment"><i class="fa fa-check"></i><b>2.3</b> Using a Jupyter Notebook Environment</a></li>
+<li class="chapter" data-level="2.4" data-path="getting-started.html"><a href="getting-started.html#exploring-the-book-as-an-online-interactive-textbook-not-yet"><i class="fa fa-check"></i><b>2.4</b> Exploring the Book as an Online Interactive Textbook (Not Yet!)</a></li>
+<li class="chapter" data-level="2.5" data-path="getting-started.html"><a href="getting-started.html#serving-your-own-map-tiles-and-elevation-raster-images"><i class="fa fa-check"></i><b>2.5</b> Serving Your Own Map Tiles and Elevation Raster Images</a></li>
+<li class="chapter" data-level="2.6" data-path="getting-started.html"><a href="getting-started.html#donate"><i class="fa fa-check"></i><b>2.6</b> Donate</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html"><i class="fa fa-check"></i><b>3</b> Importing the Stage Route Data</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#downloading-the-stage-data-file"><i class="fa fa-check"></i><b>3.1</b> Downloading the Stage Data File</a></li>
+<li class="chapter" data-level="3.2" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#opening-kml-geodata-files"><i class="fa fa-check"></i><b>3.2</b> Opening KML Geodata Files</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#using-rgdal-and-sp-to-open-geodata-files"><i class="fa fa-check"></i><b>3.2.1</b> Using <code>rgdal</code> and <code>sp</code> to Open Geodata Files</a></li>
+<li class="chapter" data-level="3.2.2" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#using-sf-to-open-geodata-files"><i class="fa fa-check"></i><b>3.2.2</b> Using <code>sf</code> to Open Geodata Files</a></li>
+<li class="chapter" data-level="3.2.3" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#accessing-route-data-as-a-geojson-string"><i class="fa fa-check"></i><b>3.2.3</b> Accessing Route Data as a geojson String</a></li>
+<li class="chapter" data-level="3.2.4" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#saving-simple-features-data-to-various-geodata-file-formats"><i class="fa fa-check"></i><b>3.2.4</b> Saving Simple Features Data to Various Geodata File Formats</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#important-geodata-file-formats"><i class="fa fa-check"></i><b>3.3</b> Important Geodata File Formats</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#loading-geojson-data"><i class="fa fa-check"></i><b>3.3.1</b> Loading geojson Data</a></li>
+<li class="chapter" data-level="3.3.2" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#loading-gpx-data"><i class="fa fa-check"></i><b>3.3.2</b> Loading GPX Data</a></li>
+<li class="chapter" data-level="3.3.3" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#loading-flight-data-using-igc-format-gps-files"><i class="fa fa-check"></i><b>3.3.3</b> Loading Flight Data Using IGC format GPS Files</a></li>
+<li class="chapter" data-level="3.3.4" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#reading-data-from-gps-devices"><i class="fa fa-check"></i><b>3.3.4</b> Reading Data from GPS Devices</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="working-with-route-data.html"><a href="working-with-route-data.html"><i class="fa fa-check"></i><b>4</b> Working with Route Data</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="working-with-route-data.html"><a href="working-with-route-data.html#loading-in-the-route-data"><i class="fa fa-check"></i><b>4.1</b> Loading in the Route Data</a></li>
+<li class="chapter" data-level="4.2" data-path="working-with-route-data.html"><a href="working-with-route-data.html#access-a-specific-stage"><i class="fa fa-check"></i><b>4.2</b> Access a specific stage</a></li>
+<li class="chapter" data-level="4.3" data-path="working-with-route-data.html"><a href="working-with-route-data.html#visual-preview-of-route-geodata"><i class="fa fa-check"></i><b>4.3</b> Visual Preview of Route Geodata</a></li>
+<li class="chapter" data-level="4.4" data-path="working-with-route-data.html"><a href="working-with-route-data.html#previews-using-ggplot2"><i class="fa fa-check"></i><b>4.4</b> Previews using <code>ggplot2</code></a></li>
+<li class="chapter" data-level="4.5" data-path="working-with-route-data.html"><a href="working-with-route-data.html#identifying-the-start-and-end-of-the-stage"><i class="fa fa-check"></i><b>4.5</b> Identifying the Start and End of the Stage</a></li>
+<li class="chapter" data-level="4.6" data-path="working-with-route-data.html"><a href="working-with-route-data.html#extracting-route-fragments"><i class="fa fa-check"></i><b>4.6</b> Extracting Route Fragments</a></li>
+<li class="chapter" data-level="4.7" data-path="working-with-route-data.html"><a href="working-with-route-data.html#previews-using-leaflet-interactive-maps"><i class="fa fa-check"></i><b>4.7</b> Previews Using <code>leaflet</code> Interactive Maps</a></li>
+<li class="chapter" data-level="4.8" data-path="working-with-route-data.html"><a href="working-with-route-data.html#creating-buffer-regions-around-features"><i class="fa fa-check"></i><b>4.8</b> Creating Buffer regions around features</a></li>
+<li class="chapter" data-level="4.9" data-path="working-with-route-data.html"><a href="working-with-route-data.html#adding-additional-features-to-leaflet-maps"><i class="fa fa-check"></i><b>4.9</b> Adding Additional Features to <code>leaflet</code> maps</a>
+<ul>
+<li class="chapter" data-level="4.9.1" data-path="working-with-route-data.html"><a href="working-with-route-data.html#add-minimap-navigation"><i class="fa fa-check"></i><b>4.9.1</b> Add “minimap” navigation</a></li>
+<li class="chapter" data-level="4.9.2" data-path="working-with-route-data.html"><a href="working-with-route-data.html#add-custom-symbol-legends"><i class="fa fa-check"></i><b>4.9.2</b> Add Custom Symbol Legends</a></li>
+<li class="chapter" data-level="4.9.3" data-path="working-with-route-data.html"><a href="working-with-route-data.html#adding-mini-charts-to-maps"><i class="fa fa-check"></i><b>4.9.3</b> Adding Mini-Charts to Maps</a></li>
+<li class="chapter" data-level="4.9.4" data-path="working-with-route-data.html"><a href="working-with-route-data.html#adding-html-content-to-popups"><i class="fa fa-check"></i><b>4.9.4</b> Adding HTML content to popups</a></li>
+</ul></li>
+<li class="chapter" data-level="4.10" data-path="working-with-route-data.html"><a href="working-with-route-data.html#using-mapview-to-create-leaflet-maps"><i class="fa fa-check"></i><b>4.10</b> Using <code>mapview</code> To Create <em>leaflet</em> Maps</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html"><i class="fa fa-check"></i><b>5</b> Introducing Map Projections</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#load-in-the-route-data"><i class="fa fa-check"></i><b>5.1</b> Load in the Route Data</a></li>
+<li class="chapter" data-level="5.2" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#previewing-a-map-route"><i class="fa fa-check"></i><b>5.2</b> Previewing a Map Route</a></li>
+<li class="chapter" data-level="5.3" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#plotting-latlong-naively"><i class="fa fa-check"></i><b>5.3</b> Plotting LatLong Naively</a></li>
+<li class="chapter" data-level="5.4" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#using-the-utm-co-ordinate-reference-system"><i class="fa fa-check"></i><b>5.4</b> Using the UTM Co-ordinate Reference System</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#using-st_transform-for-projection-transformations"><i class="fa fa-check"></i><b>5.4.1</b> Using <code>st_transform</code> for Projection Transformations</a></li>
+<li class="chapter" data-level="5.4.2" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#using-ggplot2coord_sf-to-render-projections"><i class="fa fa-check"></i><b>5.4.2</b> Using <code>ggplot2::coord_sf</code> to Render Projections</a></li>
+<li class="chapter" data-level="5.4.3" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#exporting-the-route-data-as-a-dataframe"><i class="fa fa-check"></i><b>5.4.3</b> Exporting the Route Data As a Dataframe</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#alternative-crs-projections"><i class="fa fa-check"></i><b>5.5</b> Alternative CRS Projections</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html"><i class="fa fa-check"></i><b>6</b> Stage Route Annotations</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#load-in-the-route-data-1"><i class="fa fa-check"></i><b>6.1</b> Load in the Route Data</a></li>
+<li class="chapter" data-level="6.2" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#adding-split-point-locations"><i class="fa fa-check"></i><b>6.2</b> Adding Split Point Locations</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#using-geojson-to-find-the-distance-along-a-route"><i class="fa fa-check"></i><b>6.2.1</b> Using geojson to Find the Distance Along a Route</a></li>
+<li class="chapter" data-level="6.2.2" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#using-rgeosginterpolate-to-find-the-distance-along-a-route"><i class="fa fa-check"></i><b>6.2.2</b> Using <code>rgeos::gInterpolate</code> to Find the Distance Along a Route</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#parallel-routes"><i class="fa fa-check"></i><b>6.3</b> Parallel Routes</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html"><i class="fa fa-check"></i><b>7</b> Accessing and Working With Elevation Data Raster Files</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#introducing-digital-elevation-model-dem-raster-images"><i class="fa fa-check"></i><b>7.1</b> Introducing Digital Elevation Model (DEM) Raster Images</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#what-is-raster-data"><i class="fa fa-check"></i><b>7.1.1</b> What Is Raster Data?</a></li>
+<li class="chapter" data-level="7.1.2" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#what-are-digital-elevation-models-dems"><i class="fa fa-check"></i><b>7.1.2</b> What Are Digital Elevation Models (DEMs)?</a></li>
+<li class="chapter" data-level="7.1.3" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#the-r-raster-package"><i class="fa fa-check"></i><b>7.1.3</b> The R <code>raster</code> Package</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#downloading-elevation-data"><i class="fa fa-check"></i><b>7.2</b> Downloading Elevation Data</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#loading-in-some-stage-data"><i class="fa fa-check"></i><b>7.2.1</b> Loading in some stage data</a></li>
+<li class="chapter" data-level="7.2.2" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#obtaining-relief-elevation-raster-data-using-elevatr"><i class="fa fa-check"></i><b>7.2.2</b> Obtaining relief / elevation raster data using <code>elevatr</code></a></li>
+<li class="chapter" data-level="7.2.3" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#plotting-rasters-as-ggplot-objects"><i class="fa fa-check"></i><b>7.2.3</b> Plotting Rasters As <code>ggplot</code> Objects</a></li>
+<li class="chapter" data-level="7.2.4" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#interactive-raster-previews-with-plainview"><i class="fa fa-check"></i><b>7.2.4</b> Interactive Raster Previews with <code>plainview</code></a></li>
+<li class="chapter" data-level="7.2.5" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#saving-the-image-raster-data-to-a-local-file"><i class="fa fa-check"></i><b>7.2.5</b> Saving the Image Raster Data to a Local File</a></li>
+<li class="chapter" data-level="7.2.6" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#from-raster-to-terra"><i class="fa fa-check"></i><b>7.2.6</b> From <code>raster</code> to <code>terra</code></a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#overlaying-raster-images-on-leaflet-maps"><i class="fa fa-check"></i><b>7.3</b> Overlaying Raster Images on Leaflet Maps</a></li>
+<li class="chapter" data-level="7.4" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#retrieving-descriptive-information-about-the-raster"><i class="fa fa-check"></i><b>7.4</b> Retrieving Descriptive Information About the Raster</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#using-mapzen-to-retrieve-dem-raster-data"><i class="fa fa-check"></i><b>7.4.1</b> Using Mapzen to Retrieve DEM raster data</a></li>
+<li class="chapter" data-level="7.4.2" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#additional-elevation-data-downloading-tools"><i class="fa fa-check"></i><b>7.4.2</b> Additional Elevation Data Downloading Tools</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#manipulating-raster-images"><i class="fa fa-check"></i><b>7.5</b> Manipulating Raster Images</a></li>
+<li class="chapter" data-level="7.6" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#ridge-maps"><i class="fa fa-check"></i><b>7.6</b> Ridge maps</a></li>
+<li class="chapter" data-level="7.7" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#further-information"><i class="fa fa-check"></i><b>7.7</b> Further Information</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html"><i class="fa fa-check"></i><b>8</b> Determining Terrain Features from Raster Data</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html#load-in-base-data"><i class="fa fa-check"></i><b>8.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="8.2" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html#rendering-terrain-over-raster-images"><i class="fa fa-check"></i><b>8.2</b> Rendering Terrain Over Raster Images</a></li>
+<li class="chapter" data-level="8.3" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html#adding-contours-to-raster-images"><i class="fa fa-check"></i><b>8.3</b> Adding Contours to <code>raster</code> Images</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html"><i class="fa fa-check"></i><b>9</b> Using <code>rayshader</code> to Render 2D Elevation and Shade Views</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#load-in-base-data-1"><i class="fa fa-check"></i><b>9.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="9.2" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#rendering-imagery-from-the-dem-raster"><i class="fa fa-check"></i><b>9.2</b> Rendering imagery from the DEM raster</a></li>
+<li class="chapter" data-level="9.3" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#roundtripping-rayshader-rasters-and-matrices"><i class="fa fa-check"></i><b>9.3</b> Roundtripping <code>rayshader</code> Rasters and Matrices</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html"><i class="fa fa-check"></i><b>10</b> Overlaying 2D <code>rayshader</code> Maps</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#load-in-base-data-2"><i class="fa fa-check"></i><b>10.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="10.2" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#adding-overlays"><i class="fa fa-check"></i><b>10.2</b> Adding overlays</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#adding-shadows-to-rayshader-maps"><i class="fa fa-check"></i><b>10.2.1</b> Adding Shadows to <code>rayshader</code> Maps</a></li>
+<li class="chapter" data-level="10.2.2" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#adding-water-features"><i class="fa fa-check"></i><b>10.2.2</b> Adding Water Features</a></li>
+<li class="chapter" data-level="10.2.3" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#overlaying-map-tiles"><i class="fa fa-check"></i><b>10.2.3</b> Overlaying Map Tiles</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#adding-a-stage-route-layer"><i class="fa fa-check"></i><b>10.3</b> Adding a Stage Route Layer</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#buffering-the-stage-route-view"><i class="fa fa-check"></i><b>10.3.1</b> Buffering the Stage Route View</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#modeling-increased-water-levels"><i class="fa fa-check"></i><b>10.4</b> Modeling Increased Water Levels</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html"><i class="fa fa-check"></i><b>11</b> Annotating <code>rayshader</code> maps</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#load-in-base-data-3"><i class="fa fa-check"></i><b>11.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="11.2" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#adding-a-title-to-a-map"><i class="fa fa-check"></i><b>11.2</b> Adding a Title to a Map</a></li>
+<li class="chapter" data-level="11.3" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#adding-contours-to-rayshader-stage-maps"><i class="fa fa-check"></i><b>11.3</b> Adding Contours to <code>rayshader</code> Stage Maps</a></li>
+<li class="chapter" data-level="11.4" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#overlaying-image-tiles"><i class="fa fa-check"></i><b>11.4</b> Overlaying Image Tiles</a></li>
+<li class="chapter" data-level="11.5" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#plotting-route-layers-on-rayshader-maps"><i class="fa fa-check"></i><b>11.5</b> Plotting Route Layers on <code>rayshader</code> Maps</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html"><i class="fa fa-check"></i>An Aside - The Penny Red</a>
+<ul>
+<li><a href="an-aside-the-penny-red.html#d-rendering-of-colour-images-using-rayshader">3D Rendering of Colour Images Using <code>rayshader</code></a>
+<ul>
+<li class="chapter" data-level="11.5.1" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html#rendering-the-image-directly-from-ggplot2"><i class="fa fa-check"></i><b>11.5.1</b> Rendering the image directly from <code>ggplot2</code></a></li>
+</ul></li>
+<li class="chapter" data-level="11.6" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html#rendering-a-movie"><i class="fa fa-check"></i><b>11.6</b> Rendering a Movie</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html"><i class="fa fa-check"></i><b>12</b> Introducing 3D <code>rayshader</code> Models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#rendering-the-3d-maps-in-rstudio-and-knitrable-rmd-documents"><i class="fa fa-check"></i><b>12.1</b> Rendering the 3D Maps in <em>RStudio&amp; and <code>knitr</code>able </em>Rmd* Documents</a></li>
+<li class="chapter" data-level="12.2" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#rendering-a-3d-view"><i class="fa fa-check"></i><b>12.2</b> Rendering a 3D View</a></li>
+<li class="chapter" data-level="12.3" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#the-rayshader-3d-model-plinth"><i class="fa fa-check"></i><b>12.3</b> The <code>rayshader</code> 3D Model Plinth</a></li>
+<li class="chapter" data-level="12.4" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#saving-the-widget-as-an-html-file"><i class="fa fa-check"></i><b>12.4</b> Saving the Widget as an HTML File</a></li>
+<li class="chapter" data-level="12.5" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#rendering-the-model-to-an-image-file"><i class="fa fa-check"></i><b>12.5</b> Rendering the Model to an Image File</a></li>
+<li class="chapter" data-level="12.6" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#rendering-high-quality-models"><i class="fa fa-check"></i><b>12.6</b> Rendering High Quality Models</a></li>
+<li class="chapter" data-level="12.7" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#making-a-3d-print-file"><i class="fa fa-check"></i><b>12.7</b> Making a 3D Print File</a></li>
+<li class="chapter" data-level="12.8" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#saving-a-movie-of-a-3d-model"><i class="fa fa-check"></i><b>12.8</b> Saving a Movie of a 3D Model</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html"><i class="fa fa-check"></i><b>13</b> Rendering 3D <code>rayshader</code> Stage Route Maps</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#load-in-base-data-4"><i class="fa fa-check"></i><b>13.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="13.2" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#setting-up-3d-embedded-plots"><i class="fa fa-check"></i><b>13.2</b> Setting Up 3D Embedded Plots</a></li>
+<li class="chapter" data-level="13.3" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#rendering-a-simple-stage-route-model"><i class="fa fa-check"></i><b>13.3</b> Rendering a Simple Stage Route Model</a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#decorating-3d-views-with-map-tile-overlays"><i class="fa fa-check"></i><b>13.3.1</b> Decorating 3D Views With Map Tile Overlays</a></li>
+<li class="chapter" data-level="13.3.2" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#adding-labels-to-3d-rayshader-maps"><i class="fa fa-check"></i><b>13.3.2</b> Adding Labels to 3D <code>rayshader</code> Maps</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="creating-cropped-3d-rayshader-models.html"><a href="creating-cropped-3d-rayshader-models.html"><i class="fa fa-check"></i><b>14</b> Creating Cropped 3d <code>rayshader</code> Models</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="creating-cropped-3d-rayshader-models.html"><a href="creating-cropped-3d-rayshader-models.html#load-in-base-data-5"><i class="fa fa-check"></i><b>14.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="14.2" data-path="creating-cropped-3d-rayshader-models.html"><a href="creating-cropped-3d-rayshader-models.html#cropping-the-rendered-3d-view"><i class="fa fa-check"></i><b>14.2</b> Cropping the Rendered 3D View</a></li>
+<li class="chapter" data-level="14.3" data-path="creating-cropped-3d-rayshader-models.html"><a href="creating-cropped-3d-rayshader-models.html#cropping-3d-models-to-a-buffered-region"><i class="fa fa-check"></i><b>14.3</b> Cropping 3D Models to a Buffered Region</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html"><i class="fa fa-check"></i><b>15</b> Obtaining Shadows for a Particular Date and Time</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#load-in-base-data-6"><i class="fa fa-check"></i><b>15.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="15.2" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#sunlight-times-vocabulary"><i class="fa fa-check"></i><b>15.2</b> Sunlight Times Vocabulary</a></li>
+<li class="chapter" data-level="15.3" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#finding-sunrise-and-sunset-times"><i class="fa fa-check"></i><b>15.3</b> Finding Sunrise and Sunset Times</a></li>
+<li class="chapter" data-level="15.4" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#animating-shade"><i class="fa fa-check"></i><b>15.4</b> Animating Shade</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html"><i class="fa fa-check"></i><b>16</b> Composing <code>rayshader</code> Stills and Movies</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#load-in-base-data-7"><i class="fa fa-check"></i><b>16.1</b> Load in Base Data</a>
+<ul>
+<li class="chapter" data-level="16.1.1" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#adding-complications"><i class="fa fa-check"></i><b>16.1.1</b> Adding Complications…</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#setting-up-the-camera-shots-in-rayshader"><i class="fa fa-check"></i><b>16.2</b> Setting Up the Camera Shots in <code>rayshader</code></a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#depth-of-field"><i class="fa fa-check"></i><b>16.2.1</b> Depth of Field</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#camera-positioning"><i class="fa fa-check"></i><b>16.3</b> Camera Positioning</a>
+<ul>
+<li class="chapter" data-level="16.3.1" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#lighting-effects"><i class="fa fa-check"></i><b>16.3.1</b> Lighting Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#making-3d-video-tracking-shots"><i class="fa fa-check"></i><b>16.4</b> Making 3D Video Tracking Shots</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html"><i class="fa fa-check"></i><b>17</b> Stage Route Analysis</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#load-in-base-data-8"><i class="fa fa-check"></i><b>17.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="17.2" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#generating-stage-route-profiles"><i class="fa fa-check"></i><b>17.2</b> Generating Stage Route Profiles</a>
+<ul>
+<li class="chapter" data-level="17.2.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#an-aside---twists-and-turns-of-rally-stages"><i class="fa fa-check"></i><b>17.2.1</b> An Aside - Twists and Turns of Rally Stages</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#finding-stage-route-lengths"><i class="fa fa-check"></i><b>17.3</b> Finding Stage Route Lengths</a></li>
+<li class="chapter" data-level="17.4" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-ecological-movement-analysis-tools-to-analyse-stage-routes"><i class="fa fa-check"></i><b>17.4</b> Using Ecological Movement Analysis Tools to Analyse Stage Routes</a></li>
+<li class="chapter" data-level="17.5" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-trajr-for-stage-route-profiling"><i class="fa fa-check"></i><b>17.5</b> Using <code>trajr</code> for Stage Route Profiling</a>
+<ul>
+<li class="chapter" data-level="17.5.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#smoothing-a-trajectory"><i class="fa fa-check"></i><b>17.5.1</b> Smoothing a Trajectory</a></li>
+<li class="chapter" data-level="17.5.2" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#resampling-locations"><i class="fa fa-check"></i><b>17.5.2</b> Resampling Locations</a></li>
+<li class="chapter" data-level="17.5.3" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#resampling-against-distance"><i class="fa fa-check"></i><b>17.5.3</b> Resampling Against Distance</a></li>
+<li class="chapter" data-level="17.5.4" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#splitting-a-trajectory"><i class="fa fa-check"></i><b>17.5.4</b> Splitting a Trajectory</a></li>
+<li class="chapter" data-level="17.5.5" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#rotating-the-stage-trajectory"><i class="fa fa-check"></i><b>17.5.5</b> Rotating the Stage Trajectory</a></li>
+<li class="chapter" data-level="17.5.6" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#straightness-and-sinuosity"><i class="fa fa-check"></i><b>17.5.6</b> Straightness and Sinuosity</a></li>
+<li class="chapter" data-level="17.5.7" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#directional-change"><i class="fa fa-check"></i><b>17.5.7</b> Directional Change</a></li>
+<li class="chapter" data-level="17.5.8" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#tracking-turning-angles"><i class="fa fa-check"></i><b>17.5.8</b> Tracking Turning Angles</a></li>
+<li class="chapter" data-level="17.5.9" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#visualising-trajectory-direction-changes"><i class="fa fa-check"></i><b>17.5.9</b> Visualising Trajectory Direction Changes</a></li>
+<li class="chapter" data-level="17.5.10" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-amt-for-stage-route-profiling"><i class="fa fa-check"></i><b>17.5.10</b> Using <code>amt</code> for Stage Route Profiling</a></li>
+<li class="chapter" data-level="17.5.11" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#creating-tracks"><i class="fa fa-check"></i><b>17.5.11</b> Creating Tracks</a></li>
+<li class="chapter" data-level="17.5.12" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#converting-to-other-track-formats"><i class="fa fa-check"></i><b>17.5.12</b> Converting to Other Track Formats</a></li>
+<li class="chapter" data-level="17.5.13" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-amt-for-stage-route-analysis"><i class="fa fa-check"></i><b>17.5.13</b> Using <code>amt</code> for Stage Route Analysis</a></li>
+<li class="chapter" data-level="17.5.14" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-rlft-for-profiling-along-a-stage-route"><i class="fa fa-check"></i><b>17.5.14</b> Using `rLFT`` for Profiling Along a Stage Route</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html"><i class="fa fa-check"></i><b>18</b> Revisiting Elevation Data</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#load-in-base-data-9"><i class="fa fa-check"></i><b>18.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="18.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#generating-elevation-maps"><i class="fa fa-check"></i><b>18.2</b> Generating Elevation Maps</a>
+<ul>
+<li class="chapter" data-level="18.2.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#accessing-elevation-values-along-a-route-from-an-elevation-raster"><i class="fa fa-check"></i><b>18.2.1</b> Accessing Elevation Values Along a Route from an Elevation Raster</a></li>
+<li class="chapter" data-level="18.2.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-geospheredistgeo-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.2</b> Using <code>geosphere::distGeo</code> to Find Distance Along a Route</a></li>
+<li class="chapter" data-level="18.2.3" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-spspdists-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.3</b> Using <code>sp::spDists</code> to Find Distance Along a Route</a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#generating-a-3d-ribbon-plot-of-the-stage-route"><i class="fa fa-check"></i><b>18.3</b> Generating a 3D Ribbon Plot of the Stage Route</a></li>
+<li class="chapter" data-level="18.4" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#identifying-road-type"><i class="fa fa-check"></i><b>18.4</b> Identifying Road Type</a></li>
+<li class="chapter" data-level="18.5" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#displaying-route-twistiness-and-elevation"><i class="fa fa-check"></i><b>18.5</b> Displaying Route Twistiness and Elevation</a>
+<ul>
+<li class="chapter" data-level="18.5.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#making-a-3d-print-file-of-the-model"><i class="fa fa-check"></i><b>18.5.1</b> Making a 3D Print File of the Model</a></li>
+<li class="chapter" data-level="18.5.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#rendering-a-3d-movie-of-the-model"><i class="fa fa-check"></i><b>18.5.2</b> Rendering a 3D movie of the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="18.6" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-the-slopes-package-to-analyse-stage-elevation-data"><i class="fa fa-check"></i><b>18.6</b> Using the <code>slopes</code> Package to Analyse Stage Elevation Data</a></li>
+<li class="chapter" data-level="18.7" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#analysing-route-elevation-from-first-principles"><i class="fa fa-check"></i><b>18.7</b> Analysing Route Elevation from First Principles</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html"><i class="fa fa-check"></i><b>19</b> Adding <em>OpenStreetMap</em> Data</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#load-in-base-data-10"><i class="fa fa-check"></i><b>19.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="19.2" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#adding-detail-and-features-from-openstreetmap"><i class="fa fa-check"></i><b>19.2</b> Adding Detail and Features from OpenStreetMap</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#plotting-osm-highways"><i class="fa fa-check"></i><b>19.2.1</b> Plotting OSM Highways</a></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#viewing-roads-in-the-vicinity-of-a-route"><i class="fa fa-check"></i><b>19.3</b> Viewing Roads in the Vicinity of a Route</a>
+<ul>
+<li class="chapter" data-level="19.3.1" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#using-sfst_buffer-to-create-buffered-areas"><i class="fa fa-check"></i><b>19.3.1</b> Using <code>sf::st_buffer</code> to Create Buffered Areas</a></li>
+<li class="chapter" data-level="19.3.2" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#using-rgeosgbuffer-to-create-buffered-areas"><i class="fa fa-check"></i><b>19.3.2</b> Using <code>rgeos::gBuffer</code> to Create Buffered Areas</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#adding-additional-data-from-osm"><i class="fa fa-check"></i><b>19.4</b> Adding Additional Data From OSM</a>
+<ul>
+<li class="chapter" data-level="19.4.1" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#adding-building-layers-from-openstreetmap"><i class="fa fa-check"></i><b>19.4.1</b> Adding Building Layers from <em>OpenStreetMap</em></a></li>
+<li class="chapter" data-level="19.4.2" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#the-wide-variety-of-osm-features"><i class="fa fa-check"></i><b>19.4.2</b> The Wide Variety of OSM Features</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html"><i class="fa fa-check"></i><b>20</b> Creating A Road Book</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#load-in-base-data-11"><i class="fa fa-check"></i><b>20.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="20.2" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#using-sfnetworks-to-represent-routes-and-road-networks"><i class="fa fa-check"></i><b>20.2</b> Using <code>sfnetworks</code> to Represent Routes and Road Networks</a></li>
+<li class="chapter" data-level="20.3" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#analysing-road-networks-with-sfnetworks"><i class="fa fa-check"></i><b>20.3</b> Analysing Road Networks with <code>sfnetworks</code></a>
+<ul>
+<li class="chapter" data-level="20.3.1" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#creating-an-sfnetworks-graph"><i class="fa fa-check"></i><b>20.3.1</b> Creating an <code>sfnetworks</code> Graph</a></li>
+<li class="chapter" data-level="20.3.2" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#filtering-an-sfnetworks-graph"><i class="fa fa-check"></i><b>20.3.2</b> Filtering an <code>sfnetworks</code> Graph</a></li>
+<li class="chapter" data-level="20.3.3" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#viewing-a-buffered-area-around-a-junction-node"><i class="fa fa-check"></i><b>20.3.3</b> Viewing a Buffered Area Around a Junction Node</a></li>
+<li class="chapter" data-level="20.3.4" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#snapping-a-route-to-a-road-network"><i class="fa fa-check"></i><b>20.3.4</b> Snapping a Route to a Road Network</a></li>
+<li class="chapter" data-level="20.3.5" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#snapping-a-full-stage-route-to-the-road-network"><i class="fa fa-check"></i><b>20.3.5</b> Snapping a Full Stage Route to the Road Network</a></li>
+</ul></li>
+<li class="chapter" data-level="20.4" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#using-dodgr-to-represent-routes-and-road-networks"><i class="fa fa-check"></i><b>20.4</b> Using <code>dodgr</code> to Represent Routes and Road Networks</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="where-next.html"><a href="where-next.html"><i class="fa fa-check"></i><b>21</b> Where Next?</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Visualising WRC Rally Stages With <code>rayshader</code> and R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="adding-openstreetmap-data" class="section level1" number="19">
+<h1><span class="header-section-number">19</span> Adding <em>OpenStreetMap</em> Data</h1>
+<p>As well as providing online interactive maps and acting as a source for open map tiles, <em>OpenStreetMap</em> also makes available a wide range of datasets, including labeled shapefiles for roads as well as buildings.</p>
+<p>The <a href="https://github.com/ropensci/osmdata"><code>ropensci/osmdata</code> <em>R</em> package</a> provides a convenient way of download OpenStreetMap data into an R simple features object.</p>
+<p><em>For downloading large datasets that time out when making <code>osmdata</code> calls, use the <a href="https://github.com/ropensci/osmextract"><code>ropensci/osmextract</code> R package</a>.</em></p>
+<div id="load-in-base-data-10" class="section level2" number="19.1">
+<h2><span class="header-section-number">19.1</span> Load in Base Data</h2>
+<p>As ever, let’s load in our stage data:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="adding-openstreetmap-data.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-2"><a href="adding-openstreetmap-data.html#cb1-2" aria-hidden="true" tabindex="-1"></a>geojson_filename <span class="ot">=</span> <span class="st">&#39;montecarlo_2021.geojson&#39;</span></span>
+<span id="cb1-3"><a href="adding-openstreetmap-data.html#cb1-3" aria-hidden="true" tabindex="-1"></a>geojson_sf <span class="ot">=</span> sf<span class="sc">::</span><span class="fu">st_read</span>(geojson_filename)</span></code></pre></div>
+<pre><code>## Reading layer `montecarlo_2021&#39; from data source `/Users/tonyhirst/Documents/GitHub/visualising-rally-stages/montecarlo_2021.geojson&#39; using driver `GeoJSON&#39;
+## Simple feature collection with 9 features and 2 fields
+## geometry type:  LINESTRING
+## dimension:      XY
+## bbox:           xmin: 5.243488 ymin: 43.87633 xmax: 6.951953 ymax: 44.81973
+## geographic CRS: WGS 84</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="adding-openstreetmap-data.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get stage bounding box</span></span>
+<span id="cb3-2"><a href="adding-openstreetmap-data.html#cb3-2" aria-hidden="true" tabindex="-1"></a>stage_bbox <span class="ot">=</span> <span class="fu">st_bbox</span>(geojson_sf[<span class="dv">1</span>,])</span>
+<span id="cb3-3"><a href="adding-openstreetmap-data.html#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="adding-openstreetmap-data.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Simplify geometry access</span></span>
+<span id="cb3-5"><a href="adding-openstreetmap-data.html#cb3-5" aria-hidden="true" tabindex="-1"></a>stages_kml <span class="ot">=</span> geojson_sf<span class="sc">$</span>geometry</span></code></pre></div>
+<p>And also load in the elevation data raster:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="adding-openstreetmap-data.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raster)</span>
+<span id="cb4-2"><a href="adding-openstreetmap-data.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rayshader)</span>
+<span id="cb4-3"><a href="adding-openstreetmap-data.html#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="adding-openstreetmap-data.html#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Previously downloaded TIF digital elevation model (DEM) file</span></span>
+<span id="cb4-5"><a href="adding-openstreetmap-data.html#cb4-5" aria-hidden="true" tabindex="-1"></a>stage_tif <span class="ot">=</span> <span class="st">&quot;stage_elevation.tif&quot;</span></span>
+<span id="cb4-6"><a href="adding-openstreetmap-data.html#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="adding-openstreetmap-data.html#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load in the previously saved image raster</span></span>
+<span id="cb4-8"><a href="adding-openstreetmap-data.html#cb4-8" aria-hidden="true" tabindex="-1"></a>elev_img <span class="ot">=</span> <span class="fu">raster</span>(stage_tif)</span>
+<span id="cb4-9"><a href="adding-openstreetmap-data.html#cb4-9" aria-hidden="true" tabindex="-1"></a>auto_zscale <span class="ot">=</span> geoviz<span class="sc">::</span><span class="fu">raster_zscale</span>(elev_img)</span>
+<span id="cb4-10"><a href="adding-openstreetmap-data.html#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="adding-openstreetmap-data.html#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Note we can pass in a file name or a raster object</span></span>
+<span id="cb4-12"><a href="adding-openstreetmap-data.html#cb4-12" aria-hidden="true" tabindex="-1"></a>elmat <span class="ot">=</span> <span class="fu">raster_to_matrix</span>(stage_tif)</span></code></pre></div>
+<pre><code>## [1] &quot;Dimensions of matrix are: 382x565.&quot;</code></pre>
+<p>Create a base <code>rayshader</code> 2D map:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="adding-openstreetmap-data.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add water</span></span>
+<span id="cb6-2"><a href="adding-openstreetmap-data.html#cb6-2" aria-hidden="true" tabindex="-1"></a>watermap <span class="ot">&lt;-</span> <span class="fu">detect_water</span>(elmat, <span class="at">progbar =</span> <span class="cn">FALSE</span>, <span class="at">zscale =</span> <span class="dv">8</span>)</span>
+<span id="cb6-3"><a href="adding-openstreetmap-data.html#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="adding-openstreetmap-data.html#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add shadows</span></span>
+<span id="cb6-5"><a href="adding-openstreetmap-data.html#cb6-5" aria-hidden="true" tabindex="-1"></a>shadow_layer <span class="ot">=</span> <span class="fu">height_shade</span>(elmat) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-6"><a href="adding-openstreetmap-data.html#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(<span class="fu">sphere_shade</span>(elmat, <span class="at">texture =</span> <span class="st">&quot;desert&quot;</span>, </span>
+<span id="cb6-7"><a href="adding-openstreetmap-data.html#cb6-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">zscale=</span>auto_zscale, <span class="at">colorintensity =</span> <span class="dv">5</span>), <span class="at">alphalayer=</span><span class="fl">0.5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="adding-openstreetmap-data.html#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_shadow</span>(<span class="fu">lamb_shade</span>(elmat,<span class="at">zscale =</span> auto_zscale),<span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="adding-openstreetmap-data.html#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_shadow</span>(<span class="fu">texture_shade</span>(elmat,<span class="at">detail=</span><span class="dv">8</span><span class="sc">/</span><span class="dv">10</span>,<span class="at">contrast=</span><span class="dv">9</span>,<span class="at">brightness =</span> <span class="dv">11</span>), <span class="fl">0.1</span>)</span></code></pre></div>
+<pre><code>## 
+Calculating Surface Normal [-----------------------------------------] ETA:  0s
+Calculating Surface Normal [=========================================] ETA:  0s
+                                                                               </code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="adding-openstreetmap-data.html#cb8-1" aria-hidden="true" tabindex="-1"></a>demo_map <span class="ot">=</span> elmat <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="adding-openstreetmap-data.html#cb8-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(shadow_layer)  <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="adding-openstreetmap-data.html#cb8-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_water</span>(watermap, <span class="at">color =</span> <span class="st">&quot;desert&quot;</span>)</span></code></pre></div>
+</div>
+<div id="adding-detail-and-features-from-openstreetmap" class="section level2" number="19.2">
+<h2><span class="header-section-number">19.2</span> Adding Detail and Features from OpenStreetMap</h2>
+<p>We can download data from the <em>OpenStreetMap</em> <a href="https://wiki.openstreetmap.org/wiki/Overpass_API">Overpass API</a> using another of the <code>rspatial</code> Github organisation packages: the <code>osmdata</code> package [<a href="https://docs.ropensci.org/osmdata/">docs</a>].</p>
+<p>Requests can be made using the <code>osmdata::opq()</code> (“Overpass query”) function for tiles covering an area specified by a bottom-left/top-right bounding box with coordinates specified in latitude/longitude degrees.</p>
+<p>Requests take the form:</p>
+<ul>
+<li><code>opq(BOUNDING_BOX) + add_osm_feature(REQUESTED_DATA) + osmdata_sf()</code> to return data as a simple features (<code>sf</code>) object;</li>
+<li><code>opq(BOUNDING_BOX) + add_osm_feature(REQUESTED_DATA) + osmdata_sp()</code> to return data in as a <code>spatial features</code>Spatial<code>(</code>sp`) object.</li>
+</ul>
+<p>We <em>could</em> manually obtain the bounding box co-ordinates by applying the <code>raster::extent()</code> function to a bounding box <code>bbox</code> object obtained from a spatial object using <code>sf::st_bbox()</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="adding-openstreetmap-data.html#cb9-1" aria-hidden="true" tabindex="-1"></a>stage_extent <span class="ot">=</span> <span class="fu">extent</span>(stage_bbox)</span>
+<span id="cb9-2"><a href="adding-openstreetmap-data.html#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="adding-openstreetmap-data.html#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#long_min, lat_min, long_max, lat_max</span></span>
+<span id="cb9-4"><a href="adding-openstreetmap-data.html#cb9-4" aria-hidden="true" tabindex="-1"></a>osm_stage_bbox <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">attr</span>(stage_extent, <span class="st">&#39;xmin&#39;</span>), <span class="fu">attr</span>(stage_extent, <span class="st">&#39;ymin&#39;</span>),</span>
+<span id="cb9-5"><a href="adding-openstreetmap-data.html#cb9-5" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">attr</span>(stage_extent, <span class="st">&#39;xmax&#39;</span>), <span class="fu">attr</span>(stage_extent, <span class="st">&#39;ymax&#39;</span>))</span></code></pre></div>
+<p>To pass the bounding box coordinates into the <code>opq()</code> function explicitly, they should be presented in the order: <code>min_long, min_lat, max_long, max_lat</code>. However, it’s far more convenient to just pass a <code>bbox</code> object to the <code>opq()</code> function directly: <code>opq(stage_bbox)</code>.</p>
+<p>As for the data we want to retrieve from the Overpass API, let’s grab the “highway” data, which returns routes for a wide range roads and paths in the specified area:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="adding-openstreetmap-data.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(osmdata)</span>
+<span id="cb10-2"><a href="adding-openstreetmap-data.html#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="adding-openstreetmap-data.html#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Recall that: stage_bbox = sf::st_bbox(geojson_sf[1,])</span></span>
+<span id="cb10-4"><a href="adding-openstreetmap-data.html#cb10-4" aria-hidden="true" tabindex="-1"></a>stage_osm  <span class="ot">=</span> <span class="fu">opq</span>(stage_bbox) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-5"><a href="adding-openstreetmap-data.html#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;highway&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-6"><a href="adding-openstreetmap-data.html#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>()</span>
+<span id="cb10-7"><a href="adding-openstreetmap-data.html#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="adding-openstreetmap-data.html#cb10-8" aria-hidden="true" tabindex="-1"></a>stage_osm</span></code></pre></div>
+<pre><code>## Object of class &#39;osmdata&#39; with:
+##                  $bbox : 44.735616,5.883753,44.819732,5.940715
+##         $overpass_call : The call submitted to the overpass API
+##                  $meta : metadata including timestamp and version numbers
+##            $osm_points : &#39;sf&#39; Simple Features Collection with 7995 points
+##             $osm_lines : &#39;sf&#39; Simple Features Collection with 346 linestrings
+##          $osm_polygons : &#39;sf&#39; Simple Features Collection with 0 polygons
+##        $osm_multilines : NULL
+##     $osm_multipolygons : NULL</code></pre>
+<p>The routes themselves can be indexed via the <code>$osm_lines</code> dataframe in the returned object.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="adding-openstreetmap-data.html#cb12-1" aria-hidden="true" tabindex="-1"></a>stage_lines <span class="ot">=</span> stage_osm<span class="sc">$</span>osm_lines</span>
+<span id="cb12-2"><a href="adding-openstreetmap-data.html#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="adding-openstreetmap-data.html#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(stage_lines)</span></code></pre></div>
+<pre><code>## [1] &quot;sf&quot;         &quot;data.frame&quot;</code></pre>
+<p>Let’s review the data frame column names:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="adding-openstreetmap-data.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(stage_lines)</span></code></pre></div>
+<pre><code>##  [1] &quot;osm_id&quot;            &quot;name&quot;              &quot;access&quot;           
+##  [4] &quot;bicycle&quot;           &quot;bridge&quot;            &quot;covered&quot;          
+##  [7] &quot;fixme&quot;             &quot;foot&quot;              &quot;highway&quot;          
+## [10] &quot;incline&quot;           &quot;lanes&quot;             &quot;layer&quot;            
+## [13] &quot;maxlength&quot;         &quot;maxspeed&quot;          &quot;motor_vehicle&quot;    
+## [16] &quot;oneway&quot;            &quot;ref&quot;               &quot;sac_scale&quot;        
+## [19] &quot;service&quot;           &quot;smoothness&quot;        &quot;source&quot;           
+## [22] &quot;surface&quot;           &quot;tracktype&quot;         &quot;trail_visibility&quot; 
+## [25] &quot;tunnel&quot;            &quot;via_ferrata_scale&quot; &quot;width&quot;            
+## [28] &quot;geometry&quot;</code></pre>
+<p>The line data is contained in the <em>geometry</em> and the <em>highway</em> describes the road type. Let’s see what sorts of road data we have retrieved by listing the unique items contained in the <em>highway</em> column:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="adding-openstreetmap-data.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(stage_lines<span class="sc">$</span>highway)</span></code></pre></div>
+<pre><code>##  [1] &quot;unclassified&quot; &quot;tertiary&quot;     &quot;secondary&quot;    &quot;track&quot;        &quot;path&quot;        
+##  [6] &quot;residential&quot;  &quot;service&quot;      &quot;footway&quot;      &quot;steps&quot;        &quot;via_ferrata&quot;</code></pre>
+<p>From the column names, we also notice several other columns that look as if they might be able to provide us with information that might help us classify what the actual stage route is like: <em>smoothness</em>, <em>surface</em>, <em>width</em>, <em>maxspeed</em>, <em>incline</em>. On inspection, the data suggests a lot of empty fields: the most useful fields are probably just the ‘highway’ and perhaps the ‘surface’ columns:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="adding-openstreetmap-data.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cast the simple features object to a dataframe, select the</span></span>
+<span id="cb18-2"><a href="adding-openstreetmap-data.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># columns of interest and then use a list apply to apply the unique </span></span>
+<span id="cb18-3"><a href="adding-openstreetmap-data.html#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># function to each of the selected columns</span></span>
+<span id="cb18-4"><a href="adding-openstreetmap-data.html#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(<span class="fu">as.data.frame</span>(stage_lines)[<span class="fu">c</span>(<span class="st">&#39;highway&#39;</span>, <span class="st">&#39;surface&#39;</span>)], unique)</span></code></pre></div>
+<pre><code>## $highway
+##  [1] &quot;unclassified&quot; &quot;tertiary&quot;     &quot;secondary&quot;    &quot;track&quot;        &quot;path&quot;        
+##  [6] &quot;residential&quot;  &quot;service&quot;      &quot;footway&quot;      &quot;steps&quot;        &quot;via_ferrata&quot; 
+## 
+## $surface
+## [1] NA        &quot;ground&quot;  &quot;asphalt&quot; &quot;wood&quot;</code></pre>
+<div id="plotting-osm-highways" class="section level3" number="19.2.1">
+<h3><span class="header-section-number">19.2.1</span> Plotting OSM Highways</h3>
+<p>To get an idea of the extent of the “highways” in the bounding box area, we can plot the spatially represented lines using an appropriate projection. The lines might informatively be colored by <em>surface</em> type, or as in the following case, <em>highway</em> type:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="adding-openstreetmap-data.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb20-2"><a href="adding-openstreetmap-data.html#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="adding-openstreetmap-data.html#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stage_lines, <span class="fu">aes</span>(<span class="at">color=</span>highway)) <span class="sc">+</span> </span>
+<span id="cb20-4"><a href="adding-openstreetmap-data.html#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span></span>
+<span id="cb20-5"><a href="adding-openstreetmap-data.html#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb20-6"><a href="adding-openstreetmap-data.html#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map `highway attribute in stage extent&quot;</span>)</span></code></pre></div>
+<p><img src="images/adding-osm-data-gg-highways-1.png" width="672" /></p>
+<p>We can remove paths, footways and other pedestrian routes and narrow down the display to road types that would appear to offer vehicular access:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="adding-openstreetmap-data.html#cb21-1" aria-hidden="true" tabindex="-1"></a>stage_roads <span class="ot">=</span> stage_lines[stage_lines<span class="sc">$</span>highway <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;unclassified&quot;</span>, <span class="st">&quot;secondary&quot;</span>, <span class="st">&quot;tertiary&quot;</span>, <span class="st">&quot;residential&quot;</span>, <span class="st">&quot;service&quot;</span>), ] </span>
+<span id="cb21-2"><a href="adding-openstreetmap-data.html#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="adding-openstreetmap-data.html#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative way of filtering road types using a pipe operator</span></span>
+<span id="cb21-4"><a href="adding-openstreetmap-data.html#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">#stage_roads = stage_lines %&gt;% </span></span>
+<span id="cb21-5"><a href="adding-openstreetmap-data.html#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  filter(highway %in% c(&quot;unclassified&quot;, &quot;secondary&quot;, &quot;tertiary&quot;, &quot;residential&quot;, &quot;service&quot;))</span></span>
+<span id="cb21-6"><a href="adding-openstreetmap-data.html#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="adding-openstreetmap-data.html#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stage_roads, <span class="fu">aes</span>(<span class="at">color=</span>highway)) <span class="sc">+</span> </span>
+<span id="cb21-8"><a href="adding-openstreetmap-data.html#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span></span>
+<span id="cb21-9"><a href="adding-openstreetmap-data.html#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb21-10"><a href="adding-openstreetmap-data.html#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map `roads`&quot;</span>)</span></code></pre></div>
+<p><img src="images/adding-osm-data-gg-roads-1.png" width="672" /></p>
+</div>
+</div>
+<div id="viewing-roads-in-the-vicinity-of-a-route" class="section level2" number="19.3">
+<h2><span class="header-section-number">19.3</span> Viewing Roads in the Vicinity of a Route</h2>
+<p>There is certainly plenty of highways information returned from the Overpass query, but what if we just want to view roads close to our route?</p>
+<p>To do this, we can create a buffered region around the route and then find the intersection of the that region and the highways lines.</p>
+<p>The <code>sf::st_buffer()</code> will create a buffered area around a simple features object to a specified distance in the units of the projection.</p>
+<p>Suppose that we want to create a buffered region 200m wide around our stage route. We can define that distance, along with its units, using the `units::set_units() function:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="adding-openstreetmap-data.html#cb22-1" aria-hidden="true" tabindex="-1"></a>buffer_margin_200m <span class="ot">=</span> units<span class="sc">::</span><span class="fu">set_units</span>(<span class="dv">200</span>, m)</span>
+<span id="cb22-2"><a href="adding-openstreetmap-data.html#cb22-2" aria-hidden="true" tabindex="-1"></a>buffer_margin_200m</span></code></pre></div>
+<pre><code>## 200 [m]</code></pre>
+<p>To create the buffered region (a polygon) around the stage route (a line), we need to project the latlong values, whose unit of distance is measured in <em>degrees</em> to a rectangular projection with a distance unit of <em>meters</em>.</p>
+<p>The coordinates used in the route data are WGS84 latitude and longitude degrees. As we have done previously, we can convert the CRS to one based on units of meters, such as the UTM projection.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="adding-openstreetmap-data.html#cb24-1" aria-hidden="true" tabindex="-1"></a>lonlat2UTM_hemisphere <span class="ot">&lt;-</span> <span class="cf">function</span>(lonlat) {</span>
+<span id="cb24-2"><a href="adding-openstreetmap-data.html#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(lonlat[<span class="dv">1</span>] <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">&quot;north&quot;</span>, <span class="st">&quot;south&quot;</span>)</span>
+<span id="cb24-3"><a href="adding-openstreetmap-data.html#cb24-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb24-4"><a href="adding-openstreetmap-data.html#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="adding-openstreetmap-data.html#cb24-5" aria-hidden="true" tabindex="-1"></a>lonlat2UTMzone <span class="ot">=</span> <span class="cf">function</span>(lonlat) {</span>
+<span id="cb24-6"><a href="adding-openstreetmap-data.html#cb24-6" aria-hidden="true" tabindex="-1"></a>  utm <span class="ot">=</span> (<span class="fu">floor</span>((lonlat[<span class="dv">1</span>] <span class="sc">+</span> <span class="dv">180</span>) <span class="sc">/</span> <span class="dv">6</span>) <span class="sc">%%</span> <span class="dv">60</span>) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb24-7"><a href="adding-openstreetmap-data.html#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(lonlat[<span class="dv">2</span>] <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb24-8"><a href="adding-openstreetmap-data.html#cb24-8" aria-hidden="true" tabindex="-1"></a>    utm <span class="sc">+</span> <span class="dv">32600</span></span>
+<span id="cb24-9"><a href="adding-openstreetmap-data.html#cb24-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb24-10"><a href="adding-openstreetmap-data.html#cb24-10" aria-hidden="true" tabindex="-1"></a>    utm <span class="sc">+</span> <span class="dv">32700</span></span>
+<span id="cb24-11"><a href="adding-openstreetmap-data.html#cb24-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb24-12"><a href="adding-openstreetmap-data.html#cb24-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb24-13"><a href="adding-openstreetmap-data.html#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="adding-openstreetmap-data.html#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Grab a copy of the original projection</span></span>
+<span id="cb24-15"><a href="adding-openstreetmap-data.html#cb24-15" aria-hidden="true" tabindex="-1"></a>original_crs <span class="ot">=</span> <span class="fu">st_crs</span>(geojson_sf[<span class="dv">1</span>,])</span>
+<span id="cb24-16"><a href="adding-openstreetmap-data.html#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="adding-openstreetmap-data.html#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the UTM zone for a sample a point on the route</span></span>
+<span id="cb24-18"><a href="adding-openstreetmap-data.html#cb24-18" aria-hidden="true" tabindex="-1"></a>crs_zone <span class="ot">=</span> <span class="fu">lonlat2UTMzone</span>(<span class="fu">c</span>(<span class="fu">st_coordinates</span>(geojson_sf[<span class="dv">1</span>,])[<span class="dv">1</span>,<span class="dv">1</span>],</span>
+<span id="cb24-19"><a href="adding-openstreetmap-data.html#cb24-19" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">st_coordinates</span>(geojson_sf[<span class="dv">1</span>,])[<span class="dv">1</span>,<span class="dv">2</span>]))</span>
+<span id="cb24-20"><a href="adding-openstreetmap-data.html#cb24-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-21"><a href="adding-openstreetmap-data.html#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the projection string</span></span>
+<span id="cb24-22"><a href="adding-openstreetmap-data.html#cb24-22" aria-hidden="true" tabindex="-1"></a>utm_pro4_string <span class="ot">=</span> <span class="fu">st_crs</span>(crs_zone)<span class="sc">$</span>proj4string</span>
+<span id="cb24-23"><a href="adding-openstreetmap-data.html#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&quot;+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs&quot;</span></span>
+<span id="cb24-24"><a href="adding-openstreetmap-data.html#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co"># units in meters e.g. https://epsg.io/32632</span></span>
+<span id="cb24-25"><a href="adding-openstreetmap-data.html#cb24-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-26"><a href="adding-openstreetmap-data.html#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Transform the route projection</span></span>
+<span id="cb24-27"><a href="adding-openstreetmap-data.html#cb24-27" aria-hidden="true" tabindex="-1"></a>utm_route <span class="ot">=</span> <span class="fu">st_transform</span>(geojson_sf[<span class="dv">1</span>,], <span class="at">crs =</span> <span class="fu">st_crs</span>(utm_pro4_string))</span></code></pre></div>
+<div id="using-sfst_buffer-to-create-buffered-areas" class="section level3" number="19.3.1">
+<h3><span class="header-section-number">19.3.1</span> Using <code>sf::st_buffer</code> to Create Buffered Areas</h3>
+<p>We can now create the buffered area around the route using the <code>sf::st_buffer</code> function:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="adding-openstreetmap-data.html#cb25-1" aria-hidden="true" tabindex="-1"></a>buffered_route_utm <span class="ot">&lt;-</span> <span class="fu">st_buffer</span>(utm_route, buffer_margin_200m)</span>
+<span id="cb25-2"><a href="adding-openstreetmap-data.html#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="adding-openstreetmap-data.html#cb25-3" aria-hidden="true" tabindex="-1"></a>buffered_route <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(buffered_route_utm, original_crs)</span>
+<span id="cb25-4"><a href="adding-openstreetmap-data.html#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="adding-openstreetmap-data.html#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(buffered_route) <span class="sc">+</span> </span>
+<span id="cb25-6"><a href="adding-openstreetmap-data.html#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>()                </span></code></pre></div>
+<p><img src="images/adding-osm-data-unnamed-chunk-13-1.png" width="672" /></p>
+<p>Let’s also save that as a shapefile:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="adding-openstreetmap-data.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># st_write will try to automatically determine the file driver</span></span>
+<span id="cb26-2"><a href="adding-openstreetmap-data.html#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># from the filename suffix</span></span>
+<span id="cb26-3"><a href="adding-openstreetmap-data.html#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(buffered_route, <span class="st">&quot;buffered_route.shp&quot;</span>)</span></code></pre></div>
+<pre><code>## Writing layer `buffered_route&#39; to data source `buffered_route.shp&#39; using driver `ESRI Shapefile&#39;
+## Writing 1 features with 2 fields and geometry type Polygon.</code></pre>
+<p>We can view the roads that appear within the buffered area around a stage route by finding the intersection of the road lines and the buffered area:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="adding-openstreetmap-data.html#cb28-1" aria-hidden="true" tabindex="-1"></a>roads_by_stage <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(stage_roads, buffered_route)</span></code></pre></div>
+<pre><code>## although coordinates are longitude/latitude, st_intersection assumes that they are planar</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="adding-openstreetmap-data.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb30-2"><a href="adding-openstreetmap-data.html#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>buffered_route) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="adding-openstreetmap-data.html#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>roads_by_stage, <span class="at">color=</span><span class="st">&#39;red&#39;</span>) </span></code></pre></div>
+<p><img src="images/adding-osm-data-gg-stage-buffer-route-1.png" width="672" />
+Note that we actually get a warning: <em>although coordinates are longitude/latitude, st_intersection assumes that they are planar</em>. So we really should have projected the roads into UTM and done the intersection using that CRS:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="adding-openstreetmap-data.html#cb31-1" aria-hidden="true" tabindex="-1"></a>stage_roads_utm <span class="ot">=</span> <span class="fu">st_transform</span>(stage_roads,</span>
+<span id="cb31-2"><a href="adding-openstreetmap-data.html#cb31-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">crs =</span> <span class="fu">st_crs</span>(utm_pro4_string))</span>
+<span id="cb31-3"><a href="adding-openstreetmap-data.html#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="adding-openstreetmap-data.html#cb31-4" aria-hidden="true" tabindex="-1"></a>roads_by_stage_utm <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(stage_roads_utm, buffered_route_utm)</span>
+<span id="cb31-5"><a href="adding-openstreetmap-data.html#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co">#although coordinates are longitude/latitude, st_intersection assumes that they are planar, so we really should project into something else</span></span>
+<span id="cb31-6"><a href="adding-openstreetmap-data.html#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="adding-openstreetmap-data.html#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb31-8"><a href="adding-openstreetmap-data.html#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>buffered_route_utm) <span class="sc">+</span></span>
+<span id="cb31-9"><a href="adding-openstreetmap-data.html#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>roads_by_stage_utm, <span class="at">color=</span><span class="st">&#39;red&#39;</span>) </span></code></pre></div>
+<p><img src="images/adding-osm-data-gg-stage-buffer-route2-1.png" width="672" /></p>
+</div>
+<div id="using-rgeosgbuffer-to-create-buffered-areas" class="section level3" number="19.3.2">
+<h3><span class="header-section-number">19.3.2</span> Using <code>rgeos::gBuffer</code> to Create Buffered Areas</h3>
+<p>Alternatively, we can create a buffered area using the <code>rgeos::gBuffer()</code> function, this time applied to a projected <em>Spatial</em> object with units of meters.</p>
+<p>For example, we can buffer our stage roads in their UTM (units of meters) projection:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="adding-openstreetmap-data.html#cb32-1" aria-hidden="true" tabindex="-1"></a>buffered_roads <span class="ot">=</span> rgeos<span class="sc">::</span><span class="fu">gBuffer</span>(<span class="fu">as</span>(stage_roads_utm, <span class="st">&#39;Spatial&#39;</span>),</span>
+<span id="cb32-2"><a href="adding-openstreetmap-data.html#cb32-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">width=</span><span class="dv">200</span>)</span>
+<span id="cb32-3"><a href="adding-openstreetmap-data.html#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="adding-openstreetmap-data.html#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot expects a simple features, rather than Spatial, object</span></span>
+<span id="cb32-5"><a href="adding-openstreetmap-data.html#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">st_as_sf</span>(buffered_roads)) <span class="sc">+</span> </span>
+<span id="cb32-6"><a href="adding-openstreetmap-data.html#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span></span>
+<span id="cb32-7"><a href="adding-openstreetmap-data.html#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Tweak the presentation angle of the x-tick labels</span></span>
+<span id="cb32-8"><a href="adding-openstreetmap-data.html#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
+<p><img src="images/adding-osm-data-gg-roads-buffer-1.png" width="672" /></p>
+</div>
+</div>
+<div id="adding-additional-data-from-osm" class="section level2" number="19.4">
+<h2><span class="header-section-number">19.4</span> Adding Additional Data From OSM</h2>
+<p>As well as highways data, <em>OpenStreetMap</em> also provides data on a wide range of other features.</p>
+<p>For example, we can identify <em>waterways</em>:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="adding-openstreetmap-data.html#cb33-1" aria-hidden="true" tabindex="-1"></a>stage_water_lines <span class="ot">=</span> <span class="fu">opq</span>(osm_stage_bbox) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="adding-openstreetmap-data.html#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;waterway&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-3"><a href="adding-openstreetmap-data.html#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>() </span>
+<span id="cb33-4"><a href="adding-openstreetmap-data.html#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="adding-openstreetmap-data.html#cb33-5" aria-hidden="true" tabindex="-1"></a>stage_waterways <span class="ot">=</span> stage_water_lines<span class="sc">$</span>osm_lines</span></code></pre></div>
+<p>Let’s preview those to see how they extends in our bounded box area:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="adding-openstreetmap-data.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stage_waterways) <span class="sc">+</span> </span>
+<span id="cb34-2"><a href="adding-openstreetmap-data.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">color=</span><span class="st">&#39;blue&#39;</span>) <span class="sc">+</span></span>
+<span id="cb34-3"><a href="adding-openstreetmap-data.html#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>stages_kml[<span class="dv">1</span>], <span class="at">color=</span><span class="st">&#39;red&#39;</span>) <span class="sc">+</span></span>
+<span id="cb34-4"><a href="adding-openstreetmap-data.html#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb34-5"><a href="adding-openstreetmap-data.html#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map `waterways`&quot;</span>)</span></code></pre></div>
+<p><img src="images/adding-osm-data-gg-waterways-1.png" width="672" />
+<em>One thing to note about this plot is that data has been returned for an area that exceeds the extent of our request.</em></p>
+<p>We can create a <code>rayshader</code> layer for the waterways that we can then add as another overlay to a rendered map:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="adding-openstreetmap-data.html#cb35-1" aria-hidden="true" tabindex="-1"></a>waterways_layer <span class="ot">=</span> <span class="fu">generate_line_overlay</span>(stage_waterways,</span>
+<span id="cb35-2"><a href="adding-openstreetmap-data.html#cb35-2" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">extent =</span> stage_extent,</span>
+<span id="cb35-3"><a href="adding-openstreetmap-data.html#cb35-3" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">heightmap =</span> elmat,</span>
+<span id="cb35-4"><a href="adding-openstreetmap-data.html#cb35-4" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">color=</span><span class="st">&quot;skyblue2&quot;</span>,</span>
+<span id="cb35-5"><a href="adding-openstreetmap-data.html#cb35-5" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">linewidth =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p>Let’s also create a new route layer, this time in red:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="adding-openstreetmap-data.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a route layer in red</span></span>
+<span id="cb36-2"><a href="adding-openstreetmap-data.html#cb36-2" aria-hidden="true" tabindex="-1"></a>red_route <span class="ot">=</span> <span class="fu">generate_line_overlay</span>(geojson_sf[<span class="dv">1</span>,],</span>
+<span id="cb36-3"><a href="adding-openstreetmap-data.html#cb36-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">extent =</span> stage_extent,</span>
+<span id="cb36-4"><a href="adding-openstreetmap-data.html#cb36-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">heightmap =</span> elmat,</span>
+<span id="cb36-5"><a href="adding-openstreetmap-data.html#cb36-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">linewidth =</span> <span class="dv">5</span>, <span class="at">color=</span><span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p>Create a roads layer:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="adding-openstreetmap-data.html#cb37-1" aria-hidden="true" tabindex="-1"></a>roads_layer <span class="ot">=</span> <span class="fu">generate_line_overlay</span>(stage_roads, <span class="at">extent =</span> stage_extent,</span>
+<span id="cb37-2"><a href="adding-openstreetmap-data.html#cb37-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">color=</span><span class="st">&quot;yellow&quot;</span>,</span>
+<span id="cb37-3"><a href="adding-openstreetmap-data.html#cb37-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">heightmap =</span> elmat)</span></code></pre></div>
+<p>Adding the waterway layer to the map potentially allows us to read additional detail into it. For example, a waterway under a highway presumable means a bridge (or a ford), and may also mean “narrows” or “care”…</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="adding-openstreetmap-data.html#cb38-1" aria-hidden="true" tabindex="-1"></a>demo_map <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="adding-openstreetmap-data.html#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(waterways_layer)  <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="adding-openstreetmap-data.html#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(roads_layer)  <span class="sc">%&gt;%</span></span>
+<span id="cb38-4"><a href="adding-openstreetmap-data.html#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(red_route) <span class="sc">%&gt;%</span></span>
+<span id="cb38-5"><a href="adding-openstreetmap-data.html#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
+<p><img src="images/adding-osm-data-map-roads-1.png" width="672" /></p>
+<p>The waterway plotted over the water map area looks a bit odd, but we could address that by changing the layer order: layers are placed on top of each other in the order we present them, so all we need to do is overplot
+the waterways by the watermap, rather than the plotting the waterways over the watermap:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="adding-openstreetmap-data.html#cb39-1" aria-hidden="true" tabindex="-1"></a>rich_map <span class="ot">=</span>  elmat <span class="sc">%&gt;%</span></span>
+<span id="cb39-2"><a href="adding-openstreetmap-data.html#cb39-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(shadow_layer) <span class="sc">%&gt;%</span></span>
+<span id="cb39-3"><a href="adding-openstreetmap-data.html#cb39-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(waterways_layer) <span class="sc">%&gt;%</span></span>
+<span id="cb39-4"><a href="adding-openstreetmap-data.html#cb39-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(roads_layer) <span class="sc">%&gt;%</span></span>
+<span id="cb39-5"><a href="adding-openstreetmap-data.html#cb39-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(red_route) <span class="sc">%&gt;%</span></span>
+<span id="cb39-6"><a href="adding-openstreetmap-data.html#cb39-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_water</span>(watermap, <span class="at">color =</span> <span class="st">&quot;desert&quot;</span>)</span>
+<span id="cb39-7"><a href="adding-openstreetmap-data.html#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-8"><a href="adding-openstreetmap-data.html#cb39-8" aria-hidden="true" tabindex="-1"></a>rich_map <span class="sc">%&gt;%</span></span>
+<span id="cb39-9"><a href="adding-openstreetmap-data.html#cb39-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
+<p><img src="images/adding-osm-data-map-rich-1.png" width="672" /></p>
+<div id="adding-building-layers-from-openstreetmap" class="section level3" number="19.4.1">
+<h3><span class="header-section-number">19.4.1</span> Adding Building Layers from <em>OpenStreetMap</em></h3>
+<p>Another class of feature that we seen on certain map tiles, and that may be useful to add directly to map layers, are building outlines. In a rally stage, buildings may add to the hazard or otherwise help us get an feel for what a particular part of a stage is like.</p>
+<p>We can download building outlines from the OSM Overpass API by requesting feature objects of type <em>building</em>.</p>
+<p>The objects of interest to us are the building outline polygons:</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="adding-openstreetmap-data.html#cb40-1" aria-hidden="true" tabindex="-1"></a>stage_buildings_polygons <span class="ot">=</span> <span class="fu">opq</span>(osm_stage_bbox) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-2"><a href="adding-openstreetmap-data.html#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;building&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-3"><a href="adding-openstreetmap-data.html#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>() </span>
+<span id="cb40-4"><a href="adding-openstreetmap-data.html#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="adding-openstreetmap-data.html#cb40-5" aria-hidden="true" tabindex="-1"></a>stage_buildings <span class="ot">=</span> stage_buildings_polygons<span class="sc">$</span>osm_polygons</span></code></pre></div>
+<p>Let’s quickly plot those to see how they look:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="adding-openstreetmap-data.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb41-2"><a href="adding-openstreetmap-data.html#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>stage_buildings,) <span class="sc">+</span></span>
+<span id="cb41-3"><a href="adding-openstreetmap-data.html#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>stages_kml[<span class="dv">1</span>], <span class="at">color=</span><span class="st">&#39;darkgrey&#39;</span>) <span class="sc">+</span></span>
+<span id="cb41-4"><a href="adding-openstreetmap-data.html#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb41-5"><a href="adding-openstreetmap-data.html#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map `buildings`&quot;</span>)</span></code></pre></div>
+<p><img src="images/adding-osm-data-gg-buildings-1.png" width="672" /></p>
+<p>As before, we can create a layer from the OSM polygons data that we can add to a <code>rayshader</code> rendered view:</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="adding-openstreetmap-data.html#cb42-1" aria-hidden="true" tabindex="-1"></a>buildings_layer <span class="ot">=</span> <span class="fu">generate_polygon_overlay</span>(stage_buildings, </span>
+<span id="cb42-2"><a href="adding-openstreetmap-data.html#cb42-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">extent =</span> stage_extent,</span>
+<span id="cb42-3"><a href="adding-openstreetmap-data.html#cb42-3" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">heightmap =</span> elmat,</span>
+<span id="cb42-4"><a href="adding-openstreetmap-data.html#cb42-4" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">palette=</span><span class="st">&#39;darkred&#39;</span>)</span></code></pre></div>
+<p>Now add the buildings layer to the map:</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="adding-openstreetmap-data.html#cb43-1" aria-hidden="true" tabindex="-1"></a>rich_map <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="adding-openstreetmap-data.html#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(buildings_layer) <span class="sc">%&gt;%</span></span>
+<span id="cb43-3"><a href="adding-openstreetmap-data.html#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
+<p><img src="images/adding-osm-data-map-buildings-1.png" width="672" /></p>
+</div>
+<div id="the-wide-variety-of-osm-features" class="section level3" number="19.4.2">
+<h3><span class="header-section-number">19.4.2</span> The Wide Variety of OSM Features</h3>
+<p>Another feature that might be useful to stage planners is locating any car parks in the area using the <code>add_osm_feature("parking")</code> feature. The <code>add_osm_feature("tourism")</code> feature also identifies a range of “touristy” features, such as <em>picnic_site</em>, <em>camp_site</em>, <em>information</em> and <em>viewpoints</em> elements, returning a combination of polygons and points.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="adding-openstreetmap-data.html#cb44-1" aria-hidden="true" tabindex="-1"></a>tourism <span class="ot">=</span> <span class="fu">opq</span>(osm_stage_bbox) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-2"><a href="adding-openstreetmap-data.html#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;tourism&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-3"><a href="adding-openstreetmap-data.html#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>()</span>
+<span id="cb44-4"><a href="adding-openstreetmap-data.html#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="adding-openstreetmap-data.html#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(tourism<span class="sc">$</span>osm_points<span class="sc">$</span>tourism)</span></code></pre></div>
+<pre><code>## [1] &quot;information&quot; &quot;picnic_site&quot; &quot;viewpoint&quot;   NA            &quot;attraction&quot; 
+## [6] &quot;camp_site&quot;</code></pre>
+<p>We can filter on selected tourist feature types:</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="adding-openstreetmap-data.html#cb46-1" aria-hidden="true" tabindex="-1"></a>tourist_points <span class="ot">=</span> tourism<span class="sc">$</span>osm_points <span class="sc">%&gt;%</span> </span>
+<span id="cb46-2"><a href="adding-openstreetmap-data.html#cb46-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(tourism <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;picnic_site&quot;</span>, <span class="st">&quot;camp_site&quot;</span>, <span class="st">&quot;viewpoint&quot;</span>))</span>
+<span id="cb46-3"><a href="adding-openstreetmap-data.html#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="adding-openstreetmap-data.html#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tourist_points)</span></code></pre></div>
+<pre><code>## Simple feature collection with 6 features and 7 fields
+## geometry type:  POINT
+## dimension:      XY
+## bbox:           xmin: 5.887543 ymin: 44.75704 xmax: 5.927669 ymax: 44.81948
+## geographic CRS: WGS 84
+##                osm_id                name  ele fixme information place
+## 1251050393 1251050393                &lt;NA&gt; &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;
+## 2263000758 2263000758 Belvédère du Sautet &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;
+## 2381632012 2381632012                &lt;NA&gt; &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;
+## 2933152319 2933152319                &lt;NA&gt; &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;
+## 3053467199 3053467199        La Croisette &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;
+## 3625424363 3625424363      Camping du Lac &lt;NA&gt;  &lt;NA&gt;        &lt;NA&gt;  &lt;NA&gt;
+##                tourism                  geometry
+## 1251050393 picnic_site POINT (5.887543 44.75704)
+## 2263000758   viewpoint POINT (5.907652 44.81785)
+## 2381632012 picnic_site POINT (5.908112 44.81805)
+## 2933152319 picnic_site POINT (5.915663 44.81948)
+## 3053467199   viewpoint POINT (5.925582 44.78287)
+## 3625424363   camp_site  POINT (5.927669 44.8167)</code></pre>
+<p>And then plot them relative to our stage route:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="adding-openstreetmap-data.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb48-2"><a href="adding-openstreetmap-data.html#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>tourist_points, <span class="fu">aes</span>(<span class="at">color=</span>tourism)) <span class="sc">+</span></span>
+<span id="cb48-3"><a href="adding-openstreetmap-data.html#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>stages_kml[<span class="dv">1</span>]) <span class="sc">+</span></span>
+<span id="cb48-4"><a href="adding-openstreetmap-data.html#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#theme(legend.position = &quot;none&quot;) +</span></span>
+<span id="cb48-5"><a href="adding-openstreetmap-data.html#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map tourism&quot;</span>)</span></code></pre></div>
+<p><img src="images/adding-osm-data-gg-tourism-1.png" width="672" /></p>
+<p><em>See the <code>rayshader</code> tutorial on <a href="https://www.tylermw.com/adding-open-street-map-data-to-rayshader-maps-in-r/"><em>Tutorial: </em>Adding Open Street Map Data to Rayshader Maps in R*</a> for more examples.</em></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="revisiting-elevation-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="creating-a-road-book.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": {}
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toc_depth": 3,
+"toolbar": {
+"position": "fixed"
+},
+"search": true,
+"info": true
+});
+});
+</script>
+
+</body>
+
+</html>

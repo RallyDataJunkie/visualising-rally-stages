@@ -1,0 +1,76 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Introduction
+
+Rally fans the world over will undoubtedly be familiar with the [Rally-Maps.com](https://www.rally-maps.com/) website, This website publishes a comprehensive selection of stage maps for a wide variety of events across the world using *OpenStreetMap* interactive web maps . WRC+ subscribers will also be familiar with the live interactive web maps used to display the progress of cars through stages and along road section liaison routes during WRC events.
+
+In this recipe collection, I'll describe various ways of visualising WRC rally stage routes using KML data files downloaded from the WRC website. The techniques should apply equally to  a wider range of data that may also be available from sites such as *rally-maps.com*, as well as downloaded directly from websites associated with particular rallies.
+
+The visualisations we'll look at include:
+
+- visualising simple 2D renderings of rally stages;
+- visualising stages overlaid on interactive *OpenStreetMap* maps;
+- visualising stages on 2D relief shaded maps;
+- visualising elevation and curvature profiles of stages;
+- visualising stages in 3D raytraced maps.
+
+We'll also explore how to categorise rally stages in terms of their elevation profiles and "curviness". Our interest may be rally stages, but researchers in areas such as ecology also have an interest in the shape of trails, animal trails in particular, and we can pinch some of their ideas to help us categorise and classify rally stages in a research-led way.
+
+## Who This Book Is For
+
+Firstly, this book is for *me*: it's a write of a learning journey that started with me wondering if I could use `rayshader` to render 3D maps of WRC stage routes and then rapidly become rather more.
+
+Secondly, this book is for rally fans wanting who fancy tinkering with a bit of code, either to get into using R, or who want to get a feel for what geocomputing may have to offer, or both.
+
+Thirdly, this book is for rally fans and perhaps sports journalists who are interested in exploring the data hinterland of rallying. A lot is spoken about th technology led nature of Formula One, but top-flight rallying is also global in reach, technologically led with manufacturer support, and one of the most friendly, welcoming and accessible forms of motorsport for fans, volunteers and competitors alike.
+
+Fourthly, it's for anyone who wonders whether their peculiar interest could provide enough scope for a theme led learning journey into a particular area of programming or data analysis. This book started with a stage map KML file and a passing glimpse of a `rayshader` 3D map that made me wonder *Could I do that?*. From that simple start, my curiosity then took me on a journey I hadn't quite anticipated when I first set out on it...
+
+And finally, it may be useful as a resource for R geo hackers working with linear geometries and single route data, if only to demonstrate how *not* to do things!
+
+
+## What This Book Isn't
+
+If you're looking for an academic course on how to write R, this book isn't that: it's more of a recipe book in which I bluff my way through using a wide range of R specialised and properly written R packages glues together with as few lines of R code as I can muster to perform particular tasks.
+
+Unlike many "teach yourself to code" books, there will be *bad practice* demonstrations along the way. I often don't appreciate why certain things are best done a particular way until I do them the wrong way first and see why they're wrong. I think you may benefit from some of that pain too! For a novice, a particular approach may seem eminently reasonable, and then turn out to lead to problems. As a learner myself, I'll show you some of those "as might be expected" false starts, and then backtrack to show how, and why, there's a better way.
+
+A major part of this book is engaged in wrangling data representations that allow us to work with data objects in a spatially relevant way. When working with time series data, if you represent the data as datetime or time-interval objects you can do natural timey-wimey things with them, like group them by day of week, or month of year, or plot them against time of day. Similarly, geodata becomes more powerful if you can process it in a geospatial way and do spacy-wacy things with it. Combining the two forms of representation — time series based telemetry data with added spatial location data goodness — is left for another day.
+
+Making sense of spatial data representations can be both bewildering and confusing, and I remain bewildered and confused by them. So this book is also not in any sense a formal primer for working with the `sp`, `sf`, `proj4` and `raster` packages. However, I hope that it does serve as a practical data junkie's guide to using those packages to get stuff done and that the overview I do provide of spatial data representations is useful.
+
+Finally, it's worth reminding ourselves that this journey into geocomputation is focused on a single, particular, and some might say, peculiar, context: rally stage data. This focus provides us with a rationale for exploring certain geospatial ideas, or specific functions in geocomputation packages, in a motivated way. As a result, you will hopefully pick up some ideas that you might be able to apply in other contexts. But if the rally stage route theme doesn't motivate you, then find some other for of route data and try to visualise that: the computer doesn't care what the data represents, as long as it's a route...
+
+## Structure of the Book
+
+The structure of the book broadly follows my own learning journey the various topics, at least on a first pass. As I continued to explore various themes I started to return to various sections to extend them or revise and improve some of the Frankenstein techniques I'd used to get various things working when I was still flying blind and working with only a very hazy understanding of the various packages and functions within them that support working in this particular area.
+
+The book opens with a brief consideration of how to set up a computational environment to work through the executable elements of this content yourself.
+
+I then describe how to open the KML file that started me on my journey, along with other geodata file formats and how to convert between them. With data in hand, we see how quickly preview simple routes using `ggplot2` charts, as well as overlaying them on interactive `leaflet` maps. It is at this point that geographical projections also make their first appearance. Annotating stage routes with additional information, some derived from the route itself (such as stage start and end locations), some from other sources, such as the location of split points described in terms of distance into the stage, comes next.
+
+Elevation data is essential for generating three-dimensional renderings of landscapes, so the next part introduces sources of open elevation data in the form of elevation raster data. Demonstrations of how to download and preview this data for specific areas, as well as buffered regions comes next, along with a review of how to access metadata and information about the rasters themselves. We also see how we can derive additional geometric layers, such as contour line overlays, from the elevation data itself.
+
+With elevation data in hand, we then see how it can be rendered in two dimensions using `rayshader`, followed by sections on how to add overlays to such maps, including map tile overlays, and how to annotate them with "derived" data such as contour lines. We also see how to add stage routes to the maps.
+
+Three dimensional rendering of maps is preceded with a short aside, showing how `rayshader` can be used to render models of an arbitrary type as long as they can be represented by a 2D matrix of height values. It is quite straightforward to map an image to such a representation using the RGB pixel values as a base 256 elevation value, so we run with this idea to render a Penny Red stamp as a 3D model, using the colour values to determine elevation.
+
+The story now moves on to rendering maps in three dimensions using `rayshader`, along with stage route overlays, my original motivation for this whole adventure. The `rayshader` package includes a wide variety of tools for setting up camera shots, as well as rendering videos to show off a model, are covered next. Lighting effects are consider too, most notably in the form of setting sun position appropriate to particular dates and times of day so we can get a feel for how shade and light might fall across a stage.
+
+The next section introduces something that had never really occurred to me before I stumbled across the term *sinuosity*, a metric often used to describe the "twistiness" of rivers in environmental and ecological research. This led me to a wide range of packages produced by ecological researchers who provide a variety of tools for processing and analysing animal tracks. Many of the techniques they have developed can also be applied to describing the structure of a rally stage and also provide a basis for working with geolocated telemetry data, although that particular consideration will have to wait for another book and another day.
+
+Having analysed stage route structure in two dimensions, we then revisit stage elevation data, visualising it using `rayshader`s three dimensional `ggplot2` plotting tools to render 3D ribbon traces of stage routes. `rayshader`s support for exporting 3D print model files suggests some exciting possibilities for producing stage route models here!
+
+Returning to the theme of annotating maps, the final section looks at enriching maps with the addition of data retrieved from the *OpenStreetMap* Overpass API. *OpenStreetMap* publish a wide range of datasets from tracks and roads information, as geodata, as well building outlines, and a wide range of data points covering labeled sites of interest, such as campsites, car parks and viewpoints. We review how to retrieve such data and add it to our maps.
+
+The book closes with a brief consideration of what may be next...
+
+## Further Reading
+
+There are several other freely available books out there do provide a more principled guide to some of the topics consider herein.
+
+For a slightly more principled overview of geocomputing in R, see [*Geocomputation with R*](https://geocompr.robinlovelace.net/) by Robin Lovelace, Jakub Nowosad, Jannes Muenchow.
+

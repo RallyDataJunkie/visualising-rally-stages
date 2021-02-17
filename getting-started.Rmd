@@ -1,0 +1,103 @@
+# Getting Started
+
+One of the biggest obstacles to using code is, or at least, *used to be*, setting up the computational environment you need in order to be able to read, write and execute code.
+
+But in recent years, thinks have got a lot easier, so 
+
+If you want to try working through the examples yourself, you will need ?? Jupyter book??
+
+
+## Setting Up a Working Code Execution Environment
+
+To try to make it possible to follow along with running the code contained within this book, I have created a Docker container containing all th necessary packages, as well as version of the original Rmd files used to create this book.
+
+
+### Installing the Docker Environment
+
+The container is built up from a [`rocker/geospatial` Docker image](https://github.com/rocker-org/geospatial) base. You can find the Dockerfile in the[`RallyDataJunkie/visualising-rally-stages`](https://github.com/RallyDataJunkie/visualising-rally-stages) Github repository.
+
+To install the container, you will need to install Docker first. Installation instructions for installing Docker Desktop, which includes the Docker community edition, on Windows, Mac and Linux computers can be found on the Docker website: [*Get Docker*](https://docs.docker.com/get-docker/).
+
+At the time of writing, the Docker image has not been built for `arm64` devices, which means that it currently *will not* run on Mac M1 or Raspberry Pi 64 bit operating system devices.
+
+To launch the docker container, run the following command on the command line:
+
+`docker run -d -p 8788:8787 psychemedia/rayshader`
+
+When mounting a volume into the container (`-v localDirPath:containerDirPath`), be aware that the default working directory inside the container is `/home/rstudio`.
+
+With the container running, visit `localhost:8788` in your browser and you should be presented with an RStudio login screen. The default username/password combination is `rstudio/rstudio`.
+
+*At the current time, the Rmd files are not bundled in the container but they can be found in the [`RallyDataJunkie/visualising-rally-stages`](https://github.com/RallyDataJunkie/visualising-rally-stages) Github repository.*
+
+#### Connecting the Docker Container to Other Containers
+
+Docker containers running different services or applications can be linked together, and share mounted storage columes, using [Docker Compose](https://docs.docker.com/compose/). For an example of linking an RStudio container to a Jupyter server container and a Neo4J graph database seever, see [Accessing a Neo4j Graph Database Server from RStudio and Jupyter R Notebooks Using Docker Containers](https://blog.ouseful.info/2016/04/12/accessing-a-neo4j-graph-database-server-from-rstudio-and-jupyter-r-notebooks-using-docker-containers/). For an example of linking an RStudio container to a container running an `ergast` F1/Formula-E results database server, see [`psychemedia/ergast-f1-api`](https://github.com/psychemedia/ergast-f1-api). The blog post [Rolling Your Own Jupyter and RStudio Data Analysis Environment Around Apache Drill Using docker-compose](https://blog.ouseful.info/2017/06/16/rolling-your-own-jupyter-and-rstudio-data-analysis-environment-around-apache-drill-using-docker-compose/) demonstrates how to mount a common storage volume between two containers.
+
+### Installing the Required R Packages Manually
+
+The code described in this books uses a large number of specialised R packages. Many of them can be found on CRAN, but some need to be installed directly from their original code repository on Github.
+
+If you are not using the pre-defined environment, you will need to ensure that all the required packages are in stalled in your R environment in order to run the code.
+
+The required packages are listed in the Dockerfile used to create the Docker container used to support this book. The Dockerfile can be found in the [`RallyDataJunkie/visualising-rally-stages`](https://github.com/RallyDataJunkie/visualising-rally-stages) Github repository.
+
+You may find that in order to *install* some packages requires other, non-R packages to be installed on your computer first. Check the *Other Installation Dependencies* section first for details of these pre-requisites. 
+You may also find that in order *run* some of the packages requires other application dependencies, even if the package installs correctly. As with the installation dependencies, check the *Other Installation Dependencies* section first for details of these pre-requisites. 
+
+
+### Other Installation Dependencies
+
+Several of the R packages have dependencies on operating system applications or packages.
+
+Know dependencies include:
+
+- GDAL
+- ImageMagick
+
+
+## Using the RStudio Environment
+
+The RStudio integrated development environment (IDE) is bundled in the original `rocker` container that provides the original basis for the container developed to support this book.
+
+An overview of the RStudio IDE can be found on the RStudio website: [`rstudio/features`](https://rstudio.com/products/rstudio/features/). A [video tour](https://rstudio.com/products/rstudio/) is also available.
+
+## Using a Jupyter Notebook Environment
+
+Whilst Rmd documents can be opened within a Jupyter notebook environment with [Jupytext](https://jupytext.readthedocs.io/) installed, and the code contained within them executed from that environment
+
+To run the Rmd files with Jupyter notebooks, along with the other dependencies, you will need to:
+
+- install Jupyter
+- install Jupytext
+- install an R Jupyter kernel
+
+Note that the required R packages must be installed into the R environment made available via the Jupyter R kernel.
+
+
+## Exploring the Book as an Online Interactive Textbook (Not Yet!)
+
+The original rendering of this book was created with the [R `bookdown` package](https://bookdown.org/). It should also be possible to create [Jupyter Book](https://jupyterbook.org/intro.html) version of the materials from the original Rmd source files through the magic of Jupytext.
+
+## Serving Your Own Map Tiles and Elevation Raster Images
+
+In order to display interactive web maps, overlay `rayshader` maps with third party map tiles, and access elevation data raster files, we need to call on a tile server, at least initially.
+
+All the tools described in this book make use of third party tileservers, called via APIs. However, it is also possible to doanload map tiles and sever them from our own tile server (although we will then need to find how to configure tile using packages to use our local server).
+
+The lightweight and easy to use `datasette` SQLite database server is a Python package that provides a simple route to running a tileserver through its [`datasette-tiles`](https://datasette.io/plugins/datasette-tiles) plugin. Tiles can easily be downloaded for adding the the server using the [`datasette/download-tiles`](https://datasette.io/tools/download-tiles) tool.
+
+An overview of how to set up a tileserver is described in [*Serving map tiles from SQLite with MBTiles and datasette-tiles*](https://simonwillison.net/2021/Feb/4/datasette-tiles/). For downloading raster elevation tiles, see for example [*Downloading MapZen elevation tiles*](https://til.simonwillison.net/gis/mapzen-elevation-tiles).
+
+
+## Donate
+
+If I didn't have to work for a living, I'd be able to do more of this sort of thing, and spend more time volunteering as a rally marshal... In the meantime, consider this as a tip jar: any monies received will go towards [covering the costs](https://revdancatt.com/2021/02/05/a-short-essay-on-pricing-pen-plotter-art) of my rally-related activities...
+
+<form action="https://www.paypal.com/donate" method="post" target="_top">
+<input type="hidden" name="hosted_button_id" value="RJ7ZF3A9BXTRU" />
+<input type="image" src="https://www.paypalobjects.com/en_GB/i/btn/btn_donate_SM.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+<img alt="" border="0" src="https://www.paypal.com/en_GB/i/scr/pixel.gif" width="1" height="1" />
+</form>
+
+If you're interested in learning more about rally marshalling, check out [volunteering opportunites via *motorspot uk*](https://www.motorsportuk.org/volunteers/marshals/) and the [British Rally Marshals Club (BRMC)](https://www.brmc.org.uk/). For a taste of what's involved, read my [*Rally marshal taster event* review](https://blog.ouseful.info/2018/01/27/rally-marshal-taster-event/).

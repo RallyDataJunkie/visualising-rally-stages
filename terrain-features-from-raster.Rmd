@@ -1,0 +1,125 @@
+```{r cache = T, echo = F, message=F}
+# Allow knitr to continue to execute even in the presence of errors
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(fig.path = "images/terrain-features-raster-")
+```
+# Determining Terrain Features from Raster Data
+
+Based on the elevation data associated with a raster image, we can depict the raster image in various ways. For example, we can select different colour plots to colour the tiles, as well as adding contour lines.
+
+## Load in Base Data 
+
+As ever, let's load in our stage data:
+
+```{r}
+geojson_filename = 'montecarlo_2021.geojson'
+geojson_sf = sf::st_read(geojson_filename)
+```
+
+And also load in the elevation data raster:
+
+```{r message=FALSE, warning=FALSE}
+library(raster)
+library(rayshader)
+
+# Previously downloaded TIF digital elevation model (DEM) file
+stage_tif = "stage_elevation.tif"
+
+# Load in the previously saved image raster
+elev_img = raster(stage_tif)
+auto_zscale = geoviz::raster_zscale(elev_img)
+
+# Note we can pass in a file name or a raster object
+elmat = raster_to_matrix(stage_tif)
+```
+
+## Rendering Terrain Over Raster Images
+
+By default, a plot of a raster image will render a colour mapping sensitive to elevation:
+
+```{r elev-preview}
+plot(elev_img, col = terrain.colors(25), axes=FALSE)
+```
+
+As well as height / elevation information, we can also extract additional information from the raster image using the `raster::terrain()` function. This function can compute various terrain characteristics from a raster with elevation data, ideally in a projected (planar) raster data image with units in meters.
+
+Terrain features include *aspect*, *slope* and *flowdir* (the direction of water flow as determined by the direction in which the greatest drop in elevation (or smallest rise) is to be found at any given point). *TPI* (Topographic Position Index, *"the difference between the value of a cell and the mean value of its 8 surrounding cells"), *TRI* (Terrain Ruggedness Index, *"the mean of the absolute differences between the value of a cell and the value of its 8 surrounding cells"*) and *roughness* (*"the difference in elevation between the maximum and the minimum value of a cell and its 8 surrounding cells"*) terrain measures are also supported:
+
+```{r terrain-preview}
+plot(terrain(elev_img, "TRI"),
+     # Remove legends, bounding box etc
+      bty="n", box=FALSE, axes=F, frame.plot=F, legend=F)
+```
+
+To give the appearance of relief as highlighted by shadow, we can shade the terrain using the the `raster::hillshade()` function with slope and aspect values determined by the `raster::`terrain()` function:
+
+```{r hill-preview}
+hill_shadows = hillShade(slope = terrain(elev_img, "slope"),
+                         aspect = terrain(elev_img, "aspect"),
+                         # azimuthal direction of sun in degrees:
+                         angle = 45, 
+                         add=TRUE)
+plot(hill_shadows)
+```
+
+
+## Adding Contours to `raster` Images
+
+Consider again our original raster image, plotted here using a "terrain style" colour palette:
+
+```{r terrain-preview2}
+plot(elev_img, col = terrain.colors(25), axes=FALSE)
+```
+
+We can use the `raster::rasterToContour` function to generate a set of contour lines over the raster:
+
+```{r terrain-contour}
+# Plot the original raster image
+plot(elev_img, col = terrain.colors(25), axes=FALSE)
+
+# Add a contour plot over the raster image
+plot (rasterToContour(elev_img), add=TRUE)
+
+#nlevels - number of contour levels desired iff levels is not supplied.
+#levels - numeric vector of levels at which to draw contour lines.
+```
+
+We have a certain amount of control over the contours that are plotted, notably through the following two parameters that can be passed through the `rasterToContour()` function to the `grDevices::contourLines` function [[docs](https://www.rdocumentation.org/packages/grDevices/versions/3.0.3/topics/contourLines)] that actually generates the contour lines:
+
+- `nlevels`: the number of contour levels desired iff `levels` is not supplied;
+- `levels`: a numeric vector of levels at which to draw the contour lines.
+
+So for example, let's set the contour lines to appear at elevations of 1000m and 1500m:
+
+```{r terrain-raster-contour}
+# Plot the original raster image
+plot(elev_img, axes=FALSE)
+
+# Add a contour plot over the raster image
+plot(rasterToContour(elev_img, levels=c(1000, 1500)), add=TRUE)
+```
+Alternatively, we may choose to let "the algorithm" decide the levels whilst we still determine how many contour levels there are to be:
+
+```{r terrain-raster-contour2}
+# Plot the original raster image
+plot(elev_img, axes=FALSE)
+
+# Add a contour plot over the raster image
+plot (rasterToContour(elev_img, nlevels=4),
+      add=TRUE)
+```
+
+Another `raster` package function, `raster::contour`, produces a contour plot with labeled contour values:
+
+```{r contour-plot}
+contour(elev_img)
+```
+
+Again, we can overplot this on the original raster image, optionally setting the contour line color:
+
+```{r contour-plot2}
+plot(elev_img)
+
+contour(elev_img, add=TRUE, col='navyblue')
+```
+

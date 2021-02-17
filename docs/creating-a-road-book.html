@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>20 Creating A Road Book | Visualising WRC Rally Stages With rayshader and R</title>
+  <meta name="description" content="Rally stage maps often appear on rally websites displayed via interactive web maps. The data used to generate the routes is often available as a digital data file of some sort. This book takes one such file and embarks on an adventure into the wilds of geocomputing using the R programming language to see just where such a file may take us. From web maps and elevation maps to interactive 3D displays, let the exploration commence…" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="20 Creating A Road Book | Visualising WRC Rally Stages With rayshader and R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Rally stage maps often appear on rally websites displayed via interactive web maps. The data used to generate the routes is often available as a digital data file of some sort. This book takes one such file and embarks on an adventure into the wilds of geocomputing using the R programming language to see just where such a file may take us. From web maps and elevation maps to interactive 3D displays, let the exploration commence…" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="20 Creating A Road Book | Visualising WRC Rally Stages With rayshader and R" />
+  
+  <meta name="twitter:description" content="Rally stage maps often appear on rally websites displayed via interactive web maps. The data used to generate the routes is often available as a digital data file of some sort. This book takes one such file and embarks on an adventure into the wilds of geocomputing using the R programming language to see just where such a file may take us. From web maps and elevation maps to interactive 3D displays, let the exploration commence…" />
+  
+
+<meta name="author" content="Tony Hirst" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="adding-openstreetmap-data.html"/>
+<link rel="next" href="where-next.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="in-the-beginning.html"><a href="in-the-beginning.html"><i class="fa fa-check"></i>In the beginning…</a></li>
+<li class="chapter" data-level="" data-path="acknowledgements.html"><a href="acknowledgements.html"><i class="fa fa-check"></i>Acknowledgements</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#who-this-book-is-for"><i class="fa fa-check"></i><b>1.1</b> Who This Book Is For</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-this-book-isnt"><i class="fa fa-check"></i><b>1.2</b> What This Book Isn’t</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#structure-of-the-book"><i class="fa fa-check"></i><b>1.3</b> Structure of the Book</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#further-reading"><i class="fa fa-check"></i><b>1.4</b> Further Reading</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="getting-started.html"><a href="getting-started.html"><i class="fa fa-check"></i><b>2</b> Getting Started</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="getting-started.html"><a href="getting-started.html#setting-up-a-working-code-execution-environment"><i class="fa fa-check"></i><b>2.1</b> Setting Up a Working Code Execution Environment</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="getting-started.html"><a href="getting-started.html#installing-the-docker-environment"><i class="fa fa-check"></i><b>2.1.1</b> Installing the Docker Environment</a></li>
+<li class="chapter" data-level="2.1.2" data-path="getting-started.html"><a href="getting-started.html#installing-the-required-r-packages-manually"><i class="fa fa-check"></i><b>2.1.2</b> Installing the Required R Packages Manually</a></li>
+<li class="chapter" data-level="2.1.3" data-path="getting-started.html"><a href="getting-started.html#other-installation-dependencies"><i class="fa fa-check"></i><b>2.1.3</b> Other Installation Dependencies</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="getting-started.html"><a href="getting-started.html#using-the-rstudio-environment"><i class="fa fa-check"></i><b>2.2</b> Using the RStudio Environment</a></li>
+<li class="chapter" data-level="2.3" data-path="getting-started.html"><a href="getting-started.html#using-a-jupyter-notebook-environment"><i class="fa fa-check"></i><b>2.3</b> Using a Jupyter Notebook Environment</a></li>
+<li class="chapter" data-level="2.4" data-path="getting-started.html"><a href="getting-started.html#exploring-the-book-as-an-online-interactive-textbook-not-yet"><i class="fa fa-check"></i><b>2.4</b> Exploring the Book as an Online Interactive Textbook (Not Yet!)</a></li>
+<li class="chapter" data-level="2.5" data-path="getting-started.html"><a href="getting-started.html#serving-your-own-map-tiles-and-elevation-raster-images"><i class="fa fa-check"></i><b>2.5</b> Serving Your Own Map Tiles and Elevation Raster Images</a></li>
+<li class="chapter" data-level="2.6" data-path="getting-started.html"><a href="getting-started.html#donate"><i class="fa fa-check"></i><b>2.6</b> Donate</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html"><i class="fa fa-check"></i><b>3</b> Importing the Stage Route Data</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#downloading-the-stage-data-file"><i class="fa fa-check"></i><b>3.1</b> Downloading the Stage Data File</a></li>
+<li class="chapter" data-level="3.2" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#opening-kml-geodata-files"><i class="fa fa-check"></i><b>3.2</b> Opening KML Geodata Files</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#using-rgdal-and-sp-to-open-geodata-files"><i class="fa fa-check"></i><b>3.2.1</b> Using <code>rgdal</code> and <code>sp</code> to Open Geodata Files</a></li>
+<li class="chapter" data-level="3.2.2" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#using-sf-to-open-geodata-files"><i class="fa fa-check"></i><b>3.2.2</b> Using <code>sf</code> to Open Geodata Files</a></li>
+<li class="chapter" data-level="3.2.3" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#accessing-route-data-as-a-geojson-string"><i class="fa fa-check"></i><b>3.2.3</b> Accessing Route Data as a geojson String</a></li>
+<li class="chapter" data-level="3.2.4" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#saving-simple-features-data-to-various-geodata-file-formats"><i class="fa fa-check"></i><b>3.2.4</b> Saving Simple Features Data to Various Geodata File Formats</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#important-geodata-file-formats"><i class="fa fa-check"></i><b>3.3</b> Important Geodata File Formats</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#loading-geojson-data"><i class="fa fa-check"></i><b>3.3.1</b> Loading geojson Data</a></li>
+<li class="chapter" data-level="3.3.2" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#loading-gpx-data"><i class="fa fa-check"></i><b>3.3.2</b> Loading GPX Data</a></li>
+<li class="chapter" data-level="3.3.3" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#loading-flight-data-using-igc-format-gps-files"><i class="fa fa-check"></i><b>3.3.3</b> Loading Flight Data Using IGC format GPS Files</a></li>
+<li class="chapter" data-level="3.3.4" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#reading-data-from-gps-devices"><i class="fa fa-check"></i><b>3.3.4</b> Reading Data from GPS Devices</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="working-with-route-data.html"><a href="working-with-route-data.html"><i class="fa fa-check"></i><b>4</b> Working with Route Data</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="working-with-route-data.html"><a href="working-with-route-data.html#loading-in-the-route-data"><i class="fa fa-check"></i><b>4.1</b> Loading in the Route Data</a></li>
+<li class="chapter" data-level="4.2" data-path="working-with-route-data.html"><a href="working-with-route-data.html#access-a-specific-stage"><i class="fa fa-check"></i><b>4.2</b> Access a specific stage</a></li>
+<li class="chapter" data-level="4.3" data-path="working-with-route-data.html"><a href="working-with-route-data.html#visual-preview-of-route-geodata"><i class="fa fa-check"></i><b>4.3</b> Visual Preview of Route Geodata</a></li>
+<li class="chapter" data-level="4.4" data-path="working-with-route-data.html"><a href="working-with-route-data.html#previews-using-ggplot2"><i class="fa fa-check"></i><b>4.4</b> Previews using <code>ggplot2</code></a></li>
+<li class="chapter" data-level="4.5" data-path="working-with-route-data.html"><a href="working-with-route-data.html#identifying-the-start-and-end-of-the-stage"><i class="fa fa-check"></i><b>4.5</b> Identifying the Start and End of the Stage</a></li>
+<li class="chapter" data-level="4.6" data-path="working-with-route-data.html"><a href="working-with-route-data.html#extracting-route-fragments"><i class="fa fa-check"></i><b>4.6</b> Extracting Route Fragments</a></li>
+<li class="chapter" data-level="4.7" data-path="working-with-route-data.html"><a href="working-with-route-data.html#previews-using-leaflet-interactive-maps"><i class="fa fa-check"></i><b>4.7</b> Previews Using <code>leaflet</code> Interactive Maps</a></li>
+<li class="chapter" data-level="4.8" data-path="working-with-route-data.html"><a href="working-with-route-data.html#creating-buffer-regions-around-features"><i class="fa fa-check"></i><b>4.8</b> Creating Buffer regions around features</a></li>
+<li class="chapter" data-level="4.9" data-path="working-with-route-data.html"><a href="working-with-route-data.html#adding-additional-features-to-leaflet-maps"><i class="fa fa-check"></i><b>4.9</b> Adding Additional Features to <code>leaflet</code> maps</a>
+<ul>
+<li class="chapter" data-level="4.9.1" data-path="working-with-route-data.html"><a href="working-with-route-data.html#add-minimap-navigation"><i class="fa fa-check"></i><b>4.9.1</b> Add “minimap” navigation</a></li>
+<li class="chapter" data-level="4.9.2" data-path="working-with-route-data.html"><a href="working-with-route-data.html#add-custom-symbol-legends"><i class="fa fa-check"></i><b>4.9.2</b> Add Custom Symbol Legends</a></li>
+<li class="chapter" data-level="4.9.3" data-path="working-with-route-data.html"><a href="working-with-route-data.html#adding-mini-charts-to-maps"><i class="fa fa-check"></i><b>4.9.3</b> Adding Mini-Charts to Maps</a></li>
+<li class="chapter" data-level="4.9.4" data-path="working-with-route-data.html"><a href="working-with-route-data.html#adding-html-content-to-popups"><i class="fa fa-check"></i><b>4.9.4</b> Adding HTML content to popups</a></li>
+</ul></li>
+<li class="chapter" data-level="4.10" data-path="working-with-route-data.html"><a href="working-with-route-data.html#using-mapview-to-create-leaflet-maps"><i class="fa fa-check"></i><b>4.10</b> Using <code>mapview</code> To Create <em>leaflet</em> Maps</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html"><i class="fa fa-check"></i><b>5</b> Introducing Map Projections</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#load-in-the-route-data"><i class="fa fa-check"></i><b>5.1</b> Load in the Route Data</a></li>
+<li class="chapter" data-level="5.2" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#previewing-a-map-route"><i class="fa fa-check"></i><b>5.2</b> Previewing a Map Route</a></li>
+<li class="chapter" data-level="5.3" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#plotting-latlong-naively"><i class="fa fa-check"></i><b>5.3</b> Plotting LatLong Naively</a></li>
+<li class="chapter" data-level="5.4" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#using-the-utm-co-ordinate-reference-system"><i class="fa fa-check"></i><b>5.4</b> Using the UTM Co-ordinate Reference System</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#using-st_transform-for-projection-transformations"><i class="fa fa-check"></i><b>5.4.1</b> Using <code>st_transform</code> for Projection Transformations</a></li>
+<li class="chapter" data-level="5.4.2" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#using-ggplot2coord_sf-to-render-projections"><i class="fa fa-check"></i><b>5.4.2</b> Using <code>ggplot2::coord_sf</code> to Render Projections</a></li>
+<li class="chapter" data-level="5.4.3" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#exporting-the-route-data-as-a-dataframe"><i class="fa fa-check"></i><b>5.4.3</b> Exporting the Route Data As a Dataframe</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#alternative-crs-projections"><i class="fa fa-check"></i><b>5.5</b> Alternative CRS Projections</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html"><i class="fa fa-check"></i><b>6</b> Stage Route Annotations</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#load-in-the-route-data-1"><i class="fa fa-check"></i><b>6.1</b> Load in the Route Data</a></li>
+<li class="chapter" data-level="6.2" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#adding-split-point-locations"><i class="fa fa-check"></i><b>6.2</b> Adding Split Point Locations</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#using-geojson-to-find-the-distance-along-a-route"><i class="fa fa-check"></i><b>6.2.1</b> Using geojson to Find the Distance Along a Route</a></li>
+<li class="chapter" data-level="6.2.2" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#using-rgeosginterpolate-to-find-the-distance-along-a-route"><i class="fa fa-check"></i><b>6.2.2</b> Using <code>rgeos::gInterpolate</code> to Find the Distance Along a Route</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#parallel-routes"><i class="fa fa-check"></i><b>6.3</b> Parallel Routes</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html"><i class="fa fa-check"></i><b>7</b> Accessing and Working With Elevation Data Raster Files</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#introducing-digital-elevation-model-dem-raster-images"><i class="fa fa-check"></i><b>7.1</b> Introducing Digital Elevation Model (DEM) Raster Images</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#what-is-raster-data"><i class="fa fa-check"></i><b>7.1.1</b> What Is Raster Data?</a></li>
+<li class="chapter" data-level="7.1.2" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#what-are-digital-elevation-models-dems"><i class="fa fa-check"></i><b>7.1.2</b> What Are Digital Elevation Models (DEMs)?</a></li>
+<li class="chapter" data-level="7.1.3" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#the-r-raster-package"><i class="fa fa-check"></i><b>7.1.3</b> The R <code>raster</code> Package</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#downloading-elevation-data"><i class="fa fa-check"></i><b>7.2</b> Downloading Elevation Data</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#loading-in-some-stage-data"><i class="fa fa-check"></i><b>7.2.1</b> Loading in some stage data</a></li>
+<li class="chapter" data-level="7.2.2" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#obtaining-relief-elevation-raster-data-using-elevatr"><i class="fa fa-check"></i><b>7.2.2</b> Obtaining relief / elevation raster data using <code>elevatr</code></a></li>
+<li class="chapter" data-level="7.2.3" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#plotting-rasters-as-ggplot-objects"><i class="fa fa-check"></i><b>7.2.3</b> Plotting Rasters As <code>ggplot</code> Objects</a></li>
+<li class="chapter" data-level="7.2.4" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#interactive-raster-previews-with-plainview"><i class="fa fa-check"></i><b>7.2.4</b> Interactive Raster Previews with <code>plainview</code></a></li>
+<li class="chapter" data-level="7.2.5" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#saving-the-image-raster-data-to-a-local-file"><i class="fa fa-check"></i><b>7.2.5</b> Saving the Image Raster Data to a Local File</a></li>
+<li class="chapter" data-level="7.2.6" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#from-raster-to-terra"><i class="fa fa-check"></i><b>7.2.6</b> From <code>raster</code> to <code>terra</code></a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#overlaying-raster-images-on-leaflet-maps"><i class="fa fa-check"></i><b>7.3</b> Overlaying Raster Images on Leaflet Maps</a></li>
+<li class="chapter" data-level="7.4" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#retrieving-descriptive-information-about-the-raster"><i class="fa fa-check"></i><b>7.4</b> Retrieving Descriptive Information About the Raster</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#using-mapzen-to-retrieve-dem-raster-data"><i class="fa fa-check"></i><b>7.4.1</b> Using Mapzen to Retrieve DEM raster data</a></li>
+<li class="chapter" data-level="7.4.2" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#additional-elevation-data-downloading-tools"><i class="fa fa-check"></i><b>7.4.2</b> Additional Elevation Data Downloading Tools</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#manipulating-raster-images"><i class="fa fa-check"></i><b>7.5</b> Manipulating Raster Images</a></li>
+<li class="chapter" data-level="7.6" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#ridge-maps"><i class="fa fa-check"></i><b>7.6</b> Ridge maps</a></li>
+<li class="chapter" data-level="7.7" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#further-information"><i class="fa fa-check"></i><b>7.7</b> Further Information</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html"><i class="fa fa-check"></i><b>8</b> Determining Terrain Features from Raster Data</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html#load-in-base-data"><i class="fa fa-check"></i><b>8.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="8.2" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html#rendering-terrain-over-raster-images"><i class="fa fa-check"></i><b>8.2</b> Rendering Terrain Over Raster Images</a></li>
+<li class="chapter" data-level="8.3" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html#adding-contours-to-raster-images"><i class="fa fa-check"></i><b>8.3</b> Adding Contours to <code>raster</code> Images</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html"><i class="fa fa-check"></i><b>9</b> Using <code>rayshader</code> to Render 2D Elevation and Shade Views</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#load-in-base-data-1"><i class="fa fa-check"></i><b>9.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="9.2" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#rendering-imagery-from-the-dem-raster"><i class="fa fa-check"></i><b>9.2</b> Rendering imagery from the DEM raster</a></li>
+<li class="chapter" data-level="9.3" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#roundtripping-rayshader-rasters-and-matrices"><i class="fa fa-check"></i><b>9.3</b> Roundtripping <code>rayshader</code> Rasters and Matrices</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html"><i class="fa fa-check"></i><b>10</b> Overlaying 2D <code>rayshader</code> Maps</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#load-in-base-data-2"><i class="fa fa-check"></i><b>10.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="10.2" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#adding-overlays"><i class="fa fa-check"></i><b>10.2</b> Adding overlays</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#adding-shadows-to-rayshader-maps"><i class="fa fa-check"></i><b>10.2.1</b> Adding Shadows to <code>rayshader</code> Maps</a></li>
+<li class="chapter" data-level="10.2.2" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#adding-water-features"><i class="fa fa-check"></i><b>10.2.2</b> Adding Water Features</a></li>
+<li class="chapter" data-level="10.2.3" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#overlaying-map-tiles"><i class="fa fa-check"></i><b>10.2.3</b> Overlaying Map Tiles</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#adding-a-stage-route-layer"><i class="fa fa-check"></i><b>10.3</b> Adding a Stage Route Layer</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#buffering-the-stage-route-view"><i class="fa fa-check"></i><b>10.3.1</b> Buffering the Stage Route View</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#modeling-increased-water-levels"><i class="fa fa-check"></i><b>10.4</b> Modeling Increased Water Levels</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html"><i class="fa fa-check"></i><b>11</b> Annotating <code>rayshader</code> maps</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#load-in-base-data-3"><i class="fa fa-check"></i><b>11.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="11.2" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#adding-a-title-to-a-map"><i class="fa fa-check"></i><b>11.2</b> Adding a Title to a Map</a></li>
+<li class="chapter" data-level="11.3" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#adding-contours-to-rayshader-stage-maps"><i class="fa fa-check"></i><b>11.3</b> Adding Contours to <code>rayshader</code> Stage Maps</a></li>
+<li class="chapter" data-level="11.4" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#overlaying-image-tiles"><i class="fa fa-check"></i><b>11.4</b> Overlaying Image Tiles</a></li>
+<li class="chapter" data-level="11.5" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#plotting-route-layers-on-rayshader-maps"><i class="fa fa-check"></i><b>11.5</b> Plotting Route Layers on <code>rayshader</code> Maps</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html"><i class="fa fa-check"></i>An Aside - The Penny Red</a>
+<ul>
+<li><a href="an-aside-the-penny-red.html#d-rendering-of-colour-images-using-rayshader">3D Rendering of Colour Images Using <code>rayshader</code></a>
+<ul>
+<li class="chapter" data-level="11.5.1" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html#rendering-the-image-directly-from-ggplot2"><i class="fa fa-check"></i><b>11.5.1</b> Rendering the image directly from <code>ggplot2</code></a></li>
+</ul></li>
+<li class="chapter" data-level="11.6" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html#rendering-a-movie"><i class="fa fa-check"></i><b>11.6</b> Rendering a Movie</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html"><i class="fa fa-check"></i><b>12</b> Introducing 3D <code>rayshader</code> Models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#rendering-the-3d-maps-in-rstudio-and-knitrable-rmd-documents"><i class="fa fa-check"></i><b>12.1</b> Rendering the 3D Maps in <em>RStudio&amp; and <code>knitr</code>able </em>Rmd* Documents</a></li>
+<li class="chapter" data-level="12.2" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#rendering-a-3d-view"><i class="fa fa-check"></i><b>12.2</b> Rendering a 3D View</a></li>
+<li class="chapter" data-level="12.3" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#the-rayshader-3d-model-plinth"><i class="fa fa-check"></i><b>12.3</b> The <code>rayshader</code> 3D Model Plinth</a></li>
+<li class="chapter" data-level="12.4" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#saving-the-widget-as-an-html-file"><i class="fa fa-check"></i><b>12.4</b> Saving the Widget as an HTML File</a></li>
+<li class="chapter" data-level="12.5" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#rendering-the-model-to-an-image-file"><i class="fa fa-check"></i><b>12.5</b> Rendering the Model to an Image File</a></li>
+<li class="chapter" data-level="12.6" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#rendering-high-quality-models"><i class="fa fa-check"></i><b>12.6</b> Rendering High Quality Models</a></li>
+<li class="chapter" data-level="12.7" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#making-a-3d-print-file"><i class="fa fa-check"></i><b>12.7</b> Making a 3D Print File</a></li>
+<li class="chapter" data-level="12.8" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#saving-a-movie-of-a-3d-model"><i class="fa fa-check"></i><b>12.8</b> Saving a Movie of a 3D Model</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html"><i class="fa fa-check"></i><b>13</b> Rendering 3D <code>rayshader</code> Stage Route Maps</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#load-in-base-data-4"><i class="fa fa-check"></i><b>13.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="13.2" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#setting-up-3d-embedded-plots"><i class="fa fa-check"></i><b>13.2</b> Setting Up 3D Embedded Plots</a></li>
+<li class="chapter" data-level="13.3" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#rendering-a-simple-stage-route-model"><i class="fa fa-check"></i><b>13.3</b> Rendering a Simple Stage Route Model</a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#decorating-3d-views-with-map-tile-overlays"><i class="fa fa-check"></i><b>13.3.1</b> Decorating 3D Views With Map Tile Overlays</a></li>
+<li class="chapter" data-level="13.3.2" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#adding-labels-to-3d-rayshader-maps"><i class="fa fa-check"></i><b>13.3.2</b> Adding Labels to 3D <code>rayshader</code> Maps</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="creating-cropped-3d-rayshader-models.html"><a href="creating-cropped-3d-rayshader-models.html"><i class="fa fa-check"></i><b>14</b> Creating Cropped 3d <code>rayshader</code> Models</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="creating-cropped-3d-rayshader-models.html"><a href="creating-cropped-3d-rayshader-models.html#load-in-base-data-5"><i class="fa fa-check"></i><b>14.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="14.2" data-path="creating-cropped-3d-rayshader-models.html"><a href="creating-cropped-3d-rayshader-models.html#cropping-the-rendered-3d-view"><i class="fa fa-check"></i><b>14.2</b> Cropping the Rendered 3D View</a></li>
+<li class="chapter" data-level="14.3" data-path="creating-cropped-3d-rayshader-models.html"><a href="creating-cropped-3d-rayshader-models.html#cropping-3d-models-to-a-buffered-region"><i class="fa fa-check"></i><b>14.3</b> Cropping 3D Models to a Buffered Region</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html"><i class="fa fa-check"></i><b>15</b> Obtaining Shadows for a Particular Date and Time</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#load-in-base-data-6"><i class="fa fa-check"></i><b>15.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="15.2" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#sunlight-times-vocabulary"><i class="fa fa-check"></i><b>15.2</b> Sunlight Times Vocabulary</a></li>
+<li class="chapter" data-level="15.3" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#finding-sunrise-and-sunset-times"><i class="fa fa-check"></i><b>15.3</b> Finding Sunrise and Sunset Times</a></li>
+<li class="chapter" data-level="15.4" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#animating-shade"><i class="fa fa-check"></i><b>15.4</b> Animating Shade</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html"><i class="fa fa-check"></i><b>16</b> Composing <code>rayshader</code> Stills and Movies</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#load-in-base-data-7"><i class="fa fa-check"></i><b>16.1</b> Load in Base Data</a>
+<ul>
+<li class="chapter" data-level="16.1.1" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#adding-complications"><i class="fa fa-check"></i><b>16.1.1</b> Adding Complications…</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#setting-up-the-camera-shots-in-rayshader"><i class="fa fa-check"></i><b>16.2</b> Setting Up the Camera Shots in <code>rayshader</code></a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#depth-of-field"><i class="fa fa-check"></i><b>16.2.1</b> Depth of Field</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#camera-positioning"><i class="fa fa-check"></i><b>16.3</b> Camera Positioning</a>
+<ul>
+<li class="chapter" data-level="16.3.1" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#lighting-effects"><i class="fa fa-check"></i><b>16.3.1</b> Lighting Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#making-3d-video-tracking-shots"><i class="fa fa-check"></i><b>16.4</b> Making 3D Video Tracking Shots</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html"><i class="fa fa-check"></i><b>17</b> Stage Route Analysis</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#load-in-base-data-8"><i class="fa fa-check"></i><b>17.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="17.2" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#generating-stage-route-profiles"><i class="fa fa-check"></i><b>17.2</b> Generating Stage Route Profiles</a>
+<ul>
+<li class="chapter" data-level="17.2.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#an-aside---twists-and-turns-of-rally-stages"><i class="fa fa-check"></i><b>17.2.1</b> An Aside - Twists and Turns of Rally Stages</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#finding-stage-route-lengths"><i class="fa fa-check"></i><b>17.3</b> Finding Stage Route Lengths</a></li>
+<li class="chapter" data-level="17.4" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-ecological-movement-analysis-tools-to-analyse-stage-routes"><i class="fa fa-check"></i><b>17.4</b> Using Ecological Movement Analysis Tools to Analyse Stage Routes</a></li>
+<li class="chapter" data-level="17.5" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-trajr-for-stage-route-profiling"><i class="fa fa-check"></i><b>17.5</b> Using <code>trajr</code> for Stage Route Profiling</a>
+<ul>
+<li class="chapter" data-level="17.5.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#smoothing-a-trajectory"><i class="fa fa-check"></i><b>17.5.1</b> Smoothing a Trajectory</a></li>
+<li class="chapter" data-level="17.5.2" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#resampling-locations"><i class="fa fa-check"></i><b>17.5.2</b> Resampling Locations</a></li>
+<li class="chapter" data-level="17.5.3" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#resampling-against-distance"><i class="fa fa-check"></i><b>17.5.3</b> Resampling Against Distance</a></li>
+<li class="chapter" data-level="17.5.4" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#splitting-a-trajectory"><i class="fa fa-check"></i><b>17.5.4</b> Splitting a Trajectory</a></li>
+<li class="chapter" data-level="17.5.5" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#rotating-the-stage-trajectory"><i class="fa fa-check"></i><b>17.5.5</b> Rotating the Stage Trajectory</a></li>
+<li class="chapter" data-level="17.5.6" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#straightness-and-sinuosity"><i class="fa fa-check"></i><b>17.5.6</b> Straightness and Sinuosity</a></li>
+<li class="chapter" data-level="17.5.7" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#directional-change"><i class="fa fa-check"></i><b>17.5.7</b> Directional Change</a></li>
+<li class="chapter" data-level="17.5.8" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#tracking-turning-angles"><i class="fa fa-check"></i><b>17.5.8</b> Tracking Turning Angles</a></li>
+<li class="chapter" data-level="17.5.9" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#visualising-trajectory-direction-changes"><i class="fa fa-check"></i><b>17.5.9</b> Visualising Trajectory Direction Changes</a></li>
+<li class="chapter" data-level="17.5.10" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-amt-for-stage-route-profiling"><i class="fa fa-check"></i><b>17.5.10</b> Using <code>amt</code> for Stage Route Profiling</a></li>
+<li class="chapter" data-level="17.5.11" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#creating-tracks"><i class="fa fa-check"></i><b>17.5.11</b> Creating Tracks</a></li>
+<li class="chapter" data-level="17.5.12" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#converting-to-other-track-formats"><i class="fa fa-check"></i><b>17.5.12</b> Converting to Other Track Formats</a></li>
+<li class="chapter" data-level="17.5.13" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-amt-for-stage-route-analysis"><i class="fa fa-check"></i><b>17.5.13</b> Using <code>amt</code> for Stage Route Analysis</a></li>
+<li class="chapter" data-level="17.5.14" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-rlft-for-profiling-along-a-stage-route"><i class="fa fa-check"></i><b>17.5.14</b> Using `rLFT`` for Profiling Along a Stage Route</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html"><i class="fa fa-check"></i><b>18</b> Revisiting Elevation Data</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#load-in-base-data-9"><i class="fa fa-check"></i><b>18.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="18.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#generating-elevation-maps"><i class="fa fa-check"></i><b>18.2</b> Generating Elevation Maps</a>
+<ul>
+<li class="chapter" data-level="18.2.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#accessing-elevation-values-along-a-route-from-an-elevation-raster"><i class="fa fa-check"></i><b>18.2.1</b> Accessing Elevation Values Along a Route from an Elevation Raster</a></li>
+<li class="chapter" data-level="18.2.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-geospheredistgeo-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.2</b> Using <code>geosphere::distGeo</code> to Find Distance Along a Route</a></li>
+<li class="chapter" data-level="18.2.3" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-spspdists-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.3</b> Using <code>sp::spDists</code> to Find Distance Along a Route</a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#generating-a-3d-ribbon-plot-of-the-stage-route"><i class="fa fa-check"></i><b>18.3</b> Generating a 3D Ribbon Plot of the Stage Route</a></li>
+<li class="chapter" data-level="18.4" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#identifying-road-type"><i class="fa fa-check"></i><b>18.4</b> Identifying Road Type</a></li>
+<li class="chapter" data-level="18.5" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#displaying-route-twistiness-and-elevation"><i class="fa fa-check"></i><b>18.5</b> Displaying Route Twistiness and Elevation</a>
+<ul>
+<li class="chapter" data-level="18.5.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#making-a-3d-print-file-of-the-model"><i class="fa fa-check"></i><b>18.5.1</b> Making a 3D Print File of the Model</a></li>
+<li class="chapter" data-level="18.5.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#rendering-a-3d-movie-of-the-model"><i class="fa fa-check"></i><b>18.5.2</b> Rendering a 3D movie of the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="18.6" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-the-slopes-package-to-analyse-stage-elevation-data"><i class="fa fa-check"></i><b>18.6</b> Using the <code>slopes</code> Package to Analyse Stage Elevation Data</a></li>
+<li class="chapter" data-level="18.7" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#analysing-route-elevation-from-first-principles"><i class="fa fa-check"></i><b>18.7</b> Analysing Route Elevation from First Principles</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html"><i class="fa fa-check"></i><b>19</b> Adding <em>OpenStreetMap</em> Data</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#load-in-base-data-10"><i class="fa fa-check"></i><b>19.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="19.2" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#adding-detail-and-features-from-openstreetmap"><i class="fa fa-check"></i><b>19.2</b> Adding Detail and Features from OpenStreetMap</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#plotting-osm-highways"><i class="fa fa-check"></i><b>19.2.1</b> Plotting OSM Highways</a></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#viewing-roads-in-the-vicinity-of-a-route"><i class="fa fa-check"></i><b>19.3</b> Viewing Roads in the Vicinity of a Route</a>
+<ul>
+<li class="chapter" data-level="19.3.1" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#using-sfst_buffer-to-create-buffered-areas"><i class="fa fa-check"></i><b>19.3.1</b> Using <code>sf::st_buffer</code> to Create Buffered Areas</a></li>
+<li class="chapter" data-level="19.3.2" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#using-rgeosgbuffer-to-create-buffered-areas"><i class="fa fa-check"></i><b>19.3.2</b> Using <code>rgeos::gBuffer</code> to Create Buffered Areas</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#adding-additional-data-from-osm"><i class="fa fa-check"></i><b>19.4</b> Adding Additional Data From OSM</a>
+<ul>
+<li class="chapter" data-level="19.4.1" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#adding-building-layers-from-openstreetmap"><i class="fa fa-check"></i><b>19.4.1</b> Adding Building Layers from <em>OpenStreetMap</em></a></li>
+<li class="chapter" data-level="19.4.2" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#the-wide-variety-of-osm-features"><i class="fa fa-check"></i><b>19.4.2</b> The Wide Variety of OSM Features</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html"><i class="fa fa-check"></i><b>20</b> Creating A Road Book</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#load-in-base-data-11"><i class="fa fa-check"></i><b>20.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="20.2" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#using-sfnetworks-to-represent-routes-and-road-networks"><i class="fa fa-check"></i><b>20.2</b> Using <code>sfnetworks</code> to Represent Routes and Road Networks</a></li>
+<li class="chapter" data-level="20.3" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#analysing-road-networks-with-sfnetworks"><i class="fa fa-check"></i><b>20.3</b> Analysing Road Networks with <code>sfnetworks</code></a>
+<ul>
+<li class="chapter" data-level="20.3.1" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#creating-an-sfnetworks-graph"><i class="fa fa-check"></i><b>20.3.1</b> Creating an <code>sfnetworks</code> Graph</a></li>
+<li class="chapter" data-level="20.3.2" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#filtering-an-sfnetworks-graph"><i class="fa fa-check"></i><b>20.3.2</b> Filtering an <code>sfnetworks</code> Graph</a></li>
+<li class="chapter" data-level="20.3.3" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#viewing-a-buffered-area-around-a-junction-node"><i class="fa fa-check"></i><b>20.3.3</b> Viewing a Buffered Area Around a Junction Node</a></li>
+<li class="chapter" data-level="20.3.4" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#snapping-a-route-to-a-road-network"><i class="fa fa-check"></i><b>20.3.4</b> Snapping a Route to a Road Network</a></li>
+<li class="chapter" data-level="20.3.5" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#snapping-a-full-stage-route-to-the-road-network"><i class="fa fa-check"></i><b>20.3.5</b> Snapping a Full Stage Route to the Road Network</a></li>
+</ul></li>
+<li class="chapter" data-level="20.4" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#using-dodgr-to-represent-routes-and-road-networks"><i class="fa fa-check"></i><b>20.4</b> Using <code>dodgr</code> to Represent Routes and Road Networks</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="where-next.html"><a href="where-next.html"><i class="fa fa-check"></i><b>21</b> Where Next?</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Visualising WRC Rally Stages With <code>rayshader</code> and R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="creating-a-road-book" class="section level1" number="20">
+<h1><span class="header-section-number">20</span> Creating A Road Book</h1>
+<p>A rally road book describes the route to be taken in a rally. Road books describe the route in terms of road sections, lengths of road between road junctions encountered along the route (<a href="https://www.therallyco-driver.com/road-book/">example</a>). At each junction, the route to be taken is clearly identified.</p>
+<p>One exciting possibility is that we can recover route information from OpenStreetMap and cast it as a graph (network) using the <code>sfnetworks</code> package and then identify all the road junctions along a route.</p>
+<p>If we then zoom in on a particular junction node, we should be able to see the junction. If we can access the orientation of the road, we should be able to generate a tulip…</p>
+<p>So the question is: <em>can we find junctions on a route snapped to a road network?"</em></p>
+<p><em>Under my current understanding, I haven’t found a way to do this yet…</em></p>
+<p>A secondary question might be: <em>can we transform a graph layout so that a spatially curved route is depicted as a straight line with junction turns off the route: a) depicted; b) depicted at their angle to the route?</em></p>
+<p><em>Again, I haven’t currently found a way to do this.</em></p>
+<div id="load-in-base-data-11" class="section level2" number="20.1">
+<h2><span class="header-section-number">20.1</span> Load in Base Data</h2>
+<p>As ever, let’s load in our stage data:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="creating-a-road-book.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Original route data  (KML file):</span></span>
+<span id="cb1-2"><a href="creating-a-road-book.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># https://webapps.wrc.com/2020/web/obc/kml/montecarlo_2021.xml</span></span>
+<span id="cb1-3"><a href="creating-a-road-book.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-4"><a href="creating-a-road-book.html#cb1-4" aria-hidden="true" tabindex="-1"></a>geojson_filename <span class="ot">=</span> <span class="st">&#39;montecarlo_2021.geojson&#39;</span></span>
+<span id="cb1-5"><a href="creating-a-road-book.html#cb1-5" aria-hidden="true" tabindex="-1"></a>geojson_sf <span class="ot">=</span> sf<span class="sc">::</span><span class="fu">st_read</span>(geojson_filename)</span></code></pre></div>
+<pre><code>## Reading layer `montecarlo_2021&#39; from data source `/Users/tonyhirst/Documents/GitHub/visualising-rally-stages/montecarlo_2021.geojson&#39; using driver `GeoJSON&#39;
+## Simple feature collection with 9 features and 2 fields
+## geometry type:  LINESTRING
+## dimension:      XY
+## bbox:           xmin: 5.243488 ymin: 43.87633 xmax: 6.951953 ymax: 44.81973
+## geographic CRS: WGS 84</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="creating-a-road-book.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grab the first stage route</span></span>
+<span id="cb3-2"><a href="creating-a-road-book.html#cb3-2" aria-hidden="true" tabindex="-1"></a>route <span class="ot">=</span> geojson_sf[<span class="dv">1</span>,]</span>
+<span id="cb3-3"><a href="creating-a-road-book.html#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="creating-a-road-book.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get stage bounding box</span></span>
+<span id="cb3-5"><a href="creating-a-road-book.html#cb3-5" aria-hidden="true" tabindex="-1"></a>stage_bbox <span class="ot">=</span> <span class="fu">st_bbox</span>(route)</span></code></pre></div>
+<p>Get the coordinates into a UTM form, and also generate a buffered area around the route:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="creating-a-road-book.html#cb4-1" aria-hidden="true" tabindex="-1"></a>lonlat2UTM_hemisphere <span class="ot">&lt;-</span> <span class="cf">function</span>(lonlat) {</span>
+<span id="cb4-2"><a href="creating-a-road-book.html#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(lonlat[<span class="dv">1</span>] <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">&quot;north&quot;</span>, <span class="st">&quot;south&quot;</span>)</span>
+<span id="cb4-3"><a href="creating-a-road-book.html#cb4-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-4"><a href="creating-a-road-book.html#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="creating-a-road-book.html#cb4-5" aria-hidden="true" tabindex="-1"></a>lonlat2UTMzone <span class="ot">=</span> <span class="cf">function</span>(lonlat) {</span>
+<span id="cb4-6"><a href="creating-a-road-book.html#cb4-6" aria-hidden="true" tabindex="-1"></a>  utm <span class="ot">=</span> (<span class="fu">floor</span>((lonlat[<span class="dv">1</span>] <span class="sc">+</span> <span class="dv">180</span>) <span class="sc">/</span> <span class="dv">6</span>) <span class="sc">%%</span> <span class="dv">60</span>) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb4-7"><a href="creating-a-road-book.html#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(lonlat[<span class="dv">2</span>] <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb4-8"><a href="creating-a-road-book.html#cb4-8" aria-hidden="true" tabindex="-1"></a>    utm <span class="sc">+</span> <span class="dv">32600</span></span>
+<span id="cb4-9"><a href="creating-a-road-book.html#cb4-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb4-10"><a href="creating-a-road-book.html#cb4-10" aria-hidden="true" tabindex="-1"></a>    utm <span class="sc">+</span> <span class="dv">32700</span></span>
+<span id="cb4-11"><a href="creating-a-road-book.html#cb4-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-12"><a href="creating-a-road-book.html#cb4-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-13"><a href="creating-a-road-book.html#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="creating-a-road-book.html#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Grab a copy of the original projection</span></span>
+<span id="cb4-15"><a href="creating-a-road-book.html#cb4-15" aria-hidden="true" tabindex="-1"></a>original_crs <span class="ot">=</span> <span class="fu">st_crs</span>(geojson_sf[<span class="dv">1</span>,])</span>
+<span id="cb4-16"><a href="creating-a-road-book.html#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="creating-a-road-book.html#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the UTM zone for a sample a point on the route</span></span>
+<span id="cb4-18"><a href="creating-a-road-book.html#cb4-18" aria-hidden="true" tabindex="-1"></a>crs_zone <span class="ot">=</span> <span class="fu">lonlat2UTMzone</span>(<span class="fu">c</span>(<span class="fu">st_coordinates</span>(route)[<span class="dv">1</span>,<span class="dv">1</span>],</span>
+<span id="cb4-19"><a href="creating-a-road-book.html#cb4-19" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">st_coordinates</span>(route)[<span class="dv">1</span>,<span class="dv">2</span>]))</span>
+<span id="cb4-20"><a href="creating-a-road-book.html#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="creating-a-road-book.html#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the projection string</span></span>
+<span id="cb4-22"><a href="creating-a-road-book.html#cb4-22" aria-hidden="true" tabindex="-1"></a>utm_pro4_string <span class="ot">=</span> <span class="fu">st_crs</span>(crs_zone)<span class="sc">$</span>proj4string</span>
+<span id="cb4-23"><a href="creating-a-road-book.html#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&quot;+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs&quot;</span></span>
+<span id="cb4-24"><a href="creating-a-road-book.html#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># units in meters e.g. https://epsg.io/32632</span></span>
+<span id="cb4-25"><a href="creating-a-road-book.html#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="creating-a-road-book.html#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Transform the route projection</span></span>
+<span id="cb4-27"><a href="creating-a-road-book.html#cb4-27" aria-hidden="true" tabindex="-1"></a>route_utm <span class="ot">=</span> <span class="fu">st_transform</span>(geojson_sf[<span class="dv">1</span>,], <span class="at">crs =</span> <span class="fu">st_crs</span>(utm_pro4_string))</span>
+<span id="cb4-28"><a href="creating-a-road-book.html#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="creating-a-road-book.html#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a buffer distance</span></span>
+<span id="cb4-30"><a href="creating-a-road-book.html#cb4-30" aria-hidden="true" tabindex="-1"></a>buffer_margin_200m <span class="ot">=</span> units<span class="sc">::</span><span class="fu">set_units</span>(<span class="dv">200</span>, m)</span>
+<span id="cb4-31"><a href="creating-a-road-book.html#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="creating-a-road-book.html#cb4-32" aria-hidden="true" tabindex="-1"></a>buffered_route_utm <span class="ot">&lt;-</span> <span class="fu">st_buffer</span>(route_utm, buffer_margin_200m)</span>
+<span id="cb4-33"><a href="creating-a-road-book.html#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="creating-a-road-book.html#cb4-34" aria-hidden="true" tabindex="-1"></a>buffered_route <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(buffered_route_utm, original_crs)</span>
+<span id="cb4-35"><a href="creating-a-road-book.html#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="creating-a-road-book.html#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(buffered_route_utm))</span>
+<span id="cb4-37"><a href="creating-a-road-book.html#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(route_utm), <span class="at">col=</span><span class="st">&#39;red&#39;</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="images/creating-road-book-utm-preview-1.png" width="672" /></p>
+<p>Also retrieve some highways data from OpenStreetMap:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="creating-a-road-book.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(osmdata)</span>
+<span id="cb5-2"><a href="creating-a-road-book.html#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="creating-a-road-book.html#cb5-3" aria-hidden="true" tabindex="-1"></a>stage_bbox <span class="ot">=</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(buffered_route)</span>
+<span id="cb5-4"><a href="creating-a-road-book.html#cb5-4" aria-hidden="true" tabindex="-1"></a>stage_osm  <span class="ot">=</span> <span class="fu">opq</span>(stage_bbox) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-5"><a href="creating-a-road-book.html#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;highway&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-6"><a href="creating-a-road-book.html#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>()</span>
+<span id="cb5-7"><a href="creating-a-road-book.html#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="creating-a-road-book.html#cb5-8" aria-hidden="true" tabindex="-1"></a>stage_osm</span></code></pre></div>
+<pre><code>## Object of class &#39;osmdata&#39; with:
+##                  $bbox : 44.7338167906645,5.88122798027631,44.8215309510708,5.94324234302002
+##         $overpass_call : The call submitted to the overpass API
+##                  $meta : metadata including timestamp and version numbers
+##            $osm_points : &#39;sf&#39; Simple Features Collection with 8706 points
+##             $osm_lines : &#39;sf&#39; Simple Features Collection with 400 linestrings
+##          $osm_polygons : &#39;sf&#39; Simple Features Collection with 0 polygons
+##        $osm_multilines : NULL
+##     $osm_multipolygons : NULL</code></pre>
+</div>
+<div id="using-sfnetworks-to-represent-routes-and-road-networks" class="section level2" number="20.2">
+<h2><span class="header-section-number">20.2</span> Using <code>sfnetworks</code> to Represent Routes and Road Networks</h2>
+<p>We can cast the stage route as a directed network using the <code>sfnetworks::as_sfnetwork()</code> applied to the linestring geometry of the route:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="creating-a-road-book.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sfnetworks)</span>
+<span id="cb7-2"><a href="creating-a-road-book.html#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="creating-a-road-book.html#cb7-3" aria-hidden="true" tabindex="-1"></a>route_dg <span class="ot">=</span> <span class="fu">as_sfnetwork</span>(<span class="fu">st_geometry</span>(route_utm), <span class="at">directed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-4"><a href="creating-a-road-book.html#cb7-4" aria-hidden="true" tabindex="-1"></a>route_dg</span></code></pre></div>
+<pre><code>## # A sfnetwork with 2 nodes and 1 edges
+## #
+## # CRS:  +proj=utm +zone=31 +datum=WGS84 +units=m +no_defs 
+## #
+## # A rooted tree with spatially explicit edges
+## #
+## # Node Data:     2 x 1 (active)
+## # Geometry type: POINT
+## # Dimension:     XY
+## # Bounding box:  xmin: 729177.5 ymin: 4957658 xmax: 732502.2 ymax: 4967064
+##                    x
+##          &lt;POINT [m]&gt;
+## 1 (729177.5 4957658)
+## 2 (732502.2 4967064)
+## #
+## # Edge Data:     1 x 3
+## # Geometry type: LINESTRING
+## # Dimension:     XY
+## # Bounding box:  xmin: 728265.7 ymin: 4957658 xmax: 732502.2 ymax: 4967115
+##    from    to                                                                   x
+##   &lt;int&gt; &lt;int&gt;                                                    &lt;LINESTRING [m]&gt;
+## 1     1     2 (729177.5 4957658, 729187.2 4957678, 729199 4957703, 729200.4 4957…</code></pre>
+<p>We can plot the route and the distinguished start and end nodes:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="creating-a-road-book.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(route_dg, <span class="st">&quot;edges&quot;</span>),</span>
+<span id="cb9-2"><a href="creating-a-road-book.html#cb9-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="st">&#39;grey&#39;</span>, <span class="at">lwd =</span> <span class="dv">4</span>)</span>
+<span id="cb9-3"><a href="creating-a-road-book.html#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="creating-a-road-book.html#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(route_dg, <span class="st">&quot;nodes&quot;</span>),</span>
+<span id="cb9-5"><a href="creating-a-road-book.html#cb9-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span><span class="fu">c</span>(<span class="st">&#39;green&#39;</span>, <span class="st">&#39;red&#39;</span>), <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">cex =</span> <span class="dv">2</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="images/creating-road-book-route_dg-1.png" width="672" /></p>
+<p>This also suggests to us that we can add additional nodes and colour those. We could also then segment the edges between the nodes.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="creating-a-road-book.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get line segment coords</span></span>
+<span id="cb10-2"><a href="creating-a-road-book.html#cb10-2" aria-hidden="true" tabindex="-1"></a>edges <span class="ot">=</span> <span class="fu">st_coordinates</span>(<span class="fu">st_geometry</span>(route_dg, <span class="st">&quot;edges&quot;</span>))</span>
+<span id="cb10-3"><a href="creating-a-road-book.html#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="creating-a-road-book.html#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the mid point by segment rather than distance</span></span>
+<span id="cb10-5"><a href="creating-a-road-book.html#cb10-5" aria-hidden="true" tabindex="-1"></a>mid_edge <span class="ot">=</span> edges[<span class="fu">floor</span>(<span class="fu">nrow</span>(edges)<span class="sc">/</span><span class="dv">2</span>),]</span>
+<span id="cb10-6"><a href="creating-a-road-book.html#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="creating-a-road-book.html#cb10-7" aria-hidden="true" tabindex="-1"></a>mid_edge_pt <span class="ot">=</span> <span class="fu">st_sfc</span>(<span class="fu">st_point</span>(<span class="fu">c</span>(mid_edge[<span class="st">&#39;X&#39;</span>],</span>
+<span id="cb10-8"><a href="creating-a-road-book.html#cb10-8" aria-hidden="true" tabindex="-1"></a>                                 mid_edge[<span class="st">&#39;Y&#39;</span>])),</span>
+<span id="cb10-9"><a href="creating-a-road-book.html#cb10-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">crs=</span><span class="fu">st_crs</span>(route_dg)<span class="sc">$</span>proj4string)</span>
+<span id="cb10-10"><a href="creating-a-road-book.html#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="creating-a-road-book.html#cb10-11" aria-hidden="true" tabindex="-1"></a>mid_edge_pt</span></code></pre></div>
+<pre><code>## Geometry set for 1 feature 
+## geometry type:  POINT
+## dimension:      XY
+## bbox:           xmin: 730424.6 ymin: 4962589 xmax: 730424.6 ymax: 4962589
+## CRS:            +proj=utm +zone=31 +datum=WGS84 +units=m +no_defs</code></pre>
+<pre><code>## POINT (730424.6 4962589)</code></pre>
+<p>We can add this point as a node on our graph using the <code>sfnetworks::st_network_blend()</code> function:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="creating-a-road-book.html#cb13-1" aria-hidden="true" tabindex="-1"></a>route_dg2 <span class="ot">=</span> <span class="fu">st_network_blend</span>(route_dg, mid_edge_pt)</span>
+<span id="cb13-2"><a href="creating-a-road-book.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(route_dg2)</span></code></pre></div>
+<p><img src="images/creating-road-book-route_dg2-1.png" width="672" /></p>
+<p>Now let’s see what happens if we add that node to the graph, and then colour the graph by the node defined edges along the route:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="creating-a-road-book.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#https://luukvdmeer.github.io/sfnetworks/articles/preprocess_and_clean.html</span></span>
+<span id="cb14-2"><a href="creating-a-road-book.html#cb14-2" aria-hidden="true" tabindex="-1"></a>edge_colors <span class="ot">=</span> <span class="cf">function</span>(x) <span class="fu">rep</span>(<span class="fu">sf.colors</span>(<span class="dv">12</span>, <span class="at">categorical =</span> <span class="cn">TRUE</span>)[<span class="sc">-</span><span class="dv">2</span>],</span>
+<span id="cb14-3"><a href="creating-a-road-book.html#cb14-3" aria-hidden="true" tabindex="-1"></a>                              <span class="dv">2</span>)[<span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span>igraph<span class="sc">::</span><span class="fu">ecount</span>(x))]</span>
+<span id="cb14-4"><a href="creating-a-road-book.html#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="creating-a-road-book.html#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(route_dg2, <span class="st">&quot;edges&quot;</span>),</span>
+<span id="cb14-6"><a href="creating-a-road-book.html#cb14-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">edge_colors</span>(route_dg2), <span class="at">lwd =</span> <span class="dv">4</span>)</span>
+<span id="cb14-7"><a href="creating-a-road-book.html#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="creating-a-road-book.html#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(route_dg2, <span class="st">&quot;nodes&quot;</span>),</span>
+<span id="cb14-9"><a href="creating-a-road-book.html#cb14-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">col=</span> <span class="st">&#39;black&#39;</span>, <span class="at">pch =</span> <span class="dv">20</span>, <span class="at">cex =</span> <span class="dv">1</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="images/creating-road-book-route_dg2_col-1.png" width="672" /></p>
+<p>This suggests that if we have a set of split points, for example, we can add them as nodes to the graph and then colour the graph edges differently for each edge that connects nodes along the route.</p>
+<p>It also suggests we can plot separate splits. For example, here’s the second half of the route:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="creating-a-road-book.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(route_dg2, <span class="st">&quot;edges&quot;</span>)[<span class="dv">2</span>],</span>
+<span id="cb15-2"><a href="creating-a-road-book.html#cb15-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">edge_colors</span>(route_dg2), <span class="at">lwd =</span> <span class="dv">4</span>)</span></code></pre></div>
+<p><img src="images/creating-road-book-route_dg_fragment-1.png" width="672" /></p>
+<p>Split point locations are often given in terms of “distance into stage”, so being able to easily add a node a certain distance along a route defined as a linestring would be really handy… Also being trivially able to select a node and found out how far it was along from the start of the route, to the end of the route, to the next node and to the previous node.</p>
+</div>
+<div id="analysing-road-networks-with-sfnetworks" class="section level2" number="20.3">
+<h2><span class="header-section-number">20.3</span> Analysing Road Networks with <code>sfnetworks</code></h2>
+<p>We can also represent a more complex set of roads as a network. For example, a set of roads retrieved from OpenStreetMap.</p>
+<div id="creating-an-sfnetworks-graph" class="section level3" number="20.3.1">
+<h3><span class="header-section-number">20.3.1</span> Creating an <code>sfnetworks</code> Graph</h3>
+<p>To create the spatial network, we pass the “lines” retrieved using <code>osmdata::opq()</code> to the <code>sfnetworks::as_sfnetwork()</code> function, this time setting the graph as undirected:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="creating-a-road-book.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the sfnetwork object</span></span>
+<span id="cb16-2"><a href="creating-a-road-book.html#cb16-2" aria-hidden="true" tabindex="-1"></a>stage_osm_g <span class="ot">&lt;-</span> <span class="fu">as_sfnetwork</span>(stage_osm<span class="sc">$</span>osm_lines,</span>
+<span id="cb16-3"><a href="creating-a-road-book.html#cb16-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-4"><a href="creating-a-road-book.html#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="creating-a-road-book.html#cb16-5" aria-hidden="true" tabindex="-1"></a>stage_osm_g</span></code></pre></div>
+<pre><code>## # A sfnetwork with 578 nodes and 400 edges
+## #
+## # CRS:  EPSG:4326 
+## #
+## # An undirected simple graph with 183 components with spatially explicit edges
+## #
+## # Node Data:     578 x 1 (active)
+## # Geometry type: POINT
+## # Dimension:     XY
+## # Bounding box:  xmin: 5.861884 ymin: 44.72746 xmax: 5.959824 ymax: 44.82754
+##              geometry
+##           &lt;POINT [°]&gt;
+## 1 (5.940974 44.81919)
+## 2 (5.907405 44.81978)
+## 3 (5.883881 44.75105)
+## 4 (5.887348 44.75815)
+## 5 (5.906538 44.81779)
+## 6 (5.907493 44.81789)
+## # … with 572 more rows
+## #
+## # Edge Data:     400 x 30
+## # Geometry type: LINESTRING
+## # Dimension:     XY
+## # Bounding box:  xmin: 5.856738 ymin: 44.72746 xmax: 5.959824 ymax: 44.8285
+##    from    to osm_id name  access bicycle bridge covered fixme foot  highway
+##   &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  
+## 1     1     2 25309… Rout… &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt;  unclas…
+## 2     3     4 25309… &lt;NA&gt;  &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt;  tertia…
+## 3     5     6 25312… &lt;NA&gt;  &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt;  unclas…
+## # … with 397 more rows, and 19 more variables: incline &lt;chr&gt;, lanes &lt;chr&gt;,
+## #   layer &lt;chr&gt;, maxlength &lt;chr&gt;, maxspeed &lt;chr&gt;, motor_vehicle &lt;chr&gt;,
+## #   oneway &lt;chr&gt;, ref &lt;chr&gt;, sac_scale &lt;chr&gt;, service &lt;chr&gt;, smoothness &lt;chr&gt;,
+## #   source &lt;chr&gt;, surface &lt;chr&gt;, tracktype &lt;chr&gt;, trail_visibility &lt;chr&gt;,
+## #   tunnel &lt;chr&gt;, via_ferrata_scale &lt;chr&gt;, width &lt;chr&gt;, geometry &lt;LINESTRING
+## #   [°]&gt;</code></pre>
+<p>Let’s see what it looks like…</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="creating-a-road-book.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(stage_osm_g, <span class="at">col=</span><span class="st">&#39;grey&#39;</span>, <span class="at">cex=</span><span class="fl">0.5</span>)</span></code></pre></div>
+<p><img src="images/creating-road-book-osm_g-1.png" width="672" /></p>
+<p>Well it looks like there’s something there!</p>
+<p>Can we transform the projection?</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="creating-a-road-book.html#cb19-1" aria-hidden="true" tabindex="-1"></a>stage_osm_g_utm <span class="ot">=</span>  stage_osm_g <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="creating-a-road-book.html#cb19-2" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">st_transform</span>(<span class="fu">st_crs</span>(buffered_route_utm))</span>
+<span id="cb19-3"><a href="creating-a-road-book.html#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="creating-a-road-book.html#cb19-4" aria-hidden="true" tabindex="-1"></a>stage_osm_g_utm</span></code></pre></div>
+<pre><code>## # A sfnetwork with 578 nodes and 400 edges
+## #
+## # CRS:  +proj=utm +zone=31 +datum=WGS84 +units=m +no_defs 
+## #
+## # An undirected simple graph with 183 components with spatially explicit edges
+## #
+## # Node Data:     578 x 1 (active)
+## # Geometry type: POINT
+## # Dimension:     XY
+## # Bounding box:  xmin: 726465.8 ymin: 4956791 xmax: 734111.8 ymax: 4967832
+##             geometry
+##          &lt;POINT [m]&gt;
+## 1 (732522.3 4967074)
+## 2   (729866 4967043)
+## 3   (728277 4959342)
+## 4 (728523.4 4960141)
+## 5 (729805.4 4966819)
+## 6 (729880.4 4966833)
+## # … with 572 more rows
+## #
+## # Edge Data:     400 x 30
+## # Geometry type: LINESTRING
+## # Dimension:     XY
+## # Bounding box:  xmin: 726076.7 ymin: 4956791 xmax: 734111.8 ymax: 4967936
+##    from    to osm_id name  access bicycle bridge covered fixme foot  highway
+##   &lt;int&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  
+## 1     1     2 25309… Rout… &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt;  unclas…
+## 2     3     4 25309… &lt;NA&gt;  &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt;  tertia…
+## 3     5     6 25312… &lt;NA&gt;  &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;   &lt;NA&gt;    &lt;NA&gt;  &lt;NA&gt;  unclas…
+## # … with 397 more rows, and 19 more variables: incline &lt;chr&gt;, lanes &lt;chr&gt;,
+## #   layer &lt;chr&gt;, maxlength &lt;chr&gt;, maxspeed &lt;chr&gt;, motor_vehicle &lt;chr&gt;,
+## #   oneway &lt;chr&gt;, ref &lt;chr&gt;, sac_scale &lt;chr&gt;, service &lt;chr&gt;, smoothness &lt;chr&gt;,
+## #   source &lt;chr&gt;, surface &lt;chr&gt;, tracktype &lt;chr&gt;, trail_visibility &lt;chr&gt;,
+## #   tunnel &lt;chr&gt;, via_ferrata_scale &lt;chr&gt;, width &lt;chr&gt;, geometry &lt;LINESTRING
+## #   [m]&gt;</code></pre>
+</div>
+<div id="filtering-an-sfnetworks-graph" class="section level3" number="20.3.2">
+<h3><span class="header-section-number">20.3.2</span> Filtering an <code>sfnetworks</code> Graph</h3>
+<p>Can we view the network in the buffered area around the stage route?</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="creating-a-road-book.html#cb21-1" aria-hidden="true" tabindex="-1"></a>filtered <span class="ot">=</span> <span class="fu">st_filter</span>(stage_osm_g_utm, </span>
+<span id="cb21-2"><a href="creating-a-road-book.html#cb21-2" aria-hidden="true" tabindex="-1"></a>                     buffered_route_utm,</span>
+<span id="cb21-3"><a href="creating-a-road-book.html#cb21-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">.pred =</span> st_intersects)</span>
+<span id="cb21-4"><a href="creating-a-road-book.html#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="creating-a-road-book.html#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(filtered, <span class="at">cex=</span><span class="fl">0.5</span>)</span>
+<span id="cb21-6"><a href="creating-a-road-book.html#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="creating-a-road-book.html#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># We can blend plots using an sfnetwork object</span></span>
+<span id="cb21-8"><a href="creating-a-road-book.html#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># As long as it has the same projected coordinate system...</span></span>
+<span id="cb21-9"><a href="creating-a-road-book.html#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(route_utm), <span class="at">col=</span><span class="st">&#39;red&#39;</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="images/creating-road-book-osm_g_filtered-1.png" width="672" /></p>
+<p>A couple of things to note here. Firstly, the stage route points may not lay exactly on the OSM highway route, even if the routes are supposed to correspond to the same bit of road. Secondly, the rally stage route may go onto track surfaces that are not recorded by OSM as highways lines.</p>
+<p>The challenge now is this: can we map out original route on the OSM network, and return a filtered part of the network that show the original route and the road junctions along it? If so, then we have the basis of a tulip diagrammer.</p>
+</div>
+<div id="viewing-a-buffered-area-around-a-junction-node" class="section level3" number="20.3.3">
+<h3><span class="header-section-number">20.3.3</span> Viewing a Buffered Area Around a Junction Node</h3>
+<p>Get a (carefully selected!) node, buffer around it and see what we can see:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="creating-a-road-book.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find a junction on the road network</span></span>
+<span id="cb22-2"><a href="creating-a-road-book.html#cb22-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">st_geometry</span>(filtered, <span class="st">&quot;nodes&quot;</span>)[<span class="dv">85</span>]</span>
+<span id="cb22-3"><a href="creating-a-road-book.html#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="creating-a-road-book.html#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a buffered area around the road network</span></span>
+<span id="cb22-5"><a href="creating-a-road-book.html#cb22-5" aria-hidden="true" tabindex="-1"></a>buffered_n <span class="ot">=</span> <span class="fu">st_buffer</span>(n, buffer_margin_200m)</span>
+<span id="cb22-6"><a href="creating-a-road-book.html#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="creating-a-road-book.html#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the road network to the buffered area</span></span>
+<span id="cb22-8"><a href="creating-a-road-book.html#cb22-8" aria-hidden="true" tabindex="-1"></a>filtered2 <span class="ot">=</span> <span class="fu">st_filter</span>(stage_osm_g_utm, </span>
+<span id="cb22-9"><a href="creating-a-road-book.html#cb22-9" aria-hidden="true" tabindex="-1"></a>                     buffered_n,</span>
+<span id="cb22-10"><a href="creating-a-road-book.html#cb22-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">.pred =</span> st_intersects)</span>
+<span id="cb22-11"><a href="creating-a-road-book.html#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="creating-a-road-book.html#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(filtered2, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">col =</span> <span class="st">&#39;grey&#39;</span>, <span class="at">lwd =</span> <span class="dv">6</span>)</span></code></pre></div>
+<p><img src="images/creating-road-book-osm_g_fragment-1.png" width="672" /></p>
+<p>If we crop our route to the buffered area, we should be able to overlay it on the road network visually at least:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="creating-a-road-book.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crop the route to the buffered area</span></span>
+<span id="cb23-2"><a href="creating-a-road-book.html#cb23-2" aria-hidden="true" tabindex="-1"></a>filtered3 <span class="ot">=</span> <span class="fu">st_crop</span>(route_utm, </span>
+<span id="cb23-3"><a href="creating-a-road-book.html#cb23-3" aria-hidden="true" tabindex="-1"></a>                     buffered_n)</span>
+<span id="cb23-4"><a href="creating-a-road-book.html#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="creating-a-road-book.html#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># See what we&#39;ve got</span></span>
+<span id="cb23-6"><a href="creating-a-road-book.html#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(filtered2, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">col =</span> <span class="st">&#39;grey&#39;</span>, <span class="at">lwd =</span> <span class="dv">6</span>)</span>
+<span id="cb23-7"><a href="creating-a-road-book.html#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">st_geometry</span>(filtered3), <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">col=</span><span class="st">&#39;red&#39;</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="images/creating-road-book-unnamed-chunk-9-1.png" width="672" />
+Okay, so we have the road network and part of the stage route; the stage route passes a junction on the right.</p>
+<p>This could be promising, <em>if</em> we can find a way to reliably snap routes to OSM lines and index nodes along a route.</p>
+<p>One way to do this might be to crudely map a route onto the nearest OSM line and then hope that the OSM line is the appropriate track…</p>
+</div>
+<div id="snapping-a-route-to-a-road-network" class="section level3" number="20.3.4">
+<h3><span class="header-section-number">20.3.4</span> Snapping a Route to a Road Network</h3>
+<p>The <code>sfnetworks::st_network_blend()</code> function looks like it will try to map points as new nodes onto the nearest part of a graph route.</p>
+<p>Let’s get the nodes from our cropped route. There must be a better way of doing this (it’s such an obvious thing to want to do!) but I can’t find a straightforward way to do it, so we’ll just have to make something up! Cast the coordinates to a multipoint object then cast that a list of points:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="creating-a-road-book.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a multipoint from a list of coordinates</span></span>
+<span id="cb24-2"><a href="creating-a-road-book.html#cb24-2" aria-hidden="true" tabindex="-1"></a>pois_mp <span class="ot">=</span> <span class="fu">st_sfc</span>(<span class="fu">st_multipoint</span>(<span class="fu">st_coordinates</span>(filtered3)),</span>
+<span id="cb24-3"><a href="creating-a-road-book.html#cb24-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">crs=</span><span class="fu">st_crs</span>(filtered3))</span>
+<span id="cb24-4"><a href="creating-a-road-book.html#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="creating-a-road-book.html#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a list of points from a multipoint</span></span>
+<span id="cb24-6"><a href="creating-a-road-book.html#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Via: https://github.com/r-spatial/sf/issues/114</span></span>
+<span id="cb24-7"><a href="creating-a-road-book.html#cb24-7" aria-hidden="true" tabindex="-1"></a>pois_points <span class="ot">=</span> <span class="fu">st_cast</span>(<span class="at">x =</span> pois_mp, <span class="at">to =</span> <span class="st">&quot;POINT&quot;</span>)</span></code></pre></div>
+<p>Let’s see what happens if we try to snap those route points onto the road network:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="creating-a-road-book.html#cb25-1" aria-hidden="true" tabindex="-1"></a>blended <span class="ot">=</span> <span class="fu">st_network_blend</span>(filtered2, pois_points)</span>
+<span id="cb25-2"><a href="creating-a-road-book.html#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="creating-a-road-book.html#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(filtered2, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">col =</span> <span class="st">&#39;grey&#39;</span>, <span class="at">lwd =</span> <span class="dv">6</span>)</span>
+<span id="cb25-4"><a href="creating-a-road-book.html#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(blended, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">col=</span><span class="st">&#39;red&#39;</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="images/creating-road-book-unnamed-chunk-11-1.png" width="672" /></p>
+<p>Okay, they seem to have snapped new nodes onto the route network.</p>
+<p>What happens if we now buffer around that route fragment and just show the route snapped to the road network:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="creating-a-road-book.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Buffered area around the route</span></span>
+<span id="cb26-2"><a href="creating-a-road-book.html#cb26-2" aria-hidden="true" tabindex="-1"></a>filtered3_buffered <span class="ot">=</span> <span class="fu">st_buffer</span>(filtered3,  units<span class="sc">::</span><span class="fu">set_units</span>(<span class="dv">15</span>, m))</span>
+<span id="cb26-3"><a href="creating-a-road-book.html#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="creating-a-road-book.html#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Limit the road network to the buffered area round the route</span></span>
+<span id="cb26-5"><a href="creating-a-road-book.html#cb26-5" aria-hidden="true" tabindex="-1"></a>filtered4 <span class="ot">=</span> <span class="fu">st_filter</span>(blended, </span>
+<span id="cb26-6"><a href="creating-a-road-book.html#cb26-6" aria-hidden="true" tabindex="-1"></a>                     filtered3_buffered,</span>
+<span id="cb26-7"><a href="creating-a-road-book.html#cb26-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">.pred =</span> st_intersects)</span>
+<span id="cb26-8"><a href="creating-a-road-book.html#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="creating-a-road-book.html#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># See what we&#39;ve got</span></span>
+<span id="cb26-10"><a href="creating-a-road-book.html#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(filtered4, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">col=</span><span class="st">&#39;red&#39;</span>)</span></code></pre></div>
+<p><img src="images/creating-road-book-unnamed-chunk-12-1.png" width="672" /></p>
+<p>In the above example we see the snapped nodes are what the <code>sfnetworks</code> docs refer to as <em>pseudo nodes</em> that have only one incoming and one outgoing edge. (I guess this means we can also use network analysis to easily identify those nodes as nodes of degree 2?)</p>
+<p>The <code>sfnetworks</code> package provides a converter that can be applied via the <code>tidygraph::convert</code> function for cleaning (“smoothing”) these pseudo nodes, <code>sfnetworks::to_spatial_smoot</code>, so let’s see how that works:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="creating-a-road-book.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidygraph)</span>
+<span id="cb27-2"><a href="creating-a-road-book.html#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="creating-a-road-book.html#cb27-3" aria-hidden="true" tabindex="-1"></a>smoothed <span class="ot">=</span> <span class="fu">convert</span>(filtered4, to_spatial_smooth) <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="creating-a-road-book.html#cb27-4" aria-hidden="true" tabindex="-1"></a>              <span class="co"># Remove singleton nodes</span></span>
+<span id="cb27-5"><a href="creating-a-road-book.html#cb27-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">convert</span>(to_spatial_subdivision, <span class="at">.clean =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb27-6"><a href="creating-a-road-book.html#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="creating-a-road-book.html#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(smoothed, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">col=</span><span class="st">&#39;red&#39;</span>)</span></code></pre></div>
+<p><img src="images/creating-road-book-unnamed-chunk-13-1.png" width="672" /></p>
+<p>So that seems to work.</p>
+<p>Can we plot also somehow fettle the layout algorithm so that the nodes along the main path (which we somehow need to distinguish with start and stop nodes) is horizontally or vertically laid out?</p>
+</div>
+<div id="snapping-a-full-stage-route-to-the-road-network" class="section level3" number="20.3.5">
+<h3><span class="header-section-number">20.3.5</span> Snapping a Full Stage Route to the Road Network</h3>
+<p>What happens now if we try that recipe with the full route?</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="creating-a-road-book.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get a buffered region round the route</span></span>
+<span id="cb28-2"><a href="creating-a-road-book.html#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#buffer_margin_1km = units::set_units(1000, m)</span></span>
+<span id="cb28-3"><a href="creating-a-road-book.html#cb28-3" aria-hidden="true" tabindex="-1"></a>buffered_route_utm <span class="ot">&lt;-</span> <span class="fu">st_buffer</span>(route_utm, buffer_margin_200m)</span>
+<span id="cb28-4"><a href="creating-a-road-book.html#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="creating-a-road-book.html#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the road network to the buffered area</span></span>
+<span id="cb28-6"><a href="creating-a-road-book.html#cb28-6" aria-hidden="true" tabindex="-1"></a>full_filtered <span class="ot">=</span> <span class="fu">st_filter</span>(stage_osm_g_utm,</span>
+<span id="cb28-7"><a href="creating-a-road-book.html#cb28-7" aria-hidden="true" tabindex="-1"></a>                          buffered_route_utm,</span>
+<span id="cb28-8"><a href="creating-a-road-book.html#cb28-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">.pred =</span> st_intersects)</span>
+<span id="cb28-9"><a href="creating-a-road-book.html#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="creating-a-road-book.html#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Route points</span></span>
+<span id="cb28-11"><a href="creating-a-road-book.html#cb28-11" aria-hidden="true" tabindex="-1"></a>route_pois_mp <span class="ot">=</span> <span class="fu">st_sfc</span>(<span class="fu">st_multipoint</span>(<span class="fu">st_coordinates</span>(route_utm)),</span>
+<span id="cb28-12"><a href="creating-a-road-book.html#cb28-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">crs=</span><span class="fu">st_crs</span>(route_utm))</span>
+<span id="cb28-13"><a href="creating-a-road-book.html#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-14"><a href="creating-a-road-book.html#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a list of points from a multipoint</span></span>
+<span id="cb28-15"><a href="creating-a-road-book.html#cb28-15" aria-hidden="true" tabindex="-1"></a>route_pois_points <span class="ot">=</span> <span class="fu">st_cast</span>(<span class="at">x =</span> route_pois_mp, <span class="at">to =</span> <span class="st">&quot;POINT&quot;</span>)</span>
+<span id="cb28-16"><a href="creating-a-road-book.html#cb28-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-17"><a href="creating-a-road-book.html#cb28-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Snap to road network</span></span>
+<span id="cb28-18"><a href="creating-a-road-book.html#cb28-18" aria-hidden="true" tabindex="-1"></a>full_blended <span class="ot">=</span> <span class="fu">st_network_blend</span>(full_filtered, route_pois_points)</span>
+<span id="cb28-19"><a href="creating-a-road-book.html#cb28-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-20"><a href="creating-a-road-book.html#cb28-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Smooth</span></span>
+<span id="cb28-21"><a href="creating-a-road-book.html#cb28-21" aria-hidden="true" tabindex="-1"></a>full_smoothed <span class="ot">=</span> <span class="fu">convert</span>(full_blended, to_spatial_smooth) <span class="sc">%&gt;%</span></span>
+<span id="cb28-22"><a href="creating-a-road-book.html#cb28-22" aria-hidden="true" tabindex="-1"></a>                  <span class="co"># Remove singleton nodes</span></span>
+<span id="cb28-23"><a href="creating-a-road-book.html#cb28-23" aria-hidden="true" tabindex="-1"></a>                <span class="fu">convert</span>(to_spatial_subdivision, <span class="at">.clean =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb28-24"><a href="creating-a-road-book.html#cb28-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-25"><a href="creating-a-road-book.html#cb28-25" aria-hidden="true" tabindex="-1"></a><span class="co"># See what we&#39;ve got</span></span>
+<span id="cb28-26"><a href="creating-a-road-book.html#cb28-26" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(full_smoothed, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">col=</span><span class="st">&#39;red&#39;</span>)</span>
+<span id="cb28-27"><a href="creating-a-road-book.html#cb28-27" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(route_utm<span class="sc">$</span>geometry,  <span class="at">col=</span><span class="st">&#39;black&#39;</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="images/creating-road-book-unnamed-chunk-14-1.png" width="672" />
+So this <em>isn’t</em> what we want. When we do the intersection, we drop the nodes outside the buffer. But what we want is for new nodes to be create where edges are cut by the filtering buffer.</p>
+<p>This is perhaps a cropping function rather than a filter? Although cropping cuts to a rectangle, which is also not what we want…</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="creating-a-road-book.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crop the road network to the buffered area</span></span>
+<span id="cb29-2"><a href="creating-a-road-book.html#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># https://luukvdmeer.github.io/sfnetworks/articles/join_filter.html</span></span>
+<span id="cb29-3"><a href="creating-a-road-book.html#cb29-3" aria-hidden="true" tabindex="-1"></a>full_cropped <span class="ot">=</span>  <span class="fu">st_crop</span>(stage_osm_g_utm, buffered_route_utm)</span>
+<span id="cb29-4"><a href="creating-a-road-book.html#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="creating-a-road-book.html#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Snap to road network</span></span>
+<span id="cb29-6"><a href="creating-a-road-book.html#cb29-6" aria-hidden="true" tabindex="-1"></a>full_cropblended_ <span class="ot">=</span> <span class="fu">st_network_blend</span>(full_cropped, route_pois_points)</span>
+<span id="cb29-7"><a href="creating-a-road-book.html#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="creating-a-road-book.html#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Smooth</span></span>
+<span id="cb29-9"><a href="creating-a-road-book.html#cb29-9" aria-hidden="true" tabindex="-1"></a>full_cropsmoothed <span class="ot">=</span> <span class="fu">convert</span>(full_cropblended_, to_spatial_smooth) <span class="sc">%&gt;%</span></span>
+<span id="cb29-10"><a href="creating-a-road-book.html#cb29-10" aria-hidden="true" tabindex="-1"></a>                      <span class="co"># Remove singleton nodes</span></span>
+<span id="cb29-11"><a href="creating-a-road-book.html#cb29-11" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">convert</span>(to_spatial_subdivision, <span class="at">.clean =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-12"><a href="creating-a-road-book.html#cb29-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-13"><a href="creating-a-road-book.html#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co"># See what we&#39;ve got</span></span>
+<span id="cb29-14"><a href="creating-a-road-book.html#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(full_cropsmoothed, <span class="at">cex=</span><span class="fl">0.5</span>, <span class="at">col=</span><span class="st">&#39;red&#39;</span>)</span>
+<span id="cb29-15"><a href="creating-a-road-book.html#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(route_utm<span class="sc">$</span>geometry,  <span class="at">col=</span><span class="st">&#39;black&#39;</span>, <span class="at">add=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="images/creating-road-book-unnamed-chunk-15-1.png" width="672" /></p>
+<p>Hmmm.. Stuck, for now…</p>
+</div>
+</div>
+<div id="using-dodgr-to-represent-routes-and-road-networks" class="section level2" number="20.4">
+<h2><span class="header-section-number">20.4</span> Using <code>dodgr</code> to Represent Routes and Road Networks</h2>
+<p>Although most current effort appears to be being placed on development of the <code>sfnetworks</code> package, two earlier packages exist for representing road networks: <code>stplanr</code> and <code>dodgr</code>. The seed data used by <code>dodgr</code> is typically a set of polyline objects generated from data returned from OpenStreetMap. We can optionally filter the data by our buffered route:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="creating-a-road-book.html#cb30-1" aria-hidden="true" tabindex="-1"></a>net <span class="ot">=</span> stage_osm <span class="sc">%&gt;%</span> osmdata<span class="sc">::</span><span class="fu">osm_poly2line</span>()</span>
+<span id="cb30-2"><a href="creating-a-road-book.html#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="creating-a-road-book.html#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Optionally buffer the network</span></span>
+<span id="cb30-4"><a href="creating-a-road-book.html#cb30-4" aria-hidden="true" tabindex="-1"></a>buffered_net <span class="ot">=</span> net <span class="sc">%&gt;%</span></span>
+<span id="cb30-5"><a href="creating-a-road-book.html#cb30-5" aria-hidden="true" tabindex="-1"></a>                  osmdata<span class="sc">::</span><span class="fu">trim_osmdata</span> (buffered_route)</span></code></pre></div>
+<p>We can plot the lines using <code>ggplot2</code>:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="creating-a-road-book.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb31-2"><a href="creating-a-road-book.html#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="creating-a-road-book.html#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(net<span class="sc">$</span>osm_lines) <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code></pre></div>
+<p><img src="images/creating-road-book-unnamed-chunk-17-1.png" width="672" /></p>
+<p>We then convert the lines to a <code>dodgr</code> network / graph object using the <code>dodgr:weight_streetnet()</code> function:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="creating-a-road-book.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dodgr)</span>
+<span id="cb32-2"><a href="creating-a-road-book.html#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="creating-a-road-book.html#cb32-3" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">weight_streetnet</span>(stage_osm<span class="sc">$</span>osm_lines,</span>
+<span id="cb32-4"><a href="creating-a-road-book.html#cb32-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">wt_profile =</span> <span class="st">&quot;motorcar&quot;</span>)</span></code></pre></div>
+<pre><code>## The following highway types are present in data yet lack corresponding weight_profile values: via_ferrata,</code></pre>
+<p>The <code>dodgr</code> packages allows edges to be characterised by two values: the distance, and a weighted distance. The weighted distance may be of interest to us if we want to make time estimations or models based on road surface or road surface and tyre combination. For example, the time taken to travel 1km on snow using snow tyres may be expected to differ from the time taken to travel 1km on tarmac. The twistiness of of each section of a route may also be used to weight anticipated travel times.</p>
+<p>It might be quite amusing to try to define weight profiles for <em>rally_car</em> or rally cars under different weather and/or tyre conditions, perhaps based on models created from datasets of previous rally stage times or even car telemetry? A weighting profile determines the weighting applied to different road types. The default weighting profiles are stored in the <code>dodgr::weighting_profiles</code> list.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="adding-openstreetmap-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="where-next.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": {}
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toc_depth": 3,
+"toolbar": {
+"position": "fixed"
+},
+"search": true,
+"info": true
+});
+});
+</script>
+
+</body>
+
+</html>

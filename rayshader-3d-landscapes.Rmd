@@ -1,0 +1,274 @@
+```{r, cache = T, echo = F, message=F}
+# Allow knitr to continue to execute even in the presence of errors
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(fig.path = "images/rayshader-3d-landscapes-")
+```
+
+# Composing `rayshader` Stills and Movies
+
+If we have access to a desktop rgl renderer, we can easily generate snapshots and movies of our rendered scenes. Without the desktop rendering, things are slower.
+
+*Such is the way of things, I left the arty 3D rendering sections to do till last, and in the three weeks since I started playing with rayshader, then parked it as I moved on to other chapters, many things rendering now seem differently broken to me. I updated something and can't find any version combinations of packages that get me back to where I was. Should'a baked it into a Docker container... :-( So this is something I'll have to return to at some point to see if things have started working again. Ho hum...*
+
+## Load in Base Data 
+
+As ever, let's load in our stage data:
+
+```{r}
+geojson_filename = 'montecarlo_2021.geojson'
+geojson_sf = sf::st_read(geojson_filename)
+```
+
+And also load in the elevation data raster:
+
+```{r message=FALSE, warning=FALSE}
+library(raster)
+library(rayshader)
+
+# Previously downloaded TIF digital elevation model (DEM) file
+stage_tif = "buffered_stage_elevation.tif"
+
+# Load in the previously saved image raster
+elev_img = raster(stage_tif)
+auto_zscale = geoviz::raster_zscale(elev_img)
+
+# Note we can pass in a file name or a raster object
+elmat = raster_to_matrix(stage_tif)
+```
+
+Let's create a demo map that we can use as as test piece:
+
+```{r}
+demo_map = elmat %>%
+              sphere_shade(texture = "desert") %>%
+              add_water(detect_water(elmat, progbar = FALSE),
+                        color = "desert")
+```
+
+We need to ensure we are rendering into a desktop rgl canvas, rather than a WebGL widget:
+
+*But that's all broken for me atm, making this a TO DO item. OpenGL not compiled in to the package I'm using and I can't find an old version that works the way it used to for me...*
+
+```{r}
+options(rgl.useNULL = FALSE,
+        rgl.printRglwidget = FALSE)
+```
+
+####  Creating Titles and Overlays
+
+The `rayshader::plot_map()` functions allow us to add a title to a view. The title text sits on top a coloured title bar, with configurable colour and transparency.
+
+The title text can be repositioned using the *title_position* attribute but the title bar doesn't seem to be transported with it...
+
+```{r title-demo}
+demo_map %>%
+      plot_map(title_text='Stage Map',
+               title_size = 20,
+               title_bar_color = "red",
+               title_bar_alpha=0.8,
+               title_color="white",
+               title_offset = c(120,12), #offset from top left
+               title_style='italic',
+               #title_position='south', # But doesn't relocate bar?)
+               )
+```
+
+We can also add titles to rendered 3D views with the  `rayshader::render_snapshot()` function:
+
+```{r}
+rgl::clear3d()
+
+demo_map %>%
+      plot_3d(elmat, zscale = auto_zscale)
+
+title_fn = "demo_stage_3D_title_overlay.png"
+
+render_snapshot(title_fn,
+                title_text='Stage Map',
+                title_size = 20,
+                title_bar_color = "red",
+                title_bar_alpha=0.8,
+                title_color="white",
+                title_offset = c(120,12), #offset from top left
+                title_style='italic',
+                #title_position='south', # But doesn't relocate bar?)
+                )
+
+knitr::include_graphics(title_fn)
+```
+
+We can also add an image overlay with the *image_overlay* attribute set to the path of a png image file (with transparency) or a 4-layer RGBA array. The image will be resized to the dimension of the image if the dimensions don't match and overlaid on the original.
+
+It might be useful to create a function that can take a smaller image, such as a stage results table, and buffer it with a transparent margin to match the raster size?
+
+### Adding Complications...
+
+We can add watchmaker style complications to the chart in the form of a scalebar and a compass to show the direction:
+
+```{r}
+rgl::clear3d()
+
+demo_map %>% 
+  plot_3d(elmat, zscale=auto_zscale)
+
+render_scalebar(limits=c(0, 5, 10),label_unit = "km",
+                position = "S", y=50,
+                scale_length = c(0.33, 1))
+
+render_compass(position = "E")
+
+complications_fn = "demo_stage_3D_map_complications.png"
+
+render_snapshot(complications_fn)
+
+knitr::include_graphics(complications_fn)
+```
+
+## Setting Up the Camera Shots in `rayshader`
+
+*This is just to slow TO DO when we have to work with `webshot2`. Revisit another day, hopefully...:-(*
+
+A wide variety of controls and functions are available that allow us to use `rayshader` as a virtual studio for capturing views of the landscape from arbitrary positions and with a wide variety of camera and lighting settings.
+
+
+### Depth of Field
+
+The `rayshader::render_depth()` function gives us control over the depth of field and provides all sort of parameters that folk who like twiddling things on their camera might enjoy. From the docs, the following controls are available:
+
+- virtual camera settings:
+  - *focus*:  depth in which to blur (0..1)
+  - *focallength*
+  - *fstop*
+- bokeh settings:
+  - *bokehshape*: *circle* or *hex*
+  - *rotation*: number of degrees to rotate the hexagon bokeh shape
+  - *bokehintensity*: intensity of the bokeh when the pixel intensity is greater than 'bokehlimit'
+  - *bokehlimit*: limit after which the bokeh intensity is increased by 'bokehintensity'
+- image manipulation:
+  - *gamma_correction*: control gamma correction when adding colors
+  - *aberration*: add chromatic aberration to the image. 
+
+A *preview_focus* flag is also provided that can be used to display a red line across the image showing where the camera will be focused.
+
+Let's generate a gallery of some possible settings:
+
+```{}
+
+rgl::clear3d()
+
+demo_map %>% plot_3d(elmat, zscale=auto_zscale)
+
+render_depth(focus = 0.81, focallength = 200,
+             title_bar_color = "black",
+             vignette = TRUE,
+             title_text = "SS1, Rallye Monte Carlo, 2021", 
+             title_color = "white", title_size = 50)
+
+test_fn = 'test8.png'
+render_snapshot(test_fn)
+
+knitr::include_graphics(test_fn)
+```
+
+TO DO - maybe generate an animated gif showing various settings?
+
+## Camera Positioning
+
+As well as generating "quick" rendered snapshots of a scene using the `rayshader::render_snapshot()` function, we can also set up a scene and render it using the `rayshader:render_highquality()` function.
+
+The `rayshader::render_highquality()` function combines the ability to render a scene with camera positioning, title adding and other scene management controls.
+
+For example, we can use the `rayshader::render_camera()` function to position the camera and set various camera properties:
+
+- *theta*: rotation of the model in the xy-plane
+- *phi*: azimuth angle, height above the horizon
+- *fov*: field of view in degrees (maximum 180)
+- *zoom*: magnification of the camera zoom (>0)
+
+A [masterclass](https://github.com/tylermorganwall/MusaMasterclass) by `rayshader` creator Tyler Morgan-Wall uses the following video to demonstrate the between the theta and phi settings, the camera position and the camera view:
+
+```{r}
+video_url = "https://www.tylermw.com/data/all.mp4"
+embedr::embed_video(video_url, type='mp4')
+```
+
+In an RMarkdown document, we can set the camera location *after* generating the 3D plot, but *before* rendering it via the widget. We could equally render the plot to an image from that position rather then rendering the widget to view the model interactively.
+
+*TO DO - this should equally position the camera in the OpenGL window and then let us take a really quick snapshot...*
+
+```{r message=FALSE}
+rgl::clear3d()
+
+demo_map %>% plot_3d(elmat, zscale=auto_zscale)
+
+render_camera(theta = 40, phi = 70, zoom = 1.5, fov = 90)
+
+rgl::rglwidget()
+```
+
+Rather than rendering the widget, we could equally just render the scene to an image file.
+
+Let's set up some example shots...
+
+```{}
+rgl::rgl.open()
+demo_map %>% plot_3d(elmat)
+
+render_camera(theta = 140, phi = 70, zoom = 0.9)
+
+test_fn = 'test8.png'
+render_snapshot(test_fn)
+
+knitr::include_graphics(test_fn)
+```
+
+Once we are happy with out shot, we might render it to a high quality image:
+
+```{}
+
+demo_map %>% plot_3d(elmat)
+
+render_camera(theta = 40, phi = 70, zoom = 1.5, fov = 90)
+
+hiq_fn = 'test2.png'
+
+render_highquality(hiq_fn)
+
+knitr::include_graphics(hiq_fn)
+```
+
+
+### Lighting Effects
+
+The `rayshader:render_highquality()` function also provides a wide range of controls for composing the shot we want to render. For example one or more light sources can introduced, each with its own *lightdirection*, *lightaltitude*, *lightsize*, *lightintensity* and *lightcolor* setting. A range of camera controls in addition to controls provided by `rgl` window are also available, including *camera_location* and *camera_lookat* (a custom point at which the camera is directed). Experimenting with those settings will have to wait for another day!
+
+For more discussion around rendering high quality images, see the [*`rayshader`: render_highquality#examples*](https://www.rayshader.com/reference/render_highquality.html#examples) docs.
+
+
+## Making 3D Video Tracking Shots
+
+As well as allowing us to control the camera view for setting up static 3D camera shots, the `rayshader` package also provides us with a way of generating animated 3D movies.
+
+We can render a movie of a rotating model using the `rayshader`render_movie()` function and its default *type="orbit"* setting or we can create out own tracking path:
+
+```{}
+library(av)
+
+rgl::clear3d()
+rgl::rgl.open()
+
+demo_map %>%
+  add_overlay(yellow_route) %>%
+      plot_3d(elmat, webgl=FALSE, snapshot=TRUE, zscale =7)
+
+render_movie('demo_stageX.mp4')
+rgl::rgl.close()
+```
+```{r}
+demo_fn = 'demo_stage.mp4'
+embedr::embed_video(demo_fn, width = "256", height = "256")
+```
+
+
+
+

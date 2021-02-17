@@ -1,0 +1,408 @@
+```{r, cache = T, echo = F, message=F}
+# Allow knitr to continue to execute even in the presence of errors
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(fig.path = "images/creating-road-book-")
+knitr::opts_chunk$set(engine.path = list(python = '/usr/local/bin/python3'))
+options(rgl.useNULL = TRUE,
+        rgl.printRglwidget = TRUE)
+```
+# Creating A Road Book
+
+A rally road book describes the route to be taken in a rally. Road books describe the route in terms of road sections, lengths of road between road junctions encountered along the route ([example](https://www.therallyco-driver.com/road-book/)). At each junction, the route to be taken is clearly identified.
+
+One exciting possibility is that we can recover route information from OpenStreetMap and cast it as a graph (network) using the `sfnetworks` package and then identify all the road junctions along a route.
+
+If we then zoom in on a particular junction node, we should be able to see the junction. If we can access the orientation of the road, we should be able to generate a tulip...
+
+So the question is: *can we find junctions on a route snapped to a road network?"*
+
+*Under my current understanding, I haven't found a way to do this yet...*
+
+A secondary question might be: *can we transform a graph layout so that a spatially curved route is depicted as a straight line with junction turns off the route: a) depicted; b) depicted at their angle to the route?*
+
+*Again, I haven't currently found a way to do this.*
+
+## Load in Base Data 
+
+As ever, let's load in our stage data:
+
+```{r message=FALSE}
+# Original route data  (KML file):
+# https://webapps.wrc.com/2020/web/obc/kml/montecarlo_2021.xml
+library(sf)
+geojson_filename = 'montecarlo_2021.geojson'
+geojson_sf = sf::st_read(geojson_filename)
+
+# Grab the first stage route
+route = geojson_sf[1,]
+
+# Get stage bounding box
+stage_bbox = st_bbox(route)
+```
+
+Get the coordinates into a UTM form, and also generate a buffered area around the route:
+
+```{r utm-preview}
+lonlat2UTM_hemisphere <- function(lonlat) {
+    ifelse(lonlat[1] > 0, "north", "south")
+}
+
+lonlat2UTMzone = function(lonlat) {
+  utm = (floor((lonlat[1] + 180) / 6) %% 60) + 1
+  if(lonlat[2] > 0) {
+    utm + 32600
+  } else{
+    utm + 32700
+  }
+}
+
+# Grab a copy of the original projection
+original_crs = st_crs(geojson_sf[1,])
+
+# Find the UTM zone for a sample a point on the route
+crs_zone = lonlat2UTMzone(c(st_coordinates(route)[1,1],
+                            st_coordinates(route)[1,2]))
+
+# Create the projection string
+utm_pro4_string = st_crs(crs_zone)$proj4string
+#"+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs"
+# units in meters e.g. https://epsg.io/32632
+
+# Transform the route projection
+route_utm = st_transform(geojson_sf[1,], crs = st_crs(utm_pro4_string))
+
+# Create a buffer distance
+buffer_margin_200m = units::set_units(200, m)
+
+buffered_route_utm <- st_buffer(route_utm, buffer_margin_200m)
+
+buffered_route <- st_transform(buffered_route_utm, original_crs)
+
+plot(st_geometry(buffered_route_utm))
+plot(st_geometry(route_utm), col='red', add=TRUE)
+```
+
+Also retrieve some highways data from OpenStreetMap:
+
+```{r}
+library(osmdata)
+
+stage_bbox = sf::st_bbox(buffered_route)
+stage_osm  = opq(stage_bbox) %>% 
+  add_osm_feature("highway") %>% 
+  osmdata_sf()
+
+stage_osm
+```
+
+
+## Using `sfnetworks` to Represent Routes and Road Networks
+
+We can cast the stage route as a directed network using the `sfnetworks::as_sfnetwork()` applied to the linestring geometry of the route:
+
+```{r}
+library(sfnetworks)
+
+route_dg = as_sfnetwork(st_geometry(route_utm), directed = TRUE)
+route_dg
+```
+
+We can plot the route and the distinguished start and end nodes:
+
+```{r route_dg}
+plot(st_geometry(route_dg, "edges"),
+     col = 'grey', lwd = 4)
+
+plot(st_geometry(route_dg, "nodes"),
+     col=c('green', 'red'), pch = 20, cex = 2, add = TRUE)
+```
+
+This also suggests to us that we can add additional nodes and colour those. We could also then segment the edges between the nodes.
+
+```{r}
+# Get line segment coords
+edges = st_coordinates(st_geometry(route_dg, "edges"))
+
+# Find the mid point by segment rather than distance
+mid_edge = edges[floor(nrow(edges)/2),]
+
+mid_edge_pt = st_sfc(st_point(c(mid_edge['X'],
+                                 mid_edge['Y'])),
+                     crs=st_crs(route_dg)$proj4string)
+
+mid_edge_pt
+```
+
+We can add this point as a node on our graph using the `sfnetworks::st_network_blend()` function:
+
+```{r route_dg2}
+route_dg2 = st_network_blend(route_dg, mid_edge_pt)
+plot(route_dg2)
+```
+
+Now let's see what happens if we add that node to the graph, and then colour the graph by the node defined edges along the route:
+
+```{r route_dg2_col,  message=FALSE}
+#https://luukvdmeer.github.io/sfnetworks/articles/preprocess_and_clean.html
+edge_colors = function(x) rep(sf.colors(12, categorical = TRUE)[-2],
+                              2)[c(1:igraph::ecount(x))]
+
+plot(st_geometry(route_dg2, "edges"),
+     col = edge_colors(route_dg2), lwd = 4)
+
+plot(st_geometry(route_dg2, "nodes"),
+     col= 'black', pch = 20, cex = 1, add = TRUE)
+```
+
+This suggests that if we have a set of split points, for example, we can add them as nodes to the graph and then colour the graph edges differently for each edge that connects nodes along the route.
+
+It also suggests we can plot separate splits. For example, here's the second half of the route:
+
+```{r route_dg_fragment}
+plot(st_geometry(route_dg2, "edges")[2],
+     col = edge_colors(route_dg2), lwd = 4)
+```
+
+Split point locations are often given in terms of "distance into stage", so being able to easily add a node a certain distance along a route defined as a linestring would be really handy... Also being trivially able to select a node and found out how far it was along from the start of the route, to the end of the route, to the next node and to the previous node.
+
+## Analysing Road Networks with `sfnetworks`
+
+We can also represent a more complex set of roads as a network. For example, a set of roads retrieved from OpenStreetMap.
+
+### Creating an `sfnetworks` Graph
+
+To create the spatial network, we pass the "lines" retrieved using `osmdata::opq()` to the `sfnetworks::as_sfnetwork()` function, this time setting the graph as undirected:
+
+```{r}
+# Create the sfnetwork object
+stage_osm_g <- as_sfnetwork(stage_osm$osm_lines,
+                            directed = FALSE)
+
+stage_osm_g
+```
+
+Let's see what it looks like...
+
+```{r osm_g}
+plot(stage_osm_g, col='grey', cex=0.5)
+```
+
+Well it looks like there's something there!
+
+Can we transform the projection?
+
+```{r}
+stage_osm_g_utm =  stage_osm_g %>%
+                    st_transform(st_crs(buffered_route_utm))
+
+stage_osm_g_utm
+```
+
+
+### Filtering an `sfnetworks` Graph
+
+Can we view the network in the buffered area around the stage route?
+
+```{r osm_g_filtered}
+filtered = st_filter(stage_osm_g_utm, 
+                     buffered_route_utm,
+                     .pred = st_intersects)
+
+plot(filtered, cex=0.5)
+
+# We can blend plots using an sfnetwork object
+# As long as it has the same projected coordinate system...
+plot(st_geometry(route_utm), col='red', add=TRUE)
+```
+
+A couple of things to note here. Firstly, the stage route points may not lay exactly on the OSM highway route, even if the routes are supposed to correspond to the same bit of road. Secondly, the rally stage route may go onto track surfaces that are not recorded by OSM as highways lines.
+
+The challenge now is this: can we map out original route on the OSM network, and return a filtered part of the network that show the original route and the road junctions along it? If so, then we have the basis of a tulip diagrammer.
+
+
+### Viewing a Buffered Area Around a Junction Node
+
+Get a (carefully selected!) node, buffer around it and see what we can see:
+
+```{r osm_g_fragment}
+# Find a junction on the road network
+n = st_geometry(filtered, "nodes")[85]
+
+# Generate a buffered area around the road network
+buffered_n = st_buffer(n, buffer_margin_200m)
+
+# Filter the road network to the buffered area
+filtered2 = st_filter(stage_osm_g_utm, 
+                     buffered_n,
+                     .pred = st_intersects)
+
+plot(filtered2, cex=0.5, col = 'grey', lwd = 6)
+```
+
+If we crop our route to the buffered area, we should be able to overlay it on the road network visually at least:
+
+```{r}
+# Crop the route to the buffered area
+filtered3 = st_crop(route_utm, 
+                     buffered_n)
+
+# See what we've got
+plot(filtered2, cex=0.5, col = 'grey', lwd = 6)
+plot(st_geometry(filtered3), cex=0.5, col='red', add=TRUE)
+```
+Okay, so we have the road network and part of the stage route; the stage route passes a junction on the right.
+
+This could be promising, *if* we can find a way to reliably snap routes to OSM lines and index nodes along a route.
+
+One way to do this might be to crudely map a route onto the nearest OSM line and then hope that the OSM line is the appropriate track...
+
+### Snapping a Route to a Road Network
+
+The `sfnetworks::st_network_blend()` function looks like it will try to map points as new nodes onto the nearest part of a graph route.
+
+Let's get the nodes from our cropped route. There must be a better way of doing this (it's such an obvious thing to want to do!) but I can't find a straightforward way to do it, so we'll just have to make something up! Cast the coordinates to a multipoint object then cast that a list of points:
+
+```{r}
+# Generate a multipoint from a list of coordinates
+pois_mp = st_sfc(st_multipoint(st_coordinates(filtered3)),
+                 crs=st_crs(filtered3))
+
+# Generate a list of points from a multipoint
+# Via: https://github.com/r-spatial/sf/issues/114
+pois_points = st_cast(x = pois_mp, to = "POINT")
+```
+
+Let's see what happens if we try to snap those route points onto the road network:
+
+```{r}
+blended = st_network_blend(filtered2, pois_points)
+
+plot(filtered2, cex=0.5, col = 'grey', lwd = 6)
+plot(blended, cex=0.5, col='red', add=TRUE)
+```
+
+Okay, they seem to have snapped new nodes onto the route network.
+
+What happens if we now buffer around that route fragment and just show the route snapped to the road network:
+
+```{r}
+# Buffered area around the route
+filtered3_buffered = st_buffer(filtered3,  units::set_units(15, m))
+
+# Limit the road network to the buffered area round the route
+filtered4 = st_filter(blended, 
+                     filtered3_buffered,
+                     .pred = st_intersects)
+
+# See what we've got
+plot(filtered4, cex=0.5, col='red')
+```
+
+In the above example we see the snapped nodes are what the `sfnetworks` docs refer to as *pseudo nodes* that have only one incoming and one outgoing edge. (I guess this means we can also use network analysis to easily identify those nodes as nodes of degree 2?) 
+
+The `sfnetworks` package provides a converter that can be applied via the `tidygraph::convert` function for cleaning ("smoothing") these pseudo nodes, `sfnetworks::to_spatial_smoot`, so let's see how that works:
+
+```{r message=FALSE}
+library(tidygraph)
+
+smoothed = convert(filtered4, to_spatial_smooth) %>%
+              # Remove singleton nodes
+              convert(to_spatial_subdivision, .clean = TRUE)
+
+plot(smoothed, cex=0.5, col='red')
+```
+
+So that seems to work.
+
+Can we plot also somehow fettle the layout algorithm so that the nodes along the main path (which we somehow need to distinguish with start and stop nodes) is horizontally or vertically laid out?
+
+
+### Snapping a Full Stage Route to the Road Network
+
+What happens now if we try that recipe with the full route?
+
+```{r}
+# Get a buffered region round the route
+#buffer_margin_1km = units::set_units(1000, m)
+buffered_route_utm <- st_buffer(route_utm, buffer_margin_200m)
+
+# Filter the road network to the buffered area
+full_filtered = st_filter(stage_osm_g_utm,
+                          buffered_route_utm,
+                          .pred = st_intersects)
+
+# Route points
+route_pois_mp = st_sfc(st_multipoint(st_coordinates(route_utm)),
+                       crs=st_crs(route_utm))
+
+# Generate a list of points from a multipoint
+route_pois_points = st_cast(x = route_pois_mp, to = "POINT")
+
+# Snap to road network
+full_blended = st_network_blend(full_filtered, route_pois_points)
+
+# Smooth
+full_smoothed = convert(full_blended, to_spatial_smooth) %>%
+                  # Remove singleton nodes
+                convert(to_spatial_subdivision, .clean = TRUE)
+
+# See what we've got
+plot(full_smoothed, cex=0.5, col='red')
+plot(route_utm$geometry,  col='black', add=TRUE)
+```
+So this *isn't* what we want. When we do the intersection, we drop the nodes outside the buffer. But what we want is for new nodes to be create where edges are cut by the filtering buffer.
+
+This is perhaps a cropping function rather than a filter? Although cropping cuts to a rectangle, which is also not what we want...
+
+```{r warning=FALSE}
+# Crop the road network to the buffered area
+# https://luukvdmeer.github.io/sfnetworks/articles/join_filter.html
+full_cropped =  st_crop(stage_osm_g_utm, buffered_route_utm)
+
+# Snap to road network
+full_cropblended_ = st_network_blend(full_cropped, route_pois_points)
+
+# Smooth
+full_cropsmoothed = convert(full_cropblended_, to_spatial_smooth) %>%
+                      # Remove singleton nodes
+                      convert(to_spatial_subdivision, .clean = TRUE)
+
+# See what we've got
+plot(full_cropsmoothed, cex=0.5, col='red')
+plot(route_utm$geometry,  col='black', add=TRUE)
+```
+
+Hmmm.. Stuck, for now...
+
+## Using `dodgr` to Represent Routes and Road Networks
+
+Although most current effort appears to be being placed on development of the `sfnetworks` package, two earlier packages exist for representing road networks: `stplanr` and `dodgr`. The seed data used by `dodgr` is typically a set of polyline objects generated from data returned from OpenStreetMap. We can optionally filter the data by our buffered route:
+
+```{r}
+net = stage_osm %>% osmdata::osm_poly2line()
+
+# Optionally buffer the network
+buffered_net = net %>%
+                  osmdata::trim_osmdata (buffered_route)
+```
+
+We can plot the lines using `ggplot2`:
+
+```{r}
+library(ggplot2)
+
+ggplot(net$osm_lines) + geom_sf()
+```
+
+We then convert the lines to a `dodgr` network / graph object using the `dodgr:weight_streetnet()` function:
+
+```{r}
+library(dodgr)
+
+graph <- weight_streetnet(stage_osm$osm_lines,
+                          wt_profile = "motorcar")
+```
+
+The `dodgr` packages allows edges to be characterised by two values: the distance, and a weighted distance. The weighted distance may be of interest to us if we want to make time estimations or models based on road surface or road surface and tyre combination. For example, the time taken to travel 1km on snow using snow tyres may be expected to differ from the time taken to travel 1km on tarmac. The twistiness of of each section of a route may also be used to weight anticipated travel times.
+
+It might be quite amusing to try to define weight profiles for *rally_car* or rally cars under different weather and/or tyre conditions, perhaps based on models created from datasets of previous rally stage times or even car telemetry? A weighting profile determines the weighting applied to different road types. The default weighting profiles are stored in the `dodgr::weighting_profiles` list.

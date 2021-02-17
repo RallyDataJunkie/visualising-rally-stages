@@ -1,0 +1,227 @@
+```{r, cache = T, echo = F, message=F}
+# Allow knitr to continue to execute even in the presence of errors
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(fig.path = "images/rayshader-3d-maps-")
+```
+
+# Rendering 3D `rayshader` Stage Route Maps
+
+Having introduced interactive 3d `rayshader` models in the previous chapter, let's now explore how we can generate interactive three dimensional models of our stage maps.
+
+## Load in Base Data 
+
+As ever, let's load in our stage data:
+
+```{r}
+library(tidyr)
+
+geojson_filename = 'montecarlo_2021.geojson'
+geojson_sf = sf::st_read(geojson_filename)
+stage_bbox = sf::st_bbox(geojson_sf)
+```
+
+We have already seen how we can overlay an elevation model raster on a leaflet map, as well as rendering two dimensional topographic models using the `raytracer` package. Generating 3D, rather than 2D, maps follows exactly the same steps as the 2D view apart from the final rendering step.
+
+Recall that the `raytracer` package itself works with a matrix of raster values. Having saved the download raster to a tif file, we can load the data back in from and convert it to a matrix using the `rayshader::raster_to_matrix()` function:
+
+```{r message=FALSE, warning=FALSE}
+library(rayshader)
+library(raster)
+
+# Previously downloaded buffered TIF digital elevation model (DEM) file
+stage_tif = "buffered_stage_elevation.tif"
+
+# Load in the previously saved image raster
+elev_img = raster(stage_tif)
+
+# Get the natural zscale
+auto_zscale = geoviz::raster_zscale(elev_img)
+
+# Note we can pass in a file name or a raster object
+elmat = raster_to_matrix(stage_tif) 
+```
+
+Just as a reminder, here's a quick review of what the 2D maps look like:
+
+```{r demo-2d}
+# Use the raster extent for the plots
+stage_extent = extent(elev_img)
+
+yellow_route = generate_line_overlay(geojson_sf[1,],
+                                    extent = stage_extent,
+                                    heightmap = elmat,
+                                    linewidth = 5, color="yellow")
+
+mapped_route_yellow = elmat %>%
+  sphere_shade(sunangle = -45, texture = "bw") %>%
+  #add_water(watermap, color = "bw") %>%
+  add_overlay(yellow_route)
+
+mapped_route_yellow %>%
+  plot_map()
+```
+
+The 2D plots can be quite pretty, but we can also bring them even more alive as 3D rendered plots.
+
+
+## Setting Up 3D Embedded Plots
+
+Recall that to embed WebGL interactive models using `rgl::rglwidget()`, we need to fettle some settings first:
+
+```{r}
+options(rgl.useNULL = TRUE,
+        rgl.printRglwidget = TRUE)
+```
+
+
+## Rendering a Simple Stage Route Model
+
+We can render our 2D route model simply by passing it to the `rayshader::plot_3d()` function, along with the elevation model.
+
+If we set the `zscale` parameter to the *auto_zscale* determined previously as `auto_zscale = geoviz::raster_zscale(elev_img)`, the relief is rendered using the "real" scaling that keeps the height of elevated areas in equal proportion to the scale used by the x and y scale values:
+
+```{r}
+rgl::clear3d()
+
+mapped_route_yellow %>%
+  plot_3d(elmat, zscale=auto_zscale)
+
+rgl::rglwidget()
+```
+
+We can also disable the display of the base to give a view similar to the sort of view we might render using `plot3d()`.
+
+There are several approaches we can use to grabbing a flat image capture of a model. One is to the use an `rgl::rglwidget(snapshot=TRUE)` call which in headless mode uses `webshot2` to launch a browser in the background, render the model inside a widget in that browser, and then grab a screenshot...
+
+```{r message=FALSE}
+rgl::rgl.open()
+rgl::clear3d()
+
+mapped_route_yellow %>%
+  plot_3d(elmat,
+        zscale = auto_zscale,
+        # Disable the solidbase display
+        solid = FALSE,
+        # But reserve the shadow
+        shadow = TRUE,
+        shadowcolor = 'lightblue'
+       )
+
+r = rgl::rglwidget(webgl=FALSE, snapshot=TRUE)
+
+render_fn = 'example_render.png'
+file.rename(r[1], render_fn)
+
+rgl::rgl.close()
+
+knitr::include_graphics(render_fn)
+```
+
+
+The `rayshader::render_snapshot()` and `rayshader::render_highquality()`` functions provide alternative ways of rendering the current scene:
+
+```{r}
+rgl::rgl.open()
+rgl::clear3d()
+mapped_route_yellow %>%
+  plot_3d(elmat, zscale = auto_zscale)
+
+render_fn2 = "demo_stage_3D_map_overlay.png"
+
+render_snapshot(render_fn2)
+
+rgl::rgl.close()
+
+knitr::include_graphics(render_fn2)
+```
+
+### Decorating 3D Views With Map Tile Overlays
+
+As with the 2D views, we can drape map tile imagery over the 3D view and it will be shaped to fit the 3D elevation model. Let's create a terrain layer using some tile imagery:
+
+```{r message=FALSE, warning=FALSE}
+library(geoviz) # For slippy_overlay
+
+overlay_image_terrain <- slippy_overlay(elev_img, 
+                                        image_source = "stamen",
+                                        image_type = "terrain",
+                                        png_opacity = 0.9)
+```
+
+Add the terrain to a model and render it in 2D:
+
+```{r}
+mapped_terrain_yellow = mapped_route_yellow %>%
+                          add_overlay(overlay_image_terrain) %>%
+                          add_overlay(yellow_route)
+
+mapped_terrain_yellow %>% plot_map()
+```
+
+And now, how about the 3D version?
+
+```{r}
+rgl::clear3d()
+
+mapped_terrain_yellow %>%
+  plot_3d(elmat, zscale=auto_zscale)
+
+rgl::rglwidget()
+```
+
+As before, we should be able to a video from the model. However, for current package versions, trying to render the movie just leads to an error after a *long* time spent trying to render the movie: 
+
+```{}
+library(av)
+
+options(rgl.useNULL = FALSE,
+        rgl.printRglwidget = FALSE)
+
+# Open a connection to the renderer
+rgl::rgl.open()
+
+rgl::clear3d()
+
+mapped_terrain_yellow %>%
+  plot_3d(elmat, zscale=auto_zscale)
+
+# Render the movie to an MP4 file
+video_fn = 'demo_3d_stage_tile_overlay.mp4'
+
+render_movie(video_fn)
+
+rgl::rgl.close()
+
+# Embed the movie
+embedr::embed_video(video_fn, width = "256", height = "256")
+
+```
+
+### Adding Labels to 3D `rayshader` Maps
+
+To highlight points of interest on a 3D model, we can we add a labels to the 3D view. A line can be used to connect a label to the point on the surface map that the label relates to.
+
+*TO DO - this has stopped working now too...; neither OpenGL nor FreeType seem to be supported in the rgl version I'm using and if I try to roll back, the previous version doesn't want to work at all. One to return to in the fullness of time perhaps... It's not an efficient use of time to get stuck in finding workarounds for what may just be dev in progress.*
+
+```{r}
+rgl::clear3d()
+mapped_terrain_yellow %>% 
+      plot_3d(elmat, zscale=auto_zscale)
+
+render_label(elmat, lat = 44.7808, long = 5.909417,
+        extent = stage_extent, 
+        #zscale = auto_zscale, 
+        offset=0, # Height above surface to start the line
+        altitude=1036 + 500 , #32000,
+        text = "Split 1", textsize = 2, linewidth = 3)
+
+rgl::rglwidget()
+```
+
+
+TO DO 
+```{r}
+
+
+
+```

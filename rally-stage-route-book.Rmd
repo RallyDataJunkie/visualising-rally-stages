@@ -1,0 +1,770 @@
+---
+title: "Visualising WRC Rally Stages With `rayshader` and R"
+subtitle: "A RallyDataJunkie Adventure"
+author: "Tony Hirst"
+description: "Rally stage maps often appear on rally websites displayed via interactive web maps. The data used to generate the routes is often available as a digital data file of some sort. This book takes one such file and embarks on an adventure into the wilds of geocomputing using the R programming language to see just where such a file may take us. From web maps and elevation maps to interactive 3D displays, let the exploration commence..."
+knit: "bookdown::render_book"
+site: bookdown::bookdown_site
+always_allow_html: yes
+new_session: no
+---
+---
+title: "Visualising WRC Rally Stages With `rayshader` and R"
+subtitle: "A RallyDataJunkie Adventure"
+author: "Tony Hirst"
+description: "Rally stage maps often appear on rally websites displayed via interactive web maps. The data used to generate the routes is often available as a digital data file of some sort. This book takes one such file and embarks on an adventure into the wilds of geocomputing using the R programming language to see just where such a file may take us. From web maps and elevation maps to interactive 3D displays, let the exploration commence..."
+knit: "bookdown::render_book"
+site: bookdown::bookdown_site
+always_allow_html: yes
+new_session: no
+---
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+knitr::opts_chunk$set(cache = T)
+library(tidyr)
+```
+
+<!--chapter:end:index.Rmd-->
+
+# In the beginning... {-}
+
+*... was a rally stage route map in the form of a KML file. This was all well and good, but what could you do with it, exactly?*
+
+This book is an exploration of just that: what you can do with a digital file containing the geographical co-ordinates of a rally stage route map and a handful of R packages to help us on our way.
+
+So get strapped in, and we'll be off... There's a lot to take in, with the occasional *don't cut* and *caution* along the way, but there are ruts we can follow and a flying finish to look forward to...
+
+# Acknowledgements {-}
+
+This book would not have been possible without the wide range of packages developed and supported by the R community, not least (but certainly no limited to) those responsible for developing the `raster`, `ggplot2`, `leaflet`, `rayshader`, `rgl` and `htmlwidgets` packages. The `sf`, `sp`  and `regeos `packages provide many of the foundational components I used to reporesent and manipulate spatial data.
+
+I also benefited greatly from package documentation and vignettes, tutorials, blog post and Stack Overflow questions and answers.
+
+<!--chapter:end:welcome.Rmd-->
+
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+# Preface {-}
+
+Idly skimming through my news feeds, I was reminded by some stunning mountain views of the `rayshader` R package for creating 3D visualisations of map terrain.
+
+I've been sketching various ways of displaying rally stage results for some time (see the forthcoming *Rally Data Junkie Guide to Visualising Rally Results Data*), but geo data is another beast entirely. I already had a pile of half-started recipes for visualising and stage routes and car telemetry data, so maybe this was the reason I needed to write up those notes and finish them off with a recipe for creating 3D stage maps.
+
+As it turned out, I dumped my original stage route analysis code, which was written in the Python programming language, and moved to the R language. In part, this was because it gave a more direct route to working with `rayshader` (although we can, if we have to, be quite promiscuous in what language we use, because we can, if we want to, run Python code from R). In part, it also allowed me to update my R knowledge from my original learning journey into that language several years ago, previously written up as [*Wrangling F1 Data With R*](https://leanpub.com/wranglingf1datawithr).
+
+Along the way, I started to make a bit more sense of the data structure minefield surrounding geodata representations, although always with a focus of *getting stuff done* and solving practical problems associated with generating particular map views, rather than immersing myself in abstract academic conceptualisations.
+
+So this book is the result of that journey, a journey that started with a single XML downloaded from the WRC website. The XML file contained the stage routes for the 2021 *Rallye Monte Carlo* and the book is record of the next 10 days, a period that started out with the goal of visualising the route on a 3D map generated using `rayshader`, but took in many more views along the way. I didn't get quite as far as making a start on the telemetry data either. That will have to wait for another day, another learning journey, and perhaps another book.
+
+*--tony.hirst, Isle of Wight, February, 2021*
+
+<!--chapter:end:preface.Rmd-->
+
+
+# Introduction
+
+Placeholder
+
+
+## Who This Book Is For
+## What This Book Isn't
+## Structure of the Book
+## Further Reading
+
+<!--chapter:end:intro.Rmd-->
+
+
+# Getting Started
+
+Placeholder
+
+
+## Setting Up a Working Code Execution Environment
+### Installing the Docker Environment
+#### Connecting the Docker Container to Other Containers
+### Installing the Required R Packages Manually
+### Other Installation Dependencies
+## Using the RStudio Environment
+## Using a Jupyter Notebook Environment
+## Exploring the Book as an Online Interactive Textbook (Not Yet!)
+## Serving Your Own Map Tiles and Elevation Raster Images
+## Donate
+
+<!--chapter:end:getting-started.Rmd-->
+
+
+# Importing the Stage Route Data
+
+Placeholder
+
+
+## Downloading the Stage Data File
+## Opening KML Geodata Files
+### Using `rgdal` and `sp` to Open Geodata Files
+### Using `sf` to Open Geodata Files
+#### Reviewing the `sf` Feature Collection
+### Accessing Route Data as a geojson String
+### Saving Simple Features Data to Various Geodata File Formats
+## Important Geodata File Formats
+### Loading geojson Data
+### Loading GPX Data
+### Loading Flight Data Using IGC format GPS Files
+### Reading Data from GPS Devices
+
+<!--chapter:end:stage-route-import.Rmd-->
+
+
+# Working with Route Data
+
+Placeholder
+
+
+## Loading in the Route Data
+## Access a specific stage
+## Visual Preview of Route Geodata
+## Previews using `ggplot2`
+## Identifying the Start and End of the Stage
+## Extracting Route Fragments
+## Previews Using `leaflet` Interactive Maps
+## Creating Buffer regions around features
+## Adding Additional Features to `leaflet` maps
+### Add "minimap" navigation
+### Add Custom Symbol Legends
+#### Adding a Logo
+### Adding Mini-Charts to Maps
+### Adding HTML content to popups
+## Using `mapview` To Create *leaflet* Maps
+
+<!--chapter:end:stage-route-preview.Rmd-->
+
+
+# Introducing Map Projections
+
+Placeholder
+
+
+## Load in the Route Data 
+## Previewing a Map Route
+## Plotting LatLong Naively
+## Using the UTM Co-ordinate Reference System
+### Using `st_transform` for Projection Transformations
+### Using `ggplot2::coord_sf` to Render Projections
+### Exporting the Route Data As a Dataframe
+## Alternative CRS Projections
+
+<!--chapter:end:introducing-projections.Rmd-->
+
+
+# Stage Route Annotations
+
+Placeholder
+
+
+## Load in the Route Data 
+## Adding Split Point Locations
+### Using geojson to Find the Distance Along a Route
+### Using `rgeos::gInterpolate` to Find the Distance Along a Route 
+## Parallel Routes
+
+<!--chapter:end:stage-route-annotations.Rmd-->
+
+
+# Accessing and Working With Elevation Data Raster Files
+
+Placeholder
+
+
+## Introducing Digital Elevation Model (DEM) Raster Images
+### What Is Raster Data?
+### What Are Digital Elevation Models (DEMs)?
+### The R `raster` Package
+## Downloading Elevation Data
+### Loading in some stage data
+### Obtaining relief / elevation raster data using `elevatr`
+### Plotting Rasters As `ggplot` Objects
+### Interactive Raster Previews with `plainview` 
+### Saving the Image Raster Data to a Local File
+### From `raster` to `terra`
+## Overlaying Raster Images on Leaflet Maps 
+## Retrieving Descriptive Information About the Raster
+### Using Mapzen to Retrieve DEM raster data
+#### Retrieving Stage Level Mapzen Elevation Data
+#### Setting a Square Side Value
+### Additional Elevation Data Downloading Tools
+## Manipulating Raster Images
+## Ridge maps
+## Further Information
+
+<!--chapter:end:elevation-data.Rmd-->
+
+
+# Determining Terrain Features from Raster Data
+
+Placeholder
+
+
+## Load in Base Data 
+## Rendering Terrain Over Raster Images
+## Adding Contours to `raster` Images
+
+<!--chapter:end:terrain-features-from-raster.Rmd-->
+
+
+# Using `rayshader` to Render 2D Elevation and Shade Views
+
+Placeholder
+
+
+## Load in Base Data 
+## Rendering imagery from the DEM raster
+## Roundtripping `rayshader` Rasters and Matrices
+
+<!--chapter:end:rayshader-2d.Rmd-->
+
+
+# Overlaying 2D `rayshader` Maps
+
+Placeholder
+
+
+## Load in Base Data 
+## Adding overlays
+### Adding Shadows to `rayshader` Maps
+#### Retrieving Shadow Data Along a Route
+### Adding Water Features
+### Overlaying Map Tiles
+#### Setting Elevation Sensitive Tile Transparancy
+## Adding a Stage Route Layer
+### Buffering the Stage Route View
+## Modeling Increased Water Levels
+
+<!--chapter:end:rayshader-2d-overlays.Rmd-->
+
+
+# Annotating `rayshader` maps
+
+Placeholder
+
+
+## Load in Base Data 
+## Adding a Title to a Map
+## Adding Contours to `rayshader` Stage Maps
+## Overlaying Image Tiles
+## Plotting Route Layers on `rayshader` Maps
+
+<!--chapter:end:annotating-rayshader-maps.Rmd-->
+
+
+# An Aside - The Penny Red {-}
+
+Placeholder
+
+
+## 3D Rendering of Colour Images Using `rayshader` {-}
+### Rendering the image directly from `ggplot2`
+## Rendering a Movie
+
+<!--chapter:end:aside-penny-red.Rmd-->
+
+
+# Introducing 3D `rayshader` Models
+
+Placeholder
+
+
+## Rendering the 3D Maps in *RStudio& and `knitr`able *Rmd* Documents
+## Rendering a 3D View
+## The `rayshader` 3D Model Plinth
+## Saving the Widget as an HTML File
+## Rendering the Model to an Image File
+## Rendering High Quality Models
+## Making a 3D Print File
+## Saving a Movie of a 3D Model
+
+<!--chapter:end:rayshader-3d.Rmd-->
+
+
+# Rendering 3D `rayshader` Stage Route Maps
+
+Placeholder
+
+
+## Load in Base Data 
+## Setting Up 3D Embedded Plots
+## Rendering a Simple Stage Route Model
+### Decorating 3D Views With Map Tile Overlays
+### Adding Labels to 3D `rayshader` Maps
+
+<!--chapter:end:rayshader-3d-maps.Rmd-->
+
+
+# Creating Cropped 3d `rayshader` Models
+
+Placeholder
+
+
+## Load in Base Data 
+## Cropping the Rendered 3D View
+## Cropping 3D Models to a Buffered Region
+
+<!--chapter:end:rayshader-3d-cropviews.Rmd-->
+
+
+# Obtaining Shadows for a Particular Date and Time
+
+Placeholder
+
+
+## Load in Base Data 
+## Sunlight Times Vocabulary
+## Finding Sunrise and Sunset Times
+## Animating Shade
+
+<!--chapter:end:shadows-time-of-day.Rmd-->
+
+
+# Composing `rayshader` Stills and Movies
+
+Placeholder
+
+
+## Load in Base Data 
+####  Creating Titles and Overlays
+### Adding Complications...
+## Setting Up the Camera Shots in `rayshader`
+### Depth of Field
+## Camera Positioning
+### Lighting Effects
+## Making 3D Video Tracking Shots
+
+<!--chapter:end:rayshader-3d-landscapes.Rmd-->
+
+
+# Stage Route Analysis
+
+Placeholder
+
+
+## Load in Base Data 
+## Generating Stage Route Profiles
+### An Aside - Twists and Turns of Rally Stages
+## Finding Stage Route Lengths
+## Using Ecological Movement Analysis Tools to Analyse Stage Routes
+## Using `trajr` for Stage Route Profiling
+### Smoothing a Trajectory
+### Resampling Locations
+### Resampling Against Distance
+### Splitting a Trajectory
+### Rotating the Stage Trajectory
+### Straightness and Sinuosity
+### Directional Change
+### Tracking Turning Angles
+### Visualising Trajectory Direction Changes
+### Using `amt` for Stage Route Profiling
+### Creating Tracks
+### Converting to Other Track Formats
+### Using `amt` for Stage Route Analysis
+### Using `rLFT`` for Profiling Along a Stage Route
+
+<!--chapter:end:route-metrics.Rmd-->
+
+```{r, cache = T, echo = F, message=F}
+# Allow knitr to continue to execute even in the presence of errors
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(fig.path = "images/revisiting-elevation-data-")
+```
+
+# Revisiting Elevation Data
+
+Having access to elevation data is essential for rendering 3D terrain maps. But we can also plot elevation data along a single dimension: the *distance along route*.
+
+For winter mountain rallies, such as Monte Carlo, elevation data may be important when estimating temperature drops along a stage caused by elevation changes, and hence the likelihood, or otherwise, of snow. (Shadow models and the time of day a stage is running, as well as the weather conditions, may also play into that).
+
+When planning hill climbs, or rally stages that perhaps involve electric vehicle competitors, a good understanding of elevation changes, and potential energy requirements resulting from climbs, may also be important,
+
+[*Rally Maps*](https://www.rally-maps.com/Rallye-Monte-Carlo-2021/Saint-Disdier-Corps) routes come with elevation profiles of this sort, and stage reports for major cycling races such as *le Tour de France* are rarely complete with a stage elevation maps show the *cols* to be encountered along the route. The [`cyclingcols.com`](https://www.cyclingcols.com/col/HolmeMoss) website demonstrates several interesting ways of analysing cycling *cols*.
+
+So can we produce our own elevation profiles from the stage route and elevation data? We surely can...
+
+*Elevation along route profiles are extracted from an elevation raster. Note that we can also extract shadow along route information from a shade raster generated for a particular data and time of day.*
+
+## Load in Base Data 
+
+As ever, let's load in our stage data and the elevation raster and create a demo map:
+
+```{r message=FALSE}
+library(sf)
+library(raster)
+library(rayshader)
+
+geojson_filename = 'montecarlo_2021.geojson'
+geojson_sf = sf::st_read(geojson_filename)
+stage_route_gj = geojsonio::geojson_json(geojson_sf[1,]$geometry)
+
+# Previously downloaded buffered TIF digital elevation model (DEM) file
+stage_tif = "buffered_stage_elevation.tif"
+
+# Load in the previously saved image raster
+elev_img = raster(stage_tif)
+
+# Note we can pass in a file name or a raster object
+elmat = raster_to_matrix(stage_tif)
+
+demo_map = elmat %>%
+              sphere_shade(texture = "desert", progbar = FALSE)
+
+```
+
+## Generating Elevation Maps
+
+With the geo data provided for the stage route, we only have access to the latitude and longitude of each point along the route, *not* the elevation.
+
+We have already seen how we can create a route layer that we can overlay on the 3D model, with the elevation then inferred so that the route is plotted correctly on the 3D rendered model. But can we access the actual elevation values along the route somehow?
+
+### Accessing Elevation Values Along a Route from an Elevation Raster
+
+The elevation raster provides an elevation value for each pixel in the raster image. We can transect the raster with a route to get the elevation value for each point along the route.
+
+To get a routepoints list, we can extract the coordinates from a linestring geometry, casting the result to a dataframe and then selecting just the X (longitude) and Y (latitude) values:
+
+```{r}
+routepoints = subset(as.data.frame(st_coordinates(geojson_sf[1,])),
+                     select = c('X', 'Y'))
+head(routepoints)
+```
+
+We can add a Z (elevation) column to the dataframe by extracting the elevation at each point (that is, for each row of the dataframe) from the elevation raster image:
+
+```{r}
+routepoints$elevation = raster::extract(elev_img, routepoints)
+head(routepoints)
+```
+
+Finding the minimum and and maximum altitude along the route is trivial:
+
+```{r}
+c(max(routepoints$elevation, na.rm=T), min(routepoints$elevation, na.rm=T))
+```
+
+### Using `geosphere::distGeo` to Find Distance Along a Route
+
+We can use the `geosphere::distGeo()` function to calculate distance in meters between each point under the WGS84 projection without having to first convert to a projection with units of meters.
+
+The function returns the distance between consecutive locations, with a null value returned for the final step. If we want to back refer distances — how far since the last point, rather than how far to the next point — we can drop the last `NA` distance and prepend a distance of `0` to the start of the list of distances:
+
+```{r}
+stage_coords = st_coordinates(geojson_sf[1,])[,c('X','Y')]
+stage_step_distances = geosphere::distGeo(stage_coords)
+
+# The last step distance is NA, so drop it
+# Also prepend the distances with 0 for the first step
+routepoints$gs_dist = c(0, head(stage_step_distances,-1))
+routepoints$gs_cum_dist = cumsum(routepoints$gs_dist)
+
+head(routepoints)
+```
+
+We can now preview the elevation against the distance along the route:
+
+```{r gg-routepoints, message=FALSE}
+library(ggplot2)
+
+ggplot(routepoints, aes(x=gs_cum_dist, y=elevation)) + geom_line()
+```
+
+### Using `sp::spDists` to Find Distance Along a Route
+
+The `sp::spDists` function also allows us to find the distance between *Spatial* point WPS84 / longlat projected points in meters without first having to convert the points to a projection with units of meters. The function returns the "step" distance as well as the accumulated distance:
+
+```{r}
+# Find the distance between points in two lists of coordinates
+distances = sp::spDists(rbind(stage_coords[1,], stage_coords),
+                        stage_coords,
+                        longlat = TRUE)
+
+# Extract the step and accumulated distances in km
+# and convert to meters
+routepoints['sp_cum_dist'] = distances[1,] * 1000
+routepoints['sp_dist'] = distances[2,] * 1000
+
+head(routepoints)
+```
+
+Note that the actual distances calculated vary slightly depending on the internals and settings used in the function used to calculate them. The numbers are close enough for storytelling!
+
+## Generating a 3D Ribbon Plot of the Stage Route
+
+A `ggplot2::geom_ribbon()` plot provides a familiar way of rendering the elevation plot in the form a line chart with a fill that extends down to the x-axis:
+
+```{r gg-elevation}
+library(ggplot2)
+
+# Find a nice minimum elevation
+min_elevation = max(0, 100*round(((min(routepoints$elevation)/100)-1.6)))
+max_elevation = max(routepoints$elevation)
+
+g = ggplot(routepoints, aes(x = gs_cum_dist)) +
+      geom_ribbon(aes(ymin = min_elevation,
+                      ymax = elevation),
+                  fill = "#1B9E77") + 
+      labs(x = "kilometers", y = "Elevation") +
+      scale_y_continuous(limits = c(min_elevation, max_elevation))
+
+g
+```
+
+We can get a 3D plot from the ribbon chart via the `rayshader::plot_gg()` function:
+
+```{r}
+options(rgl.useNULL = TRUE,
+        rgl.printRglwidget = TRUE)
+
+rgl::clear3d()
+plot_gg(g, height=5, width=6, scale=500, raytrace=FALSE)
+
+rgl::rglwidget()
+```
+
+
+## Identifying Road Type
+
+The OSM highways data often includes information about road class. We can use this information to add an aesthetic to the line that distinguishes the road class along the route, either by color or by width.
+
+```{r}
+#Precautionary measure to clean the data
+routepoints = routepoints %>% tidyr::drop_na('elevation')
+
+# Create a min colour value 10% of the max-min range below the min value
+min_val = min(routepoints$elevation) - 0.1 * (max(routepoints$elevation) -  min(routepoints$elevation))
+```
+
+We can use the `ggplot2::coord_sf(crs=st_crs(geojson_sf))` function to allow us to a non-spatial dataframe containing latitude and longitude coordinates in a spatial way:
+
+```{r gg-path}
+# We need to use the geom_path to render the route
+# geom_line will plot against ordered, not consecutive, x and y
+g2 = ggplot(routepoints, aes(x=X, y=Y, color=elevation))+
+  geom_point(size=3) +
+  geom_path(size=3.5) +
+  
+  # Set the coordinate system to the original projection
+  coord_sf(crs=st_crs(geojson_sf)) +
+  
+  lims(color=c(min_val, max(routepoints$elevation)))
+
+g2
+```
+
+It might also be interesting to explore a line width setting to reflect the likely width of the road. For example, we might image A roads to nominally have a width of 8m, enough for two cars to pass one another, B class roads to have a width of 6m (a close squeeze) and C roads or other tracks to have a width of 4m (single track road).
+ 
+## Displaying Route Twistiness and Elevation
+
+The 3D rendered ribbon chart is amusing, but not necessarily very informative. What would be far more compelling would be if we could render elevation and also the twists and turns take by the route.
+
+So let's do that in the form of a plot of elevation against latitude and longitude:
+
+```{r message=FALSE}
+rgl::clear3d()
+
+gg = plot_gg(g2, height=5, width=6, scale=500,
+             raytrace=FALSE)
+
+r = rgl::rglwidget()
+
+widget_fn = 'elev_model.html'
+htmlwidgets::saveWidget(r, widget_fn)
+```
+
+Embed the HTML back in an iframe:
+
+```{r}
+htmltools::includeHTML(widget_fn)
+```
+
+```
+
+### Making a 3D Print File of the Model
+
+As well as making movies of the stage route it is also worth reminding ourselves that we can also export the model as a 3D printer ready model. The `rayshader::save_3dprint()` function will export an `.stl` format model file directly from our model:
+
+```{r}
+# We can also save the file to a 3d print stl file
+model_fn = "stage_3d.stl"
+save_3dprint(model_fn, maxwidth = 10, unit = "in")
+```
+
+With model file in hand,it can then be uploaded to 3D print on demand service such as [*3dpeople*](https://www.3dpeople.uk/), [*3d print UK*](https://www.3dprint-uk.co.uk/), [*MakeitQuick Manufacturing*](https://makeitquick.co.uk/orders/) or [*Champion 3D*](https://champion3d.com/) to provide us with a physical model of a stage.
+
+### Rendering a 3D movie of the Model
+
+Render a 3D movie to provide a rotating view of the 3D rendered line char showing the route path and elevation:
+
+```{r message=FALSE, warning=FALSE}
+library(av)
+
+options(rgl.useNULL = FALSE,
+        rgl.printRglwidget = FALSE)
+
+rgl::rgl.open()
+rgl::clear3d()
+
+g = plot_gg(g2 + theme(legend.position = "none"),
+            height=5, width=6, scale=500,
+            raytrace=FALSE)
+
+# 3D movie
+video_fn = 'demo_stage_line.mp4'
+
+#render_movie(video_fn, progbar=FALSE)
+rgl::rgl.close()
+
+embedr::embed_video(video_fn, width = "256", height = "256")
+```
+
+
+## Using the `slopes` Package to Analyse Stage Elevation Data
+
+Having got the elevation profile as elevation by distance into stage, we can borrow some ideas from the chapter on route profiling to try to identify certain features in the route, for example in terms of gradient or even "elevation-twistiness" of a climb / descent.
+
+The [`slopes` *R* package](https://github.com/ITSLeeds/slopes) simplifies obtaining elevation data considerably, and provides an easy way to visualise slopes and steepness as well as packaging various functions relate to the ones we developed in the previous sections.
+
+For example, the `slopes::slope_3d()` function takes a route linestring and a raster and adds the elevation as the Z coordinate to the linestring:
+
+```{r}
+library(slopes)
+
+route_slope_elevation = slope_3d(geojson_sf[1,], elev_img)
+```
+
+There is also automated support for finding elevation data from a route by omitting the raster data when calling the `slopes::slope_3d()` function with just the linestring.
+
+The `slopes::plot_slope()` function visualises the gradient at each step along the 3D linestring route using base graphics:
+
+```{r slopes_plot_slope}
+plot_slope(route_slope_elevation)
+```
+
+Within the `slopes` package are several utility function for extracting step distance, elevation and gradient along the route:
+
+```{r}
+route_coords = sf::st_coordinates(geojson_sf[1,])
+# lonlat: is the order lonlat?
+d = sequential_dist(route_coords, lonlat = TRUE)
+```
+
+We can get the elevation for each line segment in the linestring using the `slopes::elevation_extract()` function:
+
+```{r}
+e = elevation_extract(route_coords, elev_img)
+```
+
+Simple plot:
+
+```{r slopes_df_plot_elev}
+slopes_df = data.frame(d=c(0,d), e=e)
+
+# Find the accumulated distanced over route steps
+slopes_df$cum_d = cumsum(slopes_df$d)
+
+ggplot(slopes_df)+geom_line(aes(x=cum_d, y=e))
+```
+
+We can get slope associated with each line segment using the `slopes::slope_distance()` function, or from the 3D linestring using the `slopes::slope_matrix()` function. (The *lonlat* parameter flags the order of longitude and latitude values.)
+
+```{r}
+step_gradients = slope_distance(d, e) # d is 1 item shorter than e
+step_gradients2 = slope_matrix(st_coordinates(route_slope_elevation),
+                               lonlat = TRUE)
+```
+
+## Analysing Route Elevation from First Principles
+
+The simplest thing to calculate is probably gradient, which tells us how steep an incline / descent is at any part of the stage, as well as as where the turning points (in gradient terms) are: crests and plateaus, for example.
+
+```{r simple-elevation-gradient}
+ggplot(routepoints, aes(x=gs_cum_dist)) + geom_line(aes( y=elevation)) +
+  geom_line(aes( y=1000*pracma::gradient(elevation, gs_cum_dist)), color='red')
+```
+
+Areas where the gradient is greater than show the route is climbing; where the gradient is less than one shows a descent. A gradient near zero is on the flat.
+
+We might get a slightly cleaner trace if we smooth the elevation profile and then find its gradient.
+
+```{r smoothed-elevation-gradient}
+trj <- TrajFromCoords(routepoints[,c('gs_cum_dist', 'elevation')])
+smoothed <- trajr::TrajSmoothSG(trj, p=3, n=9)
+
+smoothed['y_gradient'] = 1000*pracma::gradient(smoothed$y,smoothed$x)
+ggplot()+geom_line(data=routepoints,aes(x=gs_cum_dist, y=elevation)) +geom_line(data=smoothed, aes(x=x, y=y), color='red') +
+  geom_line(data=smoothed, aes(x=x, y=y_gradient), color='blue')
+```
+
+Another technique we might use to display the data is to create coloured bands, as per a ribbon plot, coloured according to the whether the gradient is positive or negative, using the magnitude of the gradient to set the colour intensity as per a heat map.
+
+```{r smoothed-elevation-gradient-filled}
+smoothed$col[smoothed$y_gradient >= 0] <- "climbing"
+smoothed$col[smoothed$y_gradient < 0] <- "descending"
+
+# Doing something wrong with the fills here?
+ggplot(smoothed, aes(x=x, y=y_gradient)) +
+  geom_area(aes(fill=col)) +
+  geom_line() +
+  geom_hline(yintercept=0)
+
+# geom_ribbon has the same issue
+```
+
+<!--chapter:end:revisiting-elevation.Rmd-->
+
+
+# Adding *OpenStreetMap* Data
+
+Placeholder
+
+
+## Load in Base Data 
+## Adding Detail and Features from OpenStreetMap
+### Plotting OSM Highways
+## Viewing Roads in the Vicinity of a Route
+### Using `sf::st_buffer` to Create Buffered Areas
+### Using `rgeos::gBuffer` to Create Buffered Areas
+## Adding Additional Data From OSM
+### Adding Building Layers from *OpenStreetMap*
+### The Wide Variety of OSM Features
+
+<!--chapter:end:adding-osm-data.Rmd-->
+
+
+# Creating A Road Book
+
+Placeholder
+
+
+## Load in Base Data 
+## Using `sfnetworks` to Represent Routes and Road Networks
+## Analysing Road Networks with `sfnetworks`
+### Creating an `sfnetworks` Graph
+### Filtering an `sfnetworks` Graph
+### Viewing a Buffered Area Around a Junction Node
+### Snapping a Route to a Road Network
+### Snapping a Full Stage Route to the Road Network
+## Using `dodgr` to Represent Routes and Road Networks
+
+<!--chapter:end:creating-a-road-book.Rmd-->
+
+# Where Next?
+
+From what started as a half hour hack, and turned into a two week learning journey and write-up, which also included how to use `bookdown` to publish web-browseable books, as well as PDFs, from Rmd documents, this book provides something of a travelogue around the bye-ways of working with geographical route data.
+
+Having been on the journey, several things occur to me. Firstly, if I ever need a present for a rally fan, I should be able to make a 3D model of their favourite stage or a custom map showing paths, trails and picnic spots around a woodland stage. Secondly, the idea of *stage route analysis* may be worth pursuing in terms of looking for profile stories *from the stage route* in advance of a rally, or perhaps to support a rally journalism write up of the events that transpired on a particular stage. I suspect I've only just started to touch on what the ecologists get up to with their path analysis, so this will likely reward further reading. Using stage route metrics to tag stages in terms of twistiness and elevation change, and use these as factors to see if they impact on driver performance, is another exciting possibility, using stage maps retrieved from [*rally-maps.com*](https://www.rally-maps.com/home) and results from [*ewrc-results.com*](https://www.ewrc-results.com/).
+
+One thing I haven't really touched on is adding infographics to stage maps. Elsewhere, I have dabbled with various ways of visually reporting on stage times and pace maps over a rally (the split times for for WRC are still on hold as a I repair my data scrapers!)
+
+Another thing that is missing from this book is the spatial analysis of collected or sampled data. I do have a stash of old WRC+ telemetry data somewhere, so a couple of half hour hacks (?!) immediately suggest themselves to me: firstly, revisiting the simple plots I originally made of them and finding ways of integrating them with some of the `leaflet` map views in particular; secondly, analysing their "group" behaviour to see how that unusual beast, the rally driver, behaves in general on a particular stage, and how and why other drivers perhaps stand out.
+
+What's certain is that this isn't the end of the story. With this book now in the state it is, its something I can continue to update and to add to... The telemetry style analysis will probably be the focus of another project, however. If holidays are locked out again, that could well be how I spend my  summer holiday fortnight!
+
+<!--chapter:end:where-next.Rmd-->
+

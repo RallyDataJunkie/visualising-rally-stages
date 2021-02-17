@@ -1,0 +1,160 @@
+```{r, cache = T, echo = F, message=F}
+# Allow knitr to continue to execute even in the presence of errors
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(fig.path = "images/rayshader-3d-cropviews-")
+```
+
+# Creating Cropped 3d `rayshader` Models
+
+As well as viewing the "full" scene using a 3D `rayshader` model, the `rayshader` package provides us with a *baseshape* parameter to the `rayshader::`plot_3d()` function that allows us to crop the view to a particular shape.
+
+We can also use a manual cropping technique to crop the extent of the model we wish to render.
+
+## Load in Base Data 
+
+As ever, let's load in our stage data:
+
+```{r}
+library(tidyr)
+
+geojson_filename = 'montecarlo_2021.geojson'
+geojson_sf = sf::st_read(geojson_filename)
+stage_bbox = sf::st_bbox(geojson_sf)
+```
+
+We have already seen how we can overlay an elevation model raster on a leaflet map, as well as rendering two dimensional topographic models using the `raytracer` package.
+
+The `raytracer` package itself works with a matrix of raster values. Having saved the download raster to a tif file, we can load the data back in from and convert it to a matrix using the `rayshader::raster_to_matrix()` function:
+
+```{r message=FALSE, warning=FALSE}
+library(rayshader)
+library(raster)
+
+# Previously downloaded TIF digital elevation model (DEM) file
+stage_tif = "buffered_stage_elevation.tif"
+
+# Load in the previously saved image raster
+elev_img = raster(stage_tif)
+
+# Get the natural zscale
+auto_zscale = geoviz::raster_zscale(elev_img)
+
+# Note we can pass in a file name or a raster object
+elmat = raster_to_matrix(stage_tif) 
+```
+
+
+```{r}
+options(rgl.useNULL = TRUE,
+        rgl.printRglwidget = TRUE)
+```
+
+Let's create a demo map that we can use as as test piece:
+
+```{r}
+demo_map = elmat %>%
+              sphere_shade(texture = "desert") %>%
+              add_water(detect_water(elmat, progbar = FALSE),
+                        color = "desert")
+```
+
+## Cropping the Rendered 3D View
+
+We can crop the rendered 3D view according to three predefined shapes: *circle*, *hex*, or the *rectangle* default.
+
+```{r}
+# Additional baseshape parameter can be: circle, hex, or rectangle
+library(rgl)
+
+options(rgl.useNULL = FALSE,
+        rgl.printRglwidget = FALSE)
+#rgl::rgl.open()
+rgl::clear3d()
+demo_map %>%
+      plot_3d(elmat, zscale = 10,
+              baseshape="circle")
+
+#rgl::rgl.close()
+rgl::rglwidget()
+```
+
+However, when cropping we may lose some of the area of interest. In such cases, we would need to add a buffer margin to the image so that when we crop it, we still retain all the detail we require in the cropped view.
+
+## Cropping 3D Models to a Buffered Region
+
+The `rayshder::plot3d()` function provides us with a means of cropping the rendered model to a circular or hexagonal base shape, as well as the default rectangular base. But we can also crop the base image manually in order to render an arbitrary shape of our choosing.
+
+For example, we have already seen how we can create a polygon that takes the shape of a buffered region around our route. As well as plotting that shape as a 2D `ggplot2` image, we can also use it as a mask for cropping our map before we render it as a 3D model.
+
+We can use the `raster::crop()` and `raster::mask()` functions applied to a spatial object to cut out the area of interest from the original image:
+
+For example, the following recipe lets use create a buffered area with a size specified in meters, around our stage route:
+
+```{r message=FALSE}
+library(sf)
+
+lonlat2UTM_hemisphere <- function(lonlat) {
+    ifelse(lonlat[1] > 0, "north", "south")
+}
+
+lonlat2UTMzone = function(lonlat) {
+  utm = (floor((lonlat[1] + 180) / 6) %% 60) + 1
+  if(lonlat[2] > 0) {
+    utm + 32600
+  } else{
+    utm + 32700
+  }
+}
+
+# Grab a copy of the original projection
+original_crs = st_crs(geojson_sf[1,])
+
+# Find the UTM zone for a sample a point on the route
+crs_zone = lonlat2UTMzone(c(st_coordinates(geojson_sf[1,])[1,1],
+                            st_coordinates(geojson_sf[1,])[1,2]))
+
+# Create the projection string
+utm_pro4_string = st_crs(crs_zone)$proj4string
+#"+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs"
+# units in meters e.g. https://epsg.io/32632
+
+# Transform the route projection
+utm_route = st_transform(geojson_sf[1,],
+                         crs = st_crs(utm_pro4_string))
+
+
+# Generate buffered routes in UTM and longlat projections
+buffer_margin_1km = units::set_units(1000, m)
+
+buffered_route_utm <- st_buffer(utm_route, buffer_margin_1km)
+buffered_route <- st_transform(buffered_route_utm, original_crs)
+```
+
+We can now use the buffered route to crop our 3D model along the route:
+
+```{r}
+# For more explanation of the following, see e.g.:
+# https://geocompr.robinlovelace.net/geometric-operations.html#raster-cropping
+
+buffered_route_sp = as(buffered_route, 'Spatial')
+rgl::clear3d()
+elmat2 <- crop(raster(stage_tif), extent(buffered_route_sp))
+elmat3 <- mask(elmat2, buffered_route_sp)
+elmat4 = raster_to_matrix(elmat3) 
+
+yellow_route_buffer = generate_line_overlay(geojson_sf[1,],
+                                    extent = extent(elmat2),
+                                    heightmap = elmat4,
+                                    linewidth = 5, color="red")
+elmat4 %>%
+  sphere_shade(sunangle = -45, texture = "bw") %>%
+  add_overlay( yellow_route_buffer ) %>%
+  plot_3d(elmat4, solid=TRUE,
+          zscale=auto_zscale)
+
+rgl::rglwidget()
+#render_movie('demo_stage_buffer.mp4')
+```
+
+*There seem to be some artefacts arising from the solid base, although I'm not sure if that's an issue with the raster or the renderer?*
+

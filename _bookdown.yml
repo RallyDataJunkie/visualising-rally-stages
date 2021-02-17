@@ -1,0 +1,26 @@
+delete_merged_file: false
+book_filename: 'rally-stage-route-book.Rmd'
+output_dir: "docs"
+rmd_files:  ["index.Rmd", "welcome.Rmd", "preface.Rmd",
+             "intro.Rmd",
+             "getting-started.Rmd", 
+             "stage-route-import.Rmd", 
+             "stage-route-preview.Rmd",
+             "introducing-projections.Rmd",
+             "stage-route-annotations.Rmd",
+             "elevation-data.Rmd",
+             "terrain-features-from-raster.Rmd",
+             "rayshader-2d.Rmd",
+             "rayshader-2d-overlays.Rmd",
+             "annotating-rayshader-maps.Rmd",
+             "aside-penny-red.Rmd",
+             "rayshader-3d.Rmd",
+             "rayshader-3d-maps.Rmd",
+             "rayshader-3d-cropviews.Rmd",
+             "shadows-time-of-day.Rmd",
+             "rayshader-3d-landscapes.Rmd",
+             "route-metrics.Rmd",
+             "revisiting-elevation.Rmd",
+             "adding-osm-data.Rmd",
+             "creating-a-road-book.Rmd",
+             "where-next.Rmd"]

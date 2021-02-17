@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>11 Annotating rayshader maps | Visualising WRC Rally Stages With rayshader and R</title>
+  <meta name="description" content="Rally stage maps often appear on rally websites displayed via interactive web maps. The data used to generate the routes is often available as a digital data file of some sort. This book takes one such file and embarks on an adventure into the wilds of geocomputing using the R programming language to see just where such a file may take us. From web maps and elevation maps to interactive 3D displays, let the exploration commence…" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="11 Annotating rayshader maps | Visualising WRC Rally Stages With rayshader and R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Rally stage maps often appear on rally websites displayed via interactive web maps. The data used to generate the routes is often available as a digital data file of some sort. This book takes one such file and embarks on an adventure into the wilds of geocomputing using the R programming language to see just where such a file may take us. From web maps and elevation maps to interactive 3D displays, let the exploration commence…" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="11 Annotating rayshader maps | Visualising WRC Rally Stages With rayshader and R" />
+  
+  <meta name="twitter:description" content="Rally stage maps often appear on rally websites displayed via interactive web maps. The data used to generate the routes is often available as a digital data file of some sort. This book takes one such file and embarks on an adventure into the wilds of geocomputing using the R programming language to see just where such a file may take us. From web maps and elevation maps to interactive 3D displays, let the exploration commence…" />
+  
+
+<meta name="author" content="Tony Hirst" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="overlaying-2d-rayshader-maps.html"/>
+<link rel="next" href="an-aside-the-penny-red.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="in-the-beginning.html"><a href="in-the-beginning.html"><i class="fa fa-check"></i>In the beginning…</a></li>
+<li class="chapter" data-level="" data-path="acknowledgements.html"><a href="acknowledgements.html"><i class="fa fa-check"></i>Acknowledgements</a></li>
+<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#who-this-book-is-for"><i class="fa fa-check"></i><b>1.1</b> Who This Book Is For</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-this-book-isnt"><i class="fa fa-check"></i><b>1.2</b> What This Book Isn’t</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#structure-of-the-book"><i class="fa fa-check"></i><b>1.3</b> Structure of the Book</a></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#further-reading"><i class="fa fa-check"></i><b>1.4</b> Further Reading</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="getting-started.html"><a href="getting-started.html"><i class="fa fa-check"></i><b>2</b> Getting Started</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="getting-started.html"><a href="getting-started.html#setting-up-a-working-code-execution-environment"><i class="fa fa-check"></i><b>2.1</b> Setting Up a Working Code Execution Environment</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="getting-started.html"><a href="getting-started.html#installing-the-docker-environment"><i class="fa fa-check"></i><b>2.1.1</b> Installing the Docker Environment</a></li>
+<li class="chapter" data-level="2.1.2" data-path="getting-started.html"><a href="getting-started.html#installing-the-required-r-packages-manually"><i class="fa fa-check"></i><b>2.1.2</b> Installing the Required R Packages Manually</a></li>
+<li class="chapter" data-level="2.1.3" data-path="getting-started.html"><a href="getting-started.html#other-installation-dependencies"><i class="fa fa-check"></i><b>2.1.3</b> Other Installation Dependencies</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="getting-started.html"><a href="getting-started.html#using-the-rstudio-environment"><i class="fa fa-check"></i><b>2.2</b> Using the RStudio Environment</a></li>
+<li class="chapter" data-level="2.3" data-path="getting-started.html"><a href="getting-started.html#using-a-jupyter-notebook-environment"><i class="fa fa-check"></i><b>2.3</b> Using a Jupyter Notebook Environment</a></li>
+<li class="chapter" data-level="2.4" data-path="getting-started.html"><a href="getting-started.html#exploring-the-book-as-an-online-interactive-textbook-not-yet"><i class="fa fa-check"></i><b>2.4</b> Exploring the Book as an Online Interactive Textbook (Not Yet!)</a></li>
+<li class="chapter" data-level="2.5" data-path="getting-started.html"><a href="getting-started.html#serving-your-own-map-tiles-and-elevation-raster-images"><i class="fa fa-check"></i><b>2.5</b> Serving Your Own Map Tiles and Elevation Raster Images</a></li>
+<li class="chapter" data-level="2.6" data-path="getting-started.html"><a href="getting-started.html#donate"><i class="fa fa-check"></i><b>2.6</b> Donate</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html"><i class="fa fa-check"></i><b>3</b> Importing the Stage Route Data</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#downloading-the-stage-data-file"><i class="fa fa-check"></i><b>3.1</b> Downloading the Stage Data File</a></li>
+<li class="chapter" data-level="3.2" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#opening-kml-geodata-files"><i class="fa fa-check"></i><b>3.2</b> Opening KML Geodata Files</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#using-rgdal-and-sp-to-open-geodata-files"><i class="fa fa-check"></i><b>3.2.1</b> Using <code>rgdal</code> and <code>sp</code> to Open Geodata Files</a></li>
+<li class="chapter" data-level="3.2.2" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#using-sf-to-open-geodata-files"><i class="fa fa-check"></i><b>3.2.2</b> Using <code>sf</code> to Open Geodata Files</a></li>
+<li class="chapter" data-level="3.2.3" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#accessing-route-data-as-a-geojson-string"><i class="fa fa-check"></i><b>3.2.3</b> Accessing Route Data as a geojson String</a></li>
+<li class="chapter" data-level="3.2.4" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#saving-simple-features-data-to-various-geodata-file-formats"><i class="fa fa-check"></i><b>3.2.4</b> Saving Simple Features Data to Various Geodata File Formats</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#important-geodata-file-formats"><i class="fa fa-check"></i><b>3.3</b> Important Geodata File Formats</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#loading-geojson-data"><i class="fa fa-check"></i><b>3.3.1</b> Loading geojson Data</a></li>
+<li class="chapter" data-level="3.3.2" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#loading-gpx-data"><i class="fa fa-check"></i><b>3.3.2</b> Loading GPX Data</a></li>
+<li class="chapter" data-level="3.3.3" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#loading-flight-data-using-igc-format-gps-files"><i class="fa fa-check"></i><b>3.3.3</b> Loading Flight Data Using IGC format GPS Files</a></li>
+<li class="chapter" data-level="3.3.4" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#reading-data-from-gps-devices"><i class="fa fa-check"></i><b>3.3.4</b> Reading Data from GPS Devices</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="working-with-route-data.html"><a href="working-with-route-data.html"><i class="fa fa-check"></i><b>4</b> Working with Route Data</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="working-with-route-data.html"><a href="working-with-route-data.html#loading-in-the-route-data"><i class="fa fa-check"></i><b>4.1</b> Loading in the Route Data</a></li>
+<li class="chapter" data-level="4.2" data-path="working-with-route-data.html"><a href="working-with-route-data.html#access-a-specific-stage"><i class="fa fa-check"></i><b>4.2</b> Access a specific stage</a></li>
+<li class="chapter" data-level="4.3" data-path="working-with-route-data.html"><a href="working-with-route-data.html#visual-preview-of-route-geodata"><i class="fa fa-check"></i><b>4.3</b> Visual Preview of Route Geodata</a></li>
+<li class="chapter" data-level="4.4" data-path="working-with-route-data.html"><a href="working-with-route-data.html#previews-using-ggplot2"><i class="fa fa-check"></i><b>4.4</b> Previews using <code>ggplot2</code></a></li>
+<li class="chapter" data-level="4.5" data-path="working-with-route-data.html"><a href="working-with-route-data.html#identifying-the-start-and-end-of-the-stage"><i class="fa fa-check"></i><b>4.5</b> Identifying the Start and End of the Stage</a></li>
+<li class="chapter" data-level="4.6" data-path="working-with-route-data.html"><a href="working-with-route-data.html#extracting-route-fragments"><i class="fa fa-check"></i><b>4.6</b> Extracting Route Fragments</a></li>
+<li class="chapter" data-level="4.7" data-path="working-with-route-data.html"><a href="working-with-route-data.html#previews-using-leaflet-interactive-maps"><i class="fa fa-check"></i><b>4.7</b> Previews Using <code>leaflet</code> Interactive Maps</a></li>
+<li class="chapter" data-level="4.8" data-path="working-with-route-data.html"><a href="working-with-route-data.html#creating-buffer-regions-around-features"><i class="fa fa-check"></i><b>4.8</b> Creating Buffer regions around features</a></li>
+<li class="chapter" data-level="4.9" data-path="working-with-route-data.html"><a href="working-with-route-data.html#adding-additional-features-to-leaflet-maps"><i class="fa fa-check"></i><b>4.9</b> Adding Additional Features to <code>leaflet</code> maps</a>
+<ul>
+<li class="chapter" data-level="4.9.1" data-path="working-with-route-data.html"><a href="working-with-route-data.html#add-minimap-navigation"><i class="fa fa-check"></i><b>4.9.1</b> Add “minimap” navigation</a></li>
+<li class="chapter" data-level="4.9.2" data-path="working-with-route-data.html"><a href="working-with-route-data.html#add-custom-symbol-legends"><i class="fa fa-check"></i><b>4.9.2</b> Add Custom Symbol Legends</a></li>
+<li class="chapter" data-level="4.9.3" data-path="working-with-route-data.html"><a href="working-with-route-data.html#adding-mini-charts-to-maps"><i class="fa fa-check"></i><b>4.9.3</b> Adding Mini-Charts to Maps</a></li>
+<li class="chapter" data-level="4.9.4" data-path="working-with-route-data.html"><a href="working-with-route-data.html#adding-html-content-to-popups"><i class="fa fa-check"></i><b>4.9.4</b> Adding HTML content to popups</a></li>
+</ul></li>
+<li class="chapter" data-level="4.10" data-path="working-with-route-data.html"><a href="working-with-route-data.html#using-mapview-to-create-leaflet-maps"><i class="fa fa-check"></i><b>4.10</b> Using <code>mapview</code> To Create <em>leaflet</em> Maps</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html"><i class="fa fa-check"></i><b>5</b> Introducing Map Projections</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#load-in-the-route-data"><i class="fa fa-check"></i><b>5.1</b> Load in the Route Data</a></li>
+<li class="chapter" data-level="5.2" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#previewing-a-map-route"><i class="fa fa-check"></i><b>5.2</b> Previewing a Map Route</a></li>
+<li class="chapter" data-level="5.3" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#plotting-latlong-naively"><i class="fa fa-check"></i><b>5.3</b> Plotting LatLong Naively</a></li>
+<li class="chapter" data-level="5.4" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#using-the-utm-co-ordinate-reference-system"><i class="fa fa-check"></i><b>5.4</b> Using the UTM Co-ordinate Reference System</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#using-st_transform-for-projection-transformations"><i class="fa fa-check"></i><b>5.4.1</b> Using <code>st_transform</code> for Projection Transformations</a></li>
+<li class="chapter" data-level="5.4.2" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#using-ggplot2coord_sf-to-render-projections"><i class="fa fa-check"></i><b>5.4.2</b> Using <code>ggplot2::coord_sf</code> to Render Projections</a></li>
+<li class="chapter" data-level="5.4.3" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#exporting-the-route-data-as-a-dataframe"><i class="fa fa-check"></i><b>5.4.3</b> Exporting the Route Data As a Dataframe</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="introducing-map-projections.html"><a href="introducing-map-projections.html#alternative-crs-projections"><i class="fa fa-check"></i><b>5.5</b> Alternative CRS Projections</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html"><i class="fa fa-check"></i><b>6</b> Stage Route Annotations</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#load-in-the-route-data-1"><i class="fa fa-check"></i><b>6.1</b> Load in the Route Data</a></li>
+<li class="chapter" data-level="6.2" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#adding-split-point-locations"><i class="fa fa-check"></i><b>6.2</b> Adding Split Point Locations</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#using-geojson-to-find-the-distance-along-a-route"><i class="fa fa-check"></i><b>6.2.1</b> Using geojson to Find the Distance Along a Route</a></li>
+<li class="chapter" data-level="6.2.2" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#using-rgeosginterpolate-to-find-the-distance-along-a-route"><i class="fa fa-check"></i><b>6.2.2</b> Using <code>rgeos::gInterpolate</code> to Find the Distance Along a Route</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="stage-route-annotations.html"><a href="stage-route-annotations.html#parallel-routes"><i class="fa fa-check"></i><b>6.3</b> Parallel Routes</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html"><i class="fa fa-check"></i><b>7</b> Accessing and Working With Elevation Data Raster Files</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#introducing-digital-elevation-model-dem-raster-images"><i class="fa fa-check"></i><b>7.1</b> Introducing Digital Elevation Model (DEM) Raster Images</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#what-is-raster-data"><i class="fa fa-check"></i><b>7.1.1</b> What Is Raster Data?</a></li>
+<li class="chapter" data-level="7.1.2" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#what-are-digital-elevation-models-dems"><i class="fa fa-check"></i><b>7.1.2</b> What Are Digital Elevation Models (DEMs)?</a></li>
+<li class="chapter" data-level="7.1.3" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#the-r-raster-package"><i class="fa fa-check"></i><b>7.1.3</b> The R <code>raster</code> Package</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#downloading-elevation-data"><i class="fa fa-check"></i><b>7.2</b> Downloading Elevation Data</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#loading-in-some-stage-data"><i class="fa fa-check"></i><b>7.2.1</b> Loading in some stage data</a></li>
+<li class="chapter" data-level="7.2.2" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#obtaining-relief-elevation-raster-data-using-elevatr"><i class="fa fa-check"></i><b>7.2.2</b> Obtaining relief / elevation raster data using <code>elevatr</code></a></li>
+<li class="chapter" data-level="7.2.3" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#plotting-rasters-as-ggplot-objects"><i class="fa fa-check"></i><b>7.2.3</b> Plotting Rasters As <code>ggplot</code> Objects</a></li>
+<li class="chapter" data-level="7.2.4" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#interactive-raster-previews-with-plainview"><i class="fa fa-check"></i><b>7.2.4</b> Interactive Raster Previews with <code>plainview</code></a></li>
+<li class="chapter" data-level="7.2.5" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#saving-the-image-raster-data-to-a-local-file"><i class="fa fa-check"></i><b>7.2.5</b> Saving the Image Raster Data to a Local File</a></li>
+<li class="chapter" data-level="7.2.6" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#from-raster-to-terra"><i class="fa fa-check"></i><b>7.2.6</b> From <code>raster</code> to <code>terra</code></a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#overlaying-raster-images-on-leaflet-maps"><i class="fa fa-check"></i><b>7.3</b> Overlaying Raster Images on Leaflet Maps</a></li>
+<li class="chapter" data-level="7.4" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#retrieving-descriptive-information-about-the-raster"><i class="fa fa-check"></i><b>7.4</b> Retrieving Descriptive Information About the Raster</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#using-mapzen-to-retrieve-dem-raster-data"><i class="fa fa-check"></i><b>7.4.1</b> Using Mapzen to Retrieve DEM raster data</a></li>
+<li class="chapter" data-level="7.4.2" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#additional-elevation-data-downloading-tools"><i class="fa fa-check"></i><b>7.4.2</b> Additional Elevation Data Downloading Tools</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#manipulating-raster-images"><i class="fa fa-check"></i><b>7.5</b> Manipulating Raster Images</a></li>
+<li class="chapter" data-level="7.6" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#ridge-maps"><i class="fa fa-check"></i><b>7.6</b> Ridge maps</a></li>
+<li class="chapter" data-level="7.7" data-path="accessing-and-working-with-elevation-data-raster-files.html"><a href="accessing-and-working-with-elevation-data-raster-files.html#further-information"><i class="fa fa-check"></i><b>7.7</b> Further Information</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html"><i class="fa fa-check"></i><b>8</b> Determining Terrain Features from Raster Data</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html#load-in-base-data"><i class="fa fa-check"></i><b>8.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="8.2" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html#rendering-terrain-over-raster-images"><i class="fa fa-check"></i><b>8.2</b> Rendering Terrain Over Raster Images</a></li>
+<li class="chapter" data-level="8.3" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html#adding-contours-to-raster-images"><i class="fa fa-check"></i><b>8.3</b> Adding Contours to <code>raster</code> Images</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html"><i class="fa fa-check"></i><b>9</b> Using <code>rayshader</code> to Render 2D Elevation and Shade Views</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#load-in-base-data-1"><i class="fa fa-check"></i><b>9.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="9.2" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#rendering-imagery-from-the-dem-raster"><i class="fa fa-check"></i><b>9.2</b> Rendering imagery from the DEM raster</a></li>
+<li class="chapter" data-level="9.3" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#roundtripping-rayshader-rasters-and-matrices"><i class="fa fa-check"></i><b>9.3</b> Roundtripping <code>rayshader</code> Rasters and Matrices</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html"><i class="fa fa-check"></i><b>10</b> Overlaying 2D <code>rayshader</code> Maps</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#load-in-base-data-2"><i class="fa fa-check"></i><b>10.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="10.2" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#adding-overlays"><i class="fa fa-check"></i><b>10.2</b> Adding overlays</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#adding-shadows-to-rayshader-maps"><i class="fa fa-check"></i><b>10.2.1</b> Adding Shadows to <code>rayshader</code> Maps</a></li>
+<li class="chapter" data-level="10.2.2" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#adding-water-features"><i class="fa fa-check"></i><b>10.2.2</b> Adding Water Features</a></li>
+<li class="chapter" data-level="10.2.3" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#overlaying-map-tiles"><i class="fa fa-check"></i><b>10.2.3</b> Overlaying Map Tiles</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#adding-a-stage-route-layer"><i class="fa fa-check"></i><b>10.3</b> Adding a Stage Route Layer</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#buffering-the-stage-route-view"><i class="fa fa-check"></i><b>10.3.1</b> Buffering the Stage Route View</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="overlaying-2d-rayshader-maps.html"><a href="overlaying-2d-rayshader-maps.html#modeling-increased-water-levels"><i class="fa fa-check"></i><b>10.4</b> Modeling Increased Water Levels</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html"><i class="fa fa-check"></i><b>11</b> Annotating <code>rayshader</code> maps</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#load-in-base-data-3"><i class="fa fa-check"></i><b>11.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="11.2" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#adding-a-title-to-a-map"><i class="fa fa-check"></i><b>11.2</b> Adding a Title to a Map</a></li>
+<li class="chapter" data-level="11.3" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#adding-contours-to-rayshader-stage-maps"><i class="fa fa-check"></i><b>11.3</b> Adding Contours to <code>rayshader</code> Stage Maps</a></li>
+<li class="chapter" data-level="11.4" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#overlaying-image-tiles"><i class="fa fa-check"></i><b>11.4</b> Overlaying Image Tiles</a></li>
+<li class="chapter" data-level="11.5" data-path="annotating-rayshader-maps.html"><a href="annotating-rayshader-maps.html#plotting-route-layers-on-rayshader-maps"><i class="fa fa-check"></i><b>11.5</b> Plotting Route Layers on <code>rayshader</code> Maps</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html"><i class="fa fa-check"></i>An Aside - The Penny Red</a>
+<ul>
+<li><a href="an-aside-the-penny-red.html#d-rendering-of-colour-images-using-rayshader">3D Rendering of Colour Images Using <code>rayshader</code></a>
+<ul>
+<li class="chapter" data-level="11.5.1" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html#rendering-the-image-directly-from-ggplot2"><i class="fa fa-check"></i><b>11.5.1</b> Rendering the image directly from <code>ggplot2</code></a></li>
+</ul></li>
+<li class="chapter" data-level="11.6" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html#rendering-a-movie"><i class="fa fa-check"></i><b>11.6</b> Rendering a Movie</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html"><i class="fa fa-check"></i><b>12</b> Introducing 3D <code>rayshader</code> Models</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#rendering-the-3d-maps-in-rstudio-and-knitrable-rmd-documents"><i class="fa fa-check"></i><b>12.1</b> Rendering the 3D Maps in <em>RStudio&amp; and <code>knitr</code>able </em>Rmd* Documents</a></li>
+<li class="chapter" data-level="12.2" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#rendering-a-3d-view"><i class="fa fa-check"></i><b>12.2</b> Rendering a 3D View</a></li>
+<li class="chapter" data-level="12.3" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#the-rayshader-3d-model-plinth"><i class="fa fa-check"></i><b>12.3</b> The <code>rayshader</code> 3D Model Plinth</a></li>
+<li class="chapter" data-level="12.4" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#saving-the-widget-as-an-html-file"><i class="fa fa-check"></i><b>12.4</b> Saving the Widget as an HTML File</a></li>
+<li class="chapter" data-level="12.5" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#rendering-the-model-to-an-image-file"><i class="fa fa-check"></i><b>12.5</b> Rendering the Model to an Image File</a></li>
+<li class="chapter" data-level="12.6" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#rendering-high-quality-models"><i class="fa fa-check"></i><b>12.6</b> Rendering High Quality Models</a></li>
+<li class="chapter" data-level="12.7" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#making-a-3d-print-file"><i class="fa fa-check"></i><b>12.7</b> Making a 3D Print File</a></li>
+<li class="chapter" data-level="12.8" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html#saving-a-movie-of-a-3d-model"><i class="fa fa-check"></i><b>12.8</b> Saving a Movie of a 3D Model</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html"><i class="fa fa-check"></i><b>13</b> Rendering 3D <code>rayshader</code> Stage Route Maps</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#load-in-base-data-4"><i class="fa fa-check"></i><b>13.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="13.2" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#setting-up-3d-embedded-plots"><i class="fa fa-check"></i><b>13.2</b> Setting Up 3D Embedded Plots</a></li>
+<li class="chapter" data-level="13.3" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#rendering-a-simple-stage-route-model"><i class="fa fa-check"></i><b>13.3</b> Rendering a Simple Stage Route Model</a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#decorating-3d-views-with-map-tile-overlays"><i class="fa fa-check"></i><b>13.3.1</b> Decorating 3D Views With Map Tile Overlays</a></li>
+<li class="chapter" data-level="13.3.2" data-path="rendering-3d-rayshader-stage-route-maps.html"><a href="rendering-3d-rayshader-stage-route-maps.html#adding-labels-to-3d-rayshader-maps"><i class="fa fa-check"></i><b>13.3.2</b> Adding Labels to 3D <code>rayshader</code> Maps</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="creating-cropped-3d-rayshader-models.html"><a href="creating-cropped-3d-rayshader-models.html"><i class="fa fa-check"></i><b>14</b> Creating Cropped 3d <code>rayshader</code> Models</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="creating-cropped-3d-rayshader-models.html"><a href="creating-cropped-3d-rayshader-models.html#load-in-base-data-5"><i class="fa fa-check"></i><b>14.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="14.2" data-path="creating-cropped-3d-rayshader-models.html"><a href="creating-cropped-3d-rayshader-models.html#cropping-the-rendered-3d-view"><i class="fa fa-check"></i><b>14.2</b> Cropping the Rendered 3D View</a></li>
+<li class="chapter" data-level="14.3" data-path="creating-cropped-3d-rayshader-models.html"><a href="creating-cropped-3d-rayshader-models.html#cropping-3d-models-to-a-buffered-region"><i class="fa fa-check"></i><b>14.3</b> Cropping 3D Models to a Buffered Region</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html"><i class="fa fa-check"></i><b>15</b> Obtaining Shadows for a Particular Date and Time</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#load-in-base-data-6"><i class="fa fa-check"></i><b>15.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="15.2" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#sunlight-times-vocabulary"><i class="fa fa-check"></i><b>15.2</b> Sunlight Times Vocabulary</a></li>
+<li class="chapter" data-level="15.3" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#finding-sunrise-and-sunset-times"><i class="fa fa-check"></i><b>15.3</b> Finding Sunrise and Sunset Times</a></li>
+<li class="chapter" data-level="15.4" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#animating-shade"><i class="fa fa-check"></i><b>15.4</b> Animating Shade</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html"><i class="fa fa-check"></i><b>16</b> Composing <code>rayshader</code> Stills and Movies</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#load-in-base-data-7"><i class="fa fa-check"></i><b>16.1</b> Load in Base Data</a>
+<ul>
+<li class="chapter" data-level="16.1.1" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#adding-complications"><i class="fa fa-check"></i><b>16.1.1</b> Adding Complications…</a></li>
+</ul></li>
+<li class="chapter" data-level="16.2" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#setting-up-the-camera-shots-in-rayshader"><i class="fa fa-check"></i><b>16.2</b> Setting Up the Camera Shots in <code>rayshader</code></a>
+<ul>
+<li class="chapter" data-level="16.2.1" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#depth-of-field"><i class="fa fa-check"></i><b>16.2.1</b> Depth of Field</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#camera-positioning"><i class="fa fa-check"></i><b>16.3</b> Camera Positioning</a>
+<ul>
+<li class="chapter" data-level="16.3.1" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#lighting-effects"><i class="fa fa-check"></i><b>16.3.1</b> Lighting Effects</a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#making-3d-video-tracking-shots"><i class="fa fa-check"></i><b>16.4</b> Making 3D Video Tracking Shots</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html"><i class="fa fa-check"></i><b>17</b> Stage Route Analysis</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#load-in-base-data-8"><i class="fa fa-check"></i><b>17.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="17.2" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#generating-stage-route-profiles"><i class="fa fa-check"></i><b>17.2</b> Generating Stage Route Profiles</a>
+<ul>
+<li class="chapter" data-level="17.2.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#an-aside---twists-and-turns-of-rally-stages"><i class="fa fa-check"></i><b>17.2.1</b> An Aside - Twists and Turns of Rally Stages</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#finding-stage-route-lengths"><i class="fa fa-check"></i><b>17.3</b> Finding Stage Route Lengths</a></li>
+<li class="chapter" data-level="17.4" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-ecological-movement-analysis-tools-to-analyse-stage-routes"><i class="fa fa-check"></i><b>17.4</b> Using Ecological Movement Analysis Tools to Analyse Stage Routes</a></li>
+<li class="chapter" data-level="17.5" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-trajr-for-stage-route-profiling"><i class="fa fa-check"></i><b>17.5</b> Using <code>trajr</code> for Stage Route Profiling</a>
+<ul>
+<li class="chapter" data-level="17.5.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#smoothing-a-trajectory"><i class="fa fa-check"></i><b>17.5.1</b> Smoothing a Trajectory</a></li>
+<li class="chapter" data-level="17.5.2" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#resampling-locations"><i class="fa fa-check"></i><b>17.5.2</b> Resampling Locations</a></li>
+<li class="chapter" data-level="17.5.3" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#resampling-against-distance"><i class="fa fa-check"></i><b>17.5.3</b> Resampling Against Distance</a></li>
+<li class="chapter" data-level="17.5.4" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#splitting-a-trajectory"><i class="fa fa-check"></i><b>17.5.4</b> Splitting a Trajectory</a></li>
+<li class="chapter" data-level="17.5.5" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#rotating-the-stage-trajectory"><i class="fa fa-check"></i><b>17.5.5</b> Rotating the Stage Trajectory</a></li>
+<li class="chapter" data-level="17.5.6" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#straightness-and-sinuosity"><i class="fa fa-check"></i><b>17.5.6</b> Straightness and Sinuosity</a></li>
+<li class="chapter" data-level="17.5.7" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#directional-change"><i class="fa fa-check"></i><b>17.5.7</b> Directional Change</a></li>
+<li class="chapter" data-level="17.5.8" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#tracking-turning-angles"><i class="fa fa-check"></i><b>17.5.8</b> Tracking Turning Angles</a></li>
+<li class="chapter" data-level="17.5.9" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#visualising-trajectory-direction-changes"><i class="fa fa-check"></i><b>17.5.9</b> Visualising Trajectory Direction Changes</a></li>
+<li class="chapter" data-level="17.5.10" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-amt-for-stage-route-profiling"><i class="fa fa-check"></i><b>17.5.10</b> Using <code>amt</code> for Stage Route Profiling</a></li>
+<li class="chapter" data-level="17.5.11" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#creating-tracks"><i class="fa fa-check"></i><b>17.5.11</b> Creating Tracks</a></li>
+<li class="chapter" data-level="17.5.12" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#converting-to-other-track-formats"><i class="fa fa-check"></i><b>17.5.12</b> Converting to Other Track Formats</a></li>
+<li class="chapter" data-level="17.5.13" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-amt-for-stage-route-analysis"><i class="fa fa-check"></i><b>17.5.13</b> Using <code>amt</code> for Stage Route Analysis</a></li>
+<li class="chapter" data-level="17.5.14" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-rlft-for-profiling-along-a-stage-route"><i class="fa fa-check"></i><b>17.5.14</b> Using `rLFT`` for Profiling Along a Stage Route</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html"><i class="fa fa-check"></i><b>18</b> Revisiting Elevation Data</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#load-in-base-data-9"><i class="fa fa-check"></i><b>18.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="18.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#generating-elevation-maps"><i class="fa fa-check"></i><b>18.2</b> Generating Elevation Maps</a>
+<ul>
+<li class="chapter" data-level="18.2.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#accessing-elevation-values-along-a-route-from-an-elevation-raster"><i class="fa fa-check"></i><b>18.2.1</b> Accessing Elevation Values Along a Route from an Elevation Raster</a></li>
+<li class="chapter" data-level="18.2.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-geospheredistgeo-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.2</b> Using <code>geosphere::distGeo</code> to Find Distance Along a Route</a></li>
+<li class="chapter" data-level="18.2.3" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-spspdists-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.3</b> Using <code>sp::spDists</code> to Find Distance Along a Route</a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#generating-a-3d-ribbon-plot-of-the-stage-route"><i class="fa fa-check"></i><b>18.3</b> Generating a 3D Ribbon Plot of the Stage Route</a></li>
+<li class="chapter" data-level="18.4" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#identifying-road-type"><i class="fa fa-check"></i><b>18.4</b> Identifying Road Type</a></li>
+<li class="chapter" data-level="18.5" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#displaying-route-twistiness-and-elevation"><i class="fa fa-check"></i><b>18.5</b> Displaying Route Twistiness and Elevation</a>
+<ul>
+<li class="chapter" data-level="18.5.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#making-a-3d-print-file-of-the-model"><i class="fa fa-check"></i><b>18.5.1</b> Making a 3D Print File of the Model</a></li>
+<li class="chapter" data-level="18.5.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#rendering-a-3d-movie-of-the-model"><i class="fa fa-check"></i><b>18.5.2</b> Rendering a 3D movie of the Model</a></li>
+</ul></li>
+<li class="chapter" data-level="18.6" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-the-slopes-package-to-analyse-stage-elevation-data"><i class="fa fa-check"></i><b>18.6</b> Using the <code>slopes</code> Package to Analyse Stage Elevation Data</a></li>
+<li class="chapter" data-level="18.7" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#analysing-route-elevation-from-first-principles"><i class="fa fa-check"></i><b>18.7</b> Analysing Route Elevation from First Principles</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html"><i class="fa fa-check"></i><b>19</b> Adding <em>OpenStreetMap</em> Data</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#load-in-base-data-10"><i class="fa fa-check"></i><b>19.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="19.2" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#adding-detail-and-features-from-openstreetmap"><i class="fa fa-check"></i><b>19.2</b> Adding Detail and Features from OpenStreetMap</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#plotting-osm-highways"><i class="fa fa-check"></i><b>19.2.1</b> Plotting OSM Highways</a></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#viewing-roads-in-the-vicinity-of-a-route"><i class="fa fa-check"></i><b>19.3</b> Viewing Roads in the Vicinity of a Route</a>
+<ul>
+<li class="chapter" data-level="19.3.1" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#using-sfst_buffer-to-create-buffered-areas"><i class="fa fa-check"></i><b>19.3.1</b> Using <code>sf::st_buffer</code> to Create Buffered Areas</a></li>
+<li class="chapter" data-level="19.3.2" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#using-rgeosgbuffer-to-create-buffered-areas"><i class="fa fa-check"></i><b>19.3.2</b> Using <code>rgeos::gBuffer</code> to Create Buffered Areas</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#adding-additional-data-from-osm"><i class="fa fa-check"></i><b>19.4</b> Adding Additional Data From OSM</a>
+<ul>
+<li class="chapter" data-level="19.4.1" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#adding-building-layers-from-openstreetmap"><i class="fa fa-check"></i><b>19.4.1</b> Adding Building Layers from <em>OpenStreetMap</em></a></li>
+<li class="chapter" data-level="19.4.2" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html#the-wide-variety-of-osm-features"><i class="fa fa-check"></i><b>19.4.2</b> The Wide Variety of OSM Features</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html"><i class="fa fa-check"></i><b>20</b> Creating A Road Book</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#load-in-base-data-11"><i class="fa fa-check"></i><b>20.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="20.2" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#using-sfnetworks-to-represent-routes-and-road-networks"><i class="fa fa-check"></i><b>20.2</b> Using <code>sfnetworks</code> to Represent Routes and Road Networks</a></li>
+<li class="chapter" data-level="20.3" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#analysing-road-networks-with-sfnetworks"><i class="fa fa-check"></i><b>20.3</b> Analysing Road Networks with <code>sfnetworks</code></a>
+<ul>
+<li class="chapter" data-level="20.3.1" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#creating-an-sfnetworks-graph"><i class="fa fa-check"></i><b>20.3.1</b> Creating an <code>sfnetworks</code> Graph</a></li>
+<li class="chapter" data-level="20.3.2" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#filtering-an-sfnetworks-graph"><i class="fa fa-check"></i><b>20.3.2</b> Filtering an <code>sfnetworks</code> Graph</a></li>
+<li class="chapter" data-level="20.3.3" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#viewing-a-buffered-area-around-a-junction-node"><i class="fa fa-check"></i><b>20.3.3</b> Viewing a Buffered Area Around a Junction Node</a></li>
+<li class="chapter" data-level="20.3.4" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#snapping-a-route-to-a-road-network"><i class="fa fa-check"></i><b>20.3.4</b> Snapping a Route to a Road Network</a></li>
+<li class="chapter" data-level="20.3.5" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#snapping-a-full-stage-route-to-the-road-network"><i class="fa fa-check"></i><b>20.3.5</b> Snapping a Full Stage Route to the Road Network</a></li>
+</ul></li>
+<li class="chapter" data-level="20.4" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#using-dodgr-to-represent-routes-and-road-networks"><i class="fa fa-check"></i><b>20.4</b> Using <code>dodgr</code> to Represent Routes and Road Networks</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="where-next.html"><a href="where-next.html"><i class="fa fa-check"></i><b>21</b> Where Next?</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Visualising WRC Rally Stages With <code>rayshader</code> and R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="annotating-rayshader-maps" class="section level1" number="11">
+<h1><span class="header-section-number">11</span> Annotating <code>rayshader</code> maps</h1>
+<p>As well as adding computed shading, contour and water overlays to maps, we can also enrich <code>rayshader</code> maps with additional annotations such as title information, or, of</p>
+<div id="load-in-base-data-3" class="section level2" number="11.1">
+<h2><span class="header-section-number">11.1</span> Load in Base Data</h2>
+<p>As ever, let’s load in our stage data and the elevation raster and create a demo map:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="annotating-rayshader-maps.html#cb1-1" aria-hidden="true" tabindex="-1"></a>geojson_filename <span class="ot">=</span> <span class="st">&#39;montecarlo_2021.geojson&#39;</span></span>
+<span id="cb1-2"><a href="annotating-rayshader-maps.html#cb1-2" aria-hidden="true" tabindex="-1"></a>geojson_sf <span class="ot">=</span> sf<span class="sc">::</span><span class="fu">st_read</span>(geojson_filename)</span></code></pre></div>
+<pre><code>## Reading layer `montecarlo_2021&#39; from data source `/Users/tonyhirst/Documents/GitHub/visualising-rally-stages/montecarlo_2021.geojson&#39; using driver `GeoJSON&#39;
+## Simple feature collection with 9 features and 2 fields
+## geometry type:  LINESTRING
+## dimension:      XY
+## bbox:           xmin: 5.243488 ymin: 43.87633 xmax: 6.951953 ymax: 44.81973
+## geographic CRS: WGS 84</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="annotating-rayshader-maps.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raster)</span>
+<span id="cb3-2"><a href="annotating-rayshader-maps.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rayshader)</span>
+<span id="cb3-3"><a href="annotating-rayshader-maps.html#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="annotating-rayshader-maps.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Previously downloaded TIF digital elevation model (DEM) file</span></span>
+<span id="cb3-5"><a href="annotating-rayshader-maps.html#cb3-5" aria-hidden="true" tabindex="-1"></a>stage_tif <span class="ot">=</span> <span class="st">&quot;stage_elevation.tif&quot;</span></span>
+<span id="cb3-6"><a href="annotating-rayshader-maps.html#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="annotating-rayshader-maps.html#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load in the previously saved image raster</span></span>
+<span id="cb3-8"><a href="annotating-rayshader-maps.html#cb3-8" aria-hidden="true" tabindex="-1"></a>elev_img <span class="ot">=</span> <span class="fu">raster</span>(stage_tif)</span>
+<span id="cb3-9"><a href="annotating-rayshader-maps.html#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="annotating-rayshader-maps.html#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Note we can pass in a file name or a raster object</span></span>
+<span id="cb3-11"><a href="annotating-rayshader-maps.html#cb3-11" aria-hidden="true" tabindex="-1"></a>elmat <span class="ot">=</span> <span class="fu">raster_to_matrix</span>(stage_tif)</span></code></pre></div>
+<pre><code>## [1] &quot;Dimensions of matrix are: 382x565.&quot;</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="annotating-rayshader-maps.html#cb5-1" aria-hidden="true" tabindex="-1"></a>demo_map <span class="ot">=</span> elmat <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="annotating-rayshader-maps.html#cb5-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">sphere_shade</span>(<span class="at">texture =</span> <span class="st">&quot;desert&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+Calculating Surface Normal [-----------------------------------------] ETA:  0s
+Calculating Surface Normal [=========================================] ETA:  0s
+                                                                               </code></pre>
+</div>
+<div id="adding-a-title-to-a-map" class="section level2" number="11.2">
+<h2><span class="header-section-number">11.2</span> Adding a Title to a Map</h2>
+<p>We can add a title to the image as a layer using the <code>rayimage::add_title()</code> function [<a href="https://www.rayimage.dev/reference/add_title.html">docs</a>].</p>
+<p>Currently, the title is overlaid on top of the image, so we would need to add a buffer to account for the area taken up by the label if we didn’t want to occlude anything in the image by the title. <em>(Can we calculate how much vertical padding is required?)</em></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="annotating-rayshader-maps.html#cb7-1" aria-hidden="true" tabindex="-1"></a>demo_map <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="annotating-rayshader-maps.html#cb7-2" aria-hidden="true" tabindex="-1"></a>  rayimage<span class="sc">::</span><span class="fu">add_title</span>(<span class="st">&quot;Stage Map&quot;</span>, <span class="at">title_size =</span> <span class="dv">20</span>, </span>
+<span id="cb7-3"><a href="annotating-rayshader-maps.html#cb7-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">title_bar_color =</span> <span class="st">&quot;red&quot;</span>,</span>
+<span id="cb7-4"><a href="annotating-rayshader-maps.html#cb7-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">title_bar_alpha=</span><span class="fl">0.8</span>,</span>
+<span id="cb7-5"><a href="annotating-rayshader-maps.html#cb7-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">title_color=</span><span class="st">&quot;white&quot;</span>,</span>
+<span id="cb7-6"><a href="annotating-rayshader-maps.html#cb7-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">title_offset =</span> <span class="fu">c</span>(<span class="dv">120</span>,<span class="dv">12</span>), <span class="co">#offset from top left</span></span>
+<span id="cb7-7"><a href="annotating-rayshader-maps.html#cb7-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">title_style=</span><span class="st">&#39;italic&#39;</span>,</span>
+<span id="cb7-8"><a href="annotating-rayshader-maps.html#cb7-8" aria-hidden="true" tabindex="-1"></a>                      <span class="co">#title_position=&#39;south&#39;, # But doesn&#39;t relocate bar?</span></span>
+<span id="cb7-9"><a href="annotating-rayshader-maps.html#cb7-9" aria-hidden="true" tabindex="-1"></a>                      ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-10"><a href="annotating-rayshader-maps.html#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
+<p><img src="images/annotating-rayshader-maps-demo-title-1.png" width="672" /></p>
+<p>Another way of using this feature might be to set the transparency level and show stage results, or example, overlaid on the stage map whilst also seeing the map below.</p>
+<p><em>It would be useful if we could set the width and location of the title and title_bar [<a href="https://github.com/tylermorganwall/rayimage/issues/3">issue</a>].</em></p>
+<p>The title and title bar can also be added (with similar arguments as to <code>rayimage::add_title()</code>) via the <code>plot_map()</code> function:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="annotating-rayshader-maps.html#cb8-1" aria-hidden="true" tabindex="-1"></a>demo_map <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="annotating-rayshader-maps.html#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>(<span class="at">title_text=</span><span class="st">&#39;Stage Map&#39;</span>,</span>
+<span id="cb8-3"><a href="annotating-rayshader-maps.html#cb8-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">title_size =</span> <span class="dv">20</span>,</span>
+<span id="cb8-4"><a href="annotating-rayshader-maps.html#cb8-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">title_bar_color =</span> <span class="st">&quot;red&quot;</span>,</span>
+<span id="cb8-5"><a href="annotating-rayshader-maps.html#cb8-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">title_bar_alpha=</span><span class="fl">0.8</span>,</span>
+<span id="cb8-6"><a href="annotating-rayshader-maps.html#cb8-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">title_color=</span><span class="st">&quot;white&quot;</span>,</span>
+<span id="cb8-7"><a href="annotating-rayshader-maps.html#cb8-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">title_offset =</span> <span class="fu">c</span>(<span class="dv">120</span>,<span class="dv">12</span>), <span class="co">#offset from top left</span></span>
+<span id="cb8-8"><a href="annotating-rayshader-maps.html#cb8-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">title_style=</span><span class="st">&#39;italic&#39;</span>,</span>
+<span id="cb8-9"><a href="annotating-rayshader-maps.html#cb8-9" aria-hidden="true" tabindex="-1"></a>           <span class="co">#title_position=&#39;south&#39;, # But doesn&#39;t relocate bar?)</span></span>
+<span id="cb8-10"><a href="annotating-rayshader-maps.html#cb8-10" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="images/annotating-rayshader-maps-demo-title2-1.png" width="672" /></p>
+</div>
+<div id="adding-contours-to-rayshader-stage-maps" class="section level2" number="11.3">
+<h2><span class="header-section-number">11.3</span> Adding Contours to <code>rayshader</code> Stage Maps</h2>
+<p>We have already seen how we can add contours to a raster image. A contour layer can also be created using the <code>rayshader::generate_contour_overlay()</code> function:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="annotating-rayshader-maps.html#cb9-1" aria-hidden="true" tabindex="-1"></a>contour_color <span class="ot">=</span> <span class="st">&quot;#ffffff&quot;</span> <span class="co">#&quot;#7d4911&quot;</span></span>
+<span id="cb9-2"><a href="annotating-rayshader-maps.html#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="annotating-rayshader-maps.html#cb9-3" aria-hidden="true" tabindex="-1"></a>contours_layer <span class="ot">=</span> <span class="fu">generate_contour_overlay</span>(elmat, <span class="at">color =</span> contour_color, </span>
+<span id="cb9-4"><a href="annotating-rayshader-maps.html#cb9-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">linewidth =</span> <span class="dv">1</span>, </span>
+<span id="cb9-5"><a href="annotating-rayshader-maps.html#cb9-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">levels=</span><span class="fu">seq</span>(<span class="fu">min</span>(elmat),</span>
+<span id="cb9-6"><a href="annotating-rayshader-maps.html#cb9-6" aria-hidden="true" tabindex="-1"></a>                                                  <span class="fu">max</span>(elmat),</span>
+<span id="cb9-7"><a href="annotating-rayshader-maps.html#cb9-7" aria-hidden="true" tabindex="-1"></a>                                                  <span class="at">by=</span><span class="dv">20</span>))</span>
+<span id="cb9-8"><a href="annotating-rayshader-maps.html#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Increasing the by argument separates out lines;</span></span>
+<span id="cb9-9"><a href="annotating-rayshader-maps.html#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># This may be important for seeing steep inclines</span></span></code></pre></div>
+<p>We can then add the overlay in the normal way:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="annotating-rayshader-maps.html#cb10-1" aria-hidden="true" tabindex="-1"></a>contoured_map <span class="ot">=</span> demo_map <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="annotating-rayshader-maps.html#cb10-2" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">add_overlay</span>(contours_layer,</span>
+<span id="cb10-3"><a href="annotating-rayshader-maps.html#cb10-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">alphalayer =</span> <span class="fl">0.9</span>)</span>
+<span id="cb10-4"><a href="annotating-rayshader-maps.html#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="annotating-rayshader-maps.html#cb10-5" aria-hidden="true" tabindex="-1"></a>contoured_map <span class="sc">%&gt;%</span>  </span>
+<span id="cb10-6"><a href="annotating-rayshader-maps.html#cb10-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">plot_map</span>()</span></code></pre></div>
+<p><img src="images/annotating-rayshader-maps-demo-contours-1.png" width="672" /></p>
+</div>
+<div id="overlaying-image-tiles" class="section level2" number="11.4">
+<h2><span class="header-section-number">11.4</span> Overlaying Image Tiles</h2>
+<p>As well as creating out own shaded terrain over the raster, we can also overlay tiles retrieved from a 2D map tile server:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="annotating-rayshader-maps.html#cb11-1" aria-hidden="true" tabindex="-1"></a>overlay_image_terrain <span class="ot">&lt;-</span></span>
+<span id="cb11-2"><a href="annotating-rayshader-maps.html#cb11-2" aria-hidden="true" tabindex="-1"></a>  geoviz<span class="sc">::</span><span class="fu">slippy_overlay</span>(elev_img, </span>
+<span id="cb11-3"><a href="annotating-rayshader-maps.html#cb11-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">image_source =</span> <span class="st">&quot;stamen&quot;</span>,</span>
+<span id="cb11-4"><a href="annotating-rayshader-maps.html#cb11-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">image_type =</span> <span class="st">&quot;terrain&quot;</span>,</span>
+<span id="cb11-5"><a href="annotating-rayshader-maps.html#cb11-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">png_opacity =</span> <span class="fl">0.9</span>)</span>
+<span id="cb11-6"><a href="annotating-rayshader-maps.html#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="annotating-rayshader-maps.html#cb11-7" aria-hidden="true" tabindex="-1"></a>demo_map <span class="sc">%&gt;%</span> </span>
+<span id="cb11-8"><a href="annotating-rayshader-maps.html#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(overlay_image_terrain) <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="annotating-rayshader-maps.html#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
+<p><img src="images/annotating-rayshader-maps-demo-overlay-1.png" width="672" /></p>
+</div>
+<div id="plotting-route-layers-on-rayshader-maps" class="section level2" number="11.5">
+<h2><span class="header-section-number">11.5</span> Plotting Route Layers on <code>rayshader</code> Maps</h2>
+<p>As well as previewing the OSM retrieved roads within the bounding box area of a stage route and the stage routes themselves using simple a <code>ggplot2</code> view, we can also render roads and stage routes as layers on a <code>rayshader</code> map.</p>
+<p>Let’s start by creating a line overlay containing the roads in the rendered area:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="annotating-rayshader-maps.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(osmdata)</span>
+<span id="cb12-2"><a href="annotating-rayshader-maps.html#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="annotating-rayshader-maps.html#cb12-3" aria-hidden="true" tabindex="-1"></a>stage_osm  <span class="ot">=</span> <span class="fu">opq</span>(sf<span class="sc">::</span><span class="fu">st_bbox</span>(geojson_sf[<span class="dv">1</span>,])) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-4"><a href="annotating-rayshader-maps.html#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;highway&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-5"><a href="annotating-rayshader-maps.html#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>()</span>
+<span id="cb12-6"><a href="annotating-rayshader-maps.html#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="annotating-rayshader-maps.html#cb12-7" aria-hidden="true" tabindex="-1"></a>stage_lines <span class="ot">=</span> stage_osm<span class="sc">$</span>osm_lines</span>
+<span id="cb12-8"><a href="annotating-rayshader-maps.html#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="annotating-rayshader-maps.html#cb12-9" aria-hidden="true" tabindex="-1"></a>stage_roads <span class="ot">=</span> stage_lines[stage_lines<span class="sc">$</span>highway <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;unclassified&quot;</span>, <span class="st">&quot;secondary&quot;</span>, <span class="st">&quot;tertiary&quot;</span>, <span class="st">&quot;residential&quot;</span>, <span class="st">&quot;service&quot;</span>), ] </span>
+<span id="cb12-10"><a href="annotating-rayshader-maps.html#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="annotating-rayshader-maps.html#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="annotating-rayshader-maps.html#cb12-12" aria-hidden="true" tabindex="-1"></a>roads_layer <span class="ot">=</span> <span class="fu">generate_line_overlay</span>(stage_roads,</span>
+<span id="cb12-13"><a href="annotating-rayshader-maps.html#cb12-13" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">extent =</span> <span class="fu">extent</span>(elev_img),</span>
+<span id="cb12-14"><a href="annotating-rayshader-maps.html#cb12-14" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">color=</span><span class="st">&quot;yellow&quot;</span>,</span>
+<span id="cb12-15"><a href="annotating-rayshader-maps.html#cb12-15" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">heightmap =</span> elmat)</span></code></pre></div>
+<p>We can also create a layer that identifies the stage route, colouring it and setting the line width as required to make it stand out in the rendered view.</p>
+<p>In the following example, we create a red coloured stage route layer:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="annotating-rayshader-maps.html#cb13-1" aria-hidden="true" tabindex="-1"></a>red_route <span class="ot">=</span> <span class="fu">generate_line_overlay</span>(geojson_sf[<span class="dv">1</span>,],</span>
+<span id="cb13-2"><a href="annotating-rayshader-maps.html#cb13-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">extent =</span> <span class="fu">extent</span>(elev_img),</span>
+<span id="cb13-3"><a href="annotating-rayshader-maps.html#cb13-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">heightmap =</span> elmat,</span>
+<span id="cb13-4"><a href="annotating-rayshader-maps.html#cb13-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">linewidth =</span> <span class="dv">5</span>, <span class="at">color=</span><span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p>We can now add the roads and stage overlays to our map:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="annotating-rayshader-maps.html#cb14-1" aria-hidden="true" tabindex="-1"></a>demo_map <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="annotating-rayshader-maps.html#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(roads_layer)  <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="annotating-rayshader-maps.html#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(red_route) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="annotating-rayshader-maps.html#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
+<p><img src="images/annotating-rayshader-maps-demo-route-1.png" width="672" /></p>
+<p>This may not look so interesting in a 2D view, but as you will seem it does provide a way of bringing the tile to life when we look at in as an interactive 3D view of 3D video view…</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="overlaying-2d-rayshader-maps.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="an-aside-the-penny-red.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": {}
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toc_depth": 3,
+"toolbar": {
+"position": "fixed"
+},
+"search": true,
+"info": true
+});
+});
+</script>
+
+</body>
+
+</html>

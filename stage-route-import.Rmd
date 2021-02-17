@@ -1,0 +1,240 @@
+```{r cache = F, echo = F, message=F}
+# Allow knitr to continue to execute even in the presence of errors
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(fig.path = "images/stage-route-import-")
+```
+
+# Importing the Stage Route Data
+
+The starting point for this adventure is an XML text file downloaded from the WRC website. The file contains data that describes the stage routes for the 2021 *Rallye Monte Carlo* using the KML file format. This format ("Keyhole Markup Language") was originally developed as a way loading data into the application that became Google Earth following its acquisition by Google. KML is now an [international standard](https://www.ogc.org/standards/kml) maintained by the Open Geospatial Consortium, Inc. (OGC).
+
+*If you see the `.kmz` file suffix attached a file, the file is a compressed (zipped) KML file.* 
+
+The first part of this chapter is the boring part, describing how to load the data in and some differences that arise depending on *how* you load it in. (If you do a web search, you'll find there are various tools for opening KML files into an R program.) The second part shows how we can actually start to preview the data in a graphical way.
+
+
+## Downloading the Stage Data File
+
+Let's start by downloading the data from its web location:
+
+```{r}
+file.url = 'https://webapps.wrc.com/2020/web/obc/kml/montecarlo_2021.xml'
+downladed.filename = 'montecarlo_2021.xml'
+
+# Download the file from a specified web location to a specifically named file
+download.file(file.url, downladed.filename)
+```
+
+## Opening KML Geodata Files
+
+A wide variety of geodata file formats can be opened using general purpose geodata packages as well as certain specialist packages.
+
+Two powerful general purpose packages are `rgdal` and `sf`, the *simple features* package.
+
+### Using `rgdal` and `sp` to Open Geodata Files
+One way of reading in the file we have just downloaded is to use the `readOGR()` function found in the `rgdal` package. We can call this function explicitly from the package as `rgdal::readOGR()` or we can import the package and then access the function simply by calling it by name:
+
+```{r message=FALSE}
+# Import the rgdal package
+library(rgdal)
+
+kml.file <- "montecarlo_2021.xml"
+
+kml_sp = readOGR(kml.file)
+```
+
+The `readOGR()` function is capable of loading in a wide variety of geo-related file formats and automatically detecting what sort of format the file represents.
+
+We can see what sort of object is loaded in by inspecting its `class()`:
+
+```{r}
+class(kml_sp)
+```
+
+In this case, the KML file is loaded in and parsed into a `SpatialLinesDataFrame` object although as you may have noticed from a warning message when the file was loaded that the Z (altitude) dimension  been discarded (as we shall see later, it is actually contains zero values anyway).
+
+The `SpatialLinesDataFrame` datatype, along with other spatial datatypes, is defined in the R `sp` package. To a certain extent, the classes (that is, data types) declared by this package have been superseded by a different datatype hierarchy defined by the more recent `sf` package. However, the `sp` package is still a dependency of many of R's spatial data packages and some functions rely on being presented with `SpatialLinesDataFrame` object data, for example.
+
+
+### Using `sf` to Open Geodata Files
+
+The `sf` package is a more recently created package for working with geodata primitives and is maintained under the auspices of the [`r-spatial` Github organisation](https://github.com/r-spatial).
+
+We can load in data from a wide range of geodata file formats using the `sf::st_read()` function:
+
+```{r warning=FALSE, message=FALSE}
+library(sf)
+
+kml_sf = st_read(kml.file)
+```
+
+In this case, we notice that the data has been loaded into a spatial features *simple feature* collection.
+
+The data loaded into each object is the same, but it is represented differently. There are ways of converting between various forms of the two representations as we shall see later.
+
+One thing to note in each case that the data appears to have been loaded in from a particular *layer*. The KML file format is capable of grouping various sets of data together in different ways. Where the datafile contains only one element that is decoded as a "layer", that is loaded in by default. If multiple layers are detected they will be reported and can then be loaded in and "unpacked" by name.
+
+We can also review the contents of the file by opening it with the `sf::st_layers()` function:
+
+```{r}
+# Preview the file layers
+st_layers(kml.file)
+```
+
+If there is more than one layer, we can load it in by name:
+
+```{r}
+kml_sf = st_read(kml.file, "Meine Orte")
+```
+
+#### Reviewing the `sf` Feature Collection
+
+The layer contains a feature collection with features containing linestrings in 3-dimensions (XYZ). There are several keys things to note:
+
+- the *projection* is WGS 84, the common "lat long" projection
+- the Z-range (altitude, or elevation) appears to be zeroed.
+
+If we refer back to the data object loaded in using the `rdgal::readOGR` function, we note that it does not contain the Z co-ordinate. We can see this more clearly if we convert that `sp` *SpatialDataFrame* object to a simple features object using the `sf::st_as_sf()` function:
+
+```{r}
+st_as_sf(kml_sp)
+```
+
+A conversion also exists back from the `sf` object to the `sp` representation:
+
+```{r}
+round_trip = as( st_as_sf(kml_sp), "Spatial")
+```
+
+However, if we try the same conversion on the simple features collection created directly from the parsed KML file, we get an error:
+
+```{r}
+#round_trip2 = as( kml_sf, "Spatial")
+```
+
+The problem appears to be the Z layer. If we drop the zeroed Z layer manually, whilst preserving the projection:
+
+```{r}
+kml_sf = st_zm(kml_sf, drop = TRUE, what = "ZM")
+```
+
+we can then convert this simple feature collection to a *SpatialDataFrame*  `Spatial` object:
+
+```{r}
+round_trip2 = as( kml_sf, "Spatial")
+```
+
+
+### Accessing Route Data as a geojson String
+
+GeoJSON is a widely used format for getting geodata into web pages. We can get the route for a stage from the routes spatial collection and cast it to JSON using the `geojsonio::geojson_json` function:
+
+```{r message=FALSE}
+# Retrieve the geojson for a single stage and
+# from within that, the linestring geometry,
+# casting it to a geojson string
+stage_route_gj = geojsonio::geojson_json(kml_sf[1,]$geometry)
+```
+
+
+### Saving Simple Features Data to Various Geodata File Formats
+
+The `st_write` function has a range of output drivers for writing geodata to different output types. although data may be last and/or the conversion of a dataset loaded from one format and output to another may not be as meaningful as may be desired.
+
+For example, we can write an object out to a geojson file:
+
+```{r message=FALSE}
+geojson_filename = 'montecarlo_2021.geojson'
+
+# The st_write function can update files or create new ones, but not
+# replace existing ones. So let's make sure the file doesn't exist
+# by deleting it if it does...
+if (file.exists(geojson_filename)) {
+  #Delete file if it exists
+  file.remove(geojson_filename)
+}
+
+st_write(kml_sf, geojson_filename, driver='geojson')
+```
+
+Equally, we can we write out the data loaded as a GPX data file (GPX data files are often used to share data collected from cycling or running route logging applications and devices):
+
+```{r message=FALSE}
+gpx_filename = 'route.gpx'
+
+# Remove any previous instances of this file
+if (file.exists(gpx_filename)) {
+  #Delete file if it exists
+  file.remove(gpx_filename)
+}
+
+st_write(kml_sf, gpx_filename, 
+         driver='GPX', dataset_options ="GPX_USE_EXTENSIONS=yes" )
+```
+
+If we have access to car telemetry data in a simple tabular form, it may be convenient to save it using the GPX format as a convenient way of serialising that data.
+
+## Important Geodata File Formats
+
+The `sf::st_read()` (as well as the `rdgal::readOGR()` function) is capable of reading in data from a wide variety of file formats.
+
+We have already seen how it can load in data from a KML file, so let's see how it copes with some other file formats.
+
+### Loading geojson Data
+
+As well as KML files, route data is may be available in the GeoJSON text format. We can read *geojson* data file into R using the `sf::st_read()` function , returning the data as a spatial object:
+
+```{r}
+geojson_sf = sf::st_read(geojson_filename)
+```
+
+As before, we can convert the simple features object to a `Spatial` dataframe by dropping the z-axis and then converting:
+
+```{r}
+geojson_sf = as(st_zm(geojson_sf, drop = TRUE, what = "ZM"), "Spatial")
+```
+
+If you have a geojson string, you can cast it to a spatial object using the `geojsonio::geojson_sp(geojson_str)` function:
+
+```{r}
+geojson_str = '{"type": "Point","coordinates": [-105.01621,39.57422]}'
+
+class( geojsonio::geojson_sp(geojson_str) )
+```
+
+### Loading GPX Data
+
+Route data collected by personal GPS devices is often shared using GPX files.
+
+We can read in GPX files using `sf::st_read`:
+
+```{r}
+st_read(gpx_filename)
+```
+
+The `plotKML` package, which has a wide range of tools for creating KML files and rendering KML into Google Earth, also has a custom function for loading in GPX files:
+ 
+```{r warning=FALSE, message=FALSE}
+#http://plotkml.r-forge.r-project.org/readGPX.html
+library(plotKML)
+
+gpx = readGPX(gpx_filename)
+```
+
+In this particular case, the GPX file contains multiple routes which we index by name.
+
+A dataframe of point values, one point per row, is associated with each route:
+
+```{r}
+head(gpx$routes$`SS 1`, 3)
+```
+In a "born GPX" file, we might expect to see more of the columns populated. As it currently stands, the GPX file we created from the original data, which was more or less limited to simple 2D linestrings, contains just the latitude and longitude data, albeit still in distinct stage identifiable routes.
+
+### Loading Flight Data Using IGC format GPS Files
+
+GPS route data contained in [IGC](https://xp-soaring.github.io/igc_file_format/igc_format_2008.html) formatted flight data files can be loaded in using the `geoviz::read_igc("path/to/your/file.igc")` function.
+
+### Reading Data from GPS Devices
+
+The [`pgirmess` *Spatial Analysis and Data Mining for Field Ecologists) package*](https://rdrr.io/cran/pgirmess/) package provides a range of tools for retrieving data from GPS devices and then analysing them. The `pgirmess::gps2gpx()` function provides support from retrieving GPS data from a range of devices via the *GPSBabel* application](http://www.gpsbabel.org/), writing waypoint or track data to GPX files to local storage with the `pgirmess::writeGPX()` function, and uploading GPX data back up to Garmin GPS devices (`pgirmess::uploadGPS()`).
+
