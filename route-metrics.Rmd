@@ -646,18 +646,6 @@ ggplot(data=trj,
              data=start_location(1))
 ```
 
-In terms of categorising turns in a way that's meaningful in a rally context, let's have a recap on what sorts of thing a rally navigator or co-driver is likely to be saying:
-
-```{r rally-notes-codriver}
-embed_url("https://www.youtube.com/watch?v=KFjRj25uclQ")
-```
-
-And let's review what we actually mean by a corner...
-
-```{r chain-bear-corner-video}
-embed_url("https://www.youtube.com/watch?v=YXOYckDATWE")
-```
-
 The instantaneous angle is okay for trying to identify particularly tight turns, but to identify whether a corner increase the angle in the same step direction, which is to say, whether the corner *tightens*, for example, we need process the data a bit further.
 
 One way of doing this is to determine the gradient of the accumulated angle using the [`pracma::gradient` function](https://www.rdocumentation.org/packages/pracma/versions/1.9.9/topics/gradient). 
@@ -836,3 +824,17 @@ outSF <- st_as_sf(outputTable,
 ```
 
 The convexity measures are defined in *Albeke, S.E. et al. [Measuring boundary convexity at multiple spatial scales using a linear 'moving window' analysis: an application to coastal river otter habitat selection](https://www.d.umn.edu/biology/documents/Nibbelink2_000.pdf) Landscape Ecology 25 (2010): 1575-1587.
+
+In terms of categorising turns in a way that's meaningful in a rally context, let's have a recap on what sorts of thing a rally navigator or co-driver is likely to be saying:
+
+```{r rally-notes-codriver}
+embed_url("https://www.youtube.com/watch?v=KFjRj25uclQ")
+```
+
+And let's review what we actually mean by a corner...
+
+```{r chain-bear-corner-video}
+embed_url("https://www.youtube.com/watch?v=YXOYckDATWE")
+```
+
+In terms of actual corners, the convexity interesting may be one of the more interesting properties...
