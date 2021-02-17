@@ -53,7 +53,8 @@ watermap <- detect_water(elmat, progbar = FALSE, zscale = 8)
 
 # Add shadows
 shadow_layer = height_shade(elmat) %>% 
-  add_overlay(sphere_shade(elmat, texture = "desert", 
+  add_overlay(sphere_shade(elmat, texture = "desert",
+                           progbar = FALSE,
                            zscale=auto_zscale, colorintensity = 5), alphalayer=0.5) %>%
   add_shadow(lamb_shade(elmat,zscale = auto_zscale),0) %>%
   add_shadow(texture_shade(elmat,detail=8/10,contrast=9,brightness = 11), 0.1)
@@ -210,7 +211,7 @@ utm_route = st_transform(geojson_sf[1,], crs = st_crs(utm_pro4_string))
 
 We can now create the buffered area around the route using the `sf::st_buffer` function:
 
-```{r}
+```{r gg-buffered-route}
 buffered_route_utm <- st_buffer(utm_route, buffer_margin_200m)
 
 buffered_route <- st_transform(buffered_route_utm, original_crs)

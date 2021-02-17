@@ -148,7 +148,6 @@ gj_point_along
 We can parse the geojson point as a simple feature using the `geojsonio::geojson_sf()` function and then plot the split time waypoint directly from that object:
 
 ```{r}
-
 m %>% 
   addCircleMarkers(data=geojson_sf(gj_point_along),
                    radius =10,
@@ -295,6 +294,4 @@ TortBuf <- TwoBuf(line=as(partial_route,'Spatial'),
 plot(TortBuf, col=c('red', 'blue'))  #First object on left, second on right
 ```
 
-To make this approach more useful, it would probably make sense to project into UTM coordinates and set the parameters in units of meters. 
-
-
+To make this approach more useful, it would probably make sense to project into UTM coordinates and set the parameters in units of meters.

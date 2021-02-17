@@ -70,11 +70,11 @@ simple_matrix = matrix(c(0, 0, 0, 0, 0,
                          0, 0, 0, 0, 0), 5)
 
 simple_map = simple_matrix %>%
-  sphere_shade(texture = "desert")
+  sphere_shade(texture = "desert", progbar = FALSE)
 ```
 We can render the matrix a 2d map using the `rayshader::plot_map()` function:
 `
-```{r}
+```{r rs3d-simple-2d-map}
 simple_map %>%
   plot_map()
 ```

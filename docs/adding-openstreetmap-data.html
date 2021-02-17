@@ -30,7 +30,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="revisiting-elevation-data.html"/>
+<link rel="prev" href="elevation-data-revisited.html"/>
 <link rel="next" href="creating-a-road-book.html"/>
 <script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -50,55 +50,6 @@
 
 
 
-<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
-<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-1.3.1/leaflet.js"></script>
-<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
-<script src="libs/proj4-2.6.2/proj4.min.js"></script>
-<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
-<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding-2.0.3.9000/leaflet.js"></script>
-<script src="libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
-<script src="libs/leaflet-providers-plugin-2.0.3.9000/leaflet-providers-plugin.js"></script>
-<link href="libs/leaflet-awesomemarkers-2.0.3/leaflet.awesome-markers.css" rel="stylesheet" />
-<script src="libs/leaflet-awesomemarkers-2.0.3/leaflet.awesome-markers.min.js"></script>
-<link href="libs/fontawesome-4.7.0/font-awesome.min.css" rel="stylesheet" />
-<link href="libs/leaflet-minimap-3.3.1/Control.MiniMap.min.css" rel="stylesheet" />
-<script src="libs/leaflet-minimap-3.3.1/Control.MiniMap.min.js"></script>
-<script src="libs/leaflet-minimap-3.3.1/Minimap-binding.js"></script>
-<script src="libs/FlatGeoBuf-3.3.3/fgb.js"></script>
-<script src="libs/FlatGeoBuf-3.3.3/flatgeobuf-geojson.min.js"></script>
-<script src="libs/chromajs-2.1.0/chroma.min.js"></script>
-<link id="geojson_sf-1-attachment" rel="attachment" href="libs/geojson_sf-0.0.1/geojson_sf_layer.fgb"/>
-<link href="libs/HomeButton-0.0.1/home-button.css" rel="stylesheet" />
-<script src="libs/HomeButton-0.0.1/home-button.js"></script>
-<script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
-<script src="libs/clipboard-0.0.1/setClipboardText.js"></script>
-<link href="libs/mapviewCSS-0.0.1/mapview-popup.css" rel="stylesheet" />
-<link href="libs/mapviewCSS-0.0.1/mapview.css" rel="stylesheet" />
-<link href="libs/style-1/style.css" rel="stylesheet" />
-<script src="libs/plainView-binding-2.9.0/plainView.js"></script>
-<link id="image-1-attachment" rel="attachment" href="libs/image-1/img.png"/>
-<script src="libs/elev_img-1/data_stars_elev_imgdacf38.txt"></script>
-<script src="libs/joda-0.0.1/joda.js"></script>
-<script src="libs/joda-0.0.1/addImageQuery-bindings.js"></script>
-<script src="libs/rglWebGL-binding-0.105.14/rglWebGL.js"></script>
-<link href="libs/rglwidgetClass-0.105.14/rgl.css" rel="stylesheet" />
-<script src="libs/rglwidgetClass-0.105.14/rglClass.src.js"></script>
-<script src="libs/rglwidgetClass-0.105.14/utils.src.js"></script>
-<script src="libs/rglwidgetClass-0.105.14/subscenes.src.js"></script>
-<script src="libs/rglwidgetClass-0.105.14/shaders.src.js"></script>
-<script src="libs/rglwidgetClass-0.105.14/textures.src.js"></script>
-<script src="libs/rglwidgetClass-0.105.14/projection.src.js"></script>
-<script src="libs/rglwidgetClass-0.105.14/mouse.src.js"></script>
-<script src="libs/rglwidgetClass-0.105.14/init.src.js"></script>
-<script src="libs/rglwidgetClass-0.105.14/pieces.src.js"></script>
-<script src="libs/rglwidgetClass-0.105.14/draw.src.js"></script>
-<script src="libs/rglwidgetClass-0.105.14/controls.src.js"></script>
-<script src="libs/rglwidgetClass-0.105.14/selection.src.js"></script>
-<script src="libs/rglwidgetClass-0.105.14/rglTimer.src.js"></script>
-<script src="libs/CanvasMatrix4-0.105.14/CanvasMatrix.src.js"></script>
-<link href="libs/vembedr-0.1.4/css/vembedr.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -178,6 +129,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Index</a></li>
 <li class="chapter" data-level="" data-path="in-the-beginning.html"><a href="in-the-beginning.html"><i class="fa fa-check"></i>In the beginning…</a></li>
 <li class="chapter" data-level="" data-path="acknowledgements.html"><a href="acknowledgements.html"><i class="fa fa-check"></i>Acknowledgements</a></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a></li>
@@ -330,7 +282,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="11.5.1" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html#rendering-the-image-directly-from-ggplot2"><i class="fa fa-check"></i><b>11.5.1</b> Rendering the image directly from <code>ggplot2</code></a></li>
 </ul></li>
-<li class="chapter" data-level="11.6" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html#rendering-a-movie"><i class="fa fa-check"></i><b>11.6</b> Rendering a Movie</a></li>
+<li class="chapter" data-level="" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html#rendering-a-movie"><i class="fa fa-check"></i>Rendering a Movie</a></li>
 </ul></li>
 <li class="chapter" data-level="12" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html"><i class="fa fa-check"></i><b>12</b> Introducing 3D <code>rayshader</code> Models</a>
 <ul>
@@ -409,23 +361,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="17.5.14" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-rlft-for-profiling-along-a-stage-route"><i class="fa fa-check"></i><b>17.5.14</b> Using `rLFT`` for Profiling Along a Stage Route</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="18" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html"><i class="fa fa-check"></i><b>18</b> Revisiting Elevation Data</a>
+<li class="chapter" data-level="18" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html"><i class="fa fa-check"></i><b>18</b> Elevation Data Revisited</a>
 <ul>
-<li class="chapter" data-level="18.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#load-in-base-data-9"><i class="fa fa-check"></i><b>18.1</b> Load in Base Data</a></li>
-<li class="chapter" data-level="18.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#generating-elevation-maps"><i class="fa fa-check"></i><b>18.2</b> Generating Elevation Maps</a>
+<li class="chapter" data-level="18.1" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#load-in-base-data-9"><i class="fa fa-check"></i><b>18.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="18.2" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#generating-elevation-maps"><i class="fa fa-check"></i><b>18.2</b> Generating Elevation Maps</a>
 <ul>
-<li class="chapter" data-level="18.2.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#accessing-elevation-values-along-a-route-from-an-elevation-raster"><i class="fa fa-check"></i><b>18.2.1</b> Accessing Elevation Values Along a Route from an Elevation Raster</a></li>
-<li class="chapter" data-level="18.2.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-geospheredistgeo-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.2</b> Using <code>geosphere::distGeo</code> to Find Distance Along a Route</a></li>
-<li class="chapter" data-level="18.2.3" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-spspdists-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.3</b> Using <code>sp::spDists</code> to Find Distance Along a Route</a></li>
+<li class="chapter" data-level="18.2.1" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#accessing-elevation-values-along-a-route-from-an-elevation-raster"><i class="fa fa-check"></i><b>18.2.1</b> Accessing Elevation Values Along a Route from an Elevation Raster</a></li>
+<li class="chapter" data-level="18.2.2" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#using-geospheredistgeo-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.2</b> Using <code>geosphere::distGeo</code> to Find Distance Along a Route</a></li>
+<li class="chapter" data-level="18.2.3" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#using-spspdists-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.3</b> Using <code>sp::spDists</code> to Find Distance Along a Route</a></li>
 </ul></li>
-<li class="chapter" data-level="18.3" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#generating-a-3d-ribbon-plot-of-the-stage-route"><i class="fa fa-check"></i><b>18.3</b> Generating a 3D Ribbon Plot of the Stage Route</a></li>
-<li class="chapter" data-level="18.4" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#identifying-road-type"><i class="fa fa-check"></i><b>18.4</b> Identifying Road Type</a></li>
-<li class="chapter" data-level="18.5" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#displaying-route-twistiness-and-elevation"><i class="fa fa-check"></i><b>18.5</b> Displaying Route Twistiness and Elevation</a>
+<li class="chapter" data-level="18.3" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#generating-a-3d-ribbon-plot-of-the-stage-route"><i class="fa fa-check"></i><b>18.3</b> Generating a 3D Ribbon Plot of the Stage Route</a></li>
+<li class="chapter" data-level="18.4" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#identifying-road-type"><i class="fa fa-check"></i><b>18.4</b> Identifying Road Type</a></li>
+<li class="chapter" data-level="18.5" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#displaying-route-twistiness-and-elevation"><i class="fa fa-check"></i><b>18.5</b> Displaying Route Twistiness and Elevation</a>
 <ul>
-<li class="chapter" data-level="18.5.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#rendering-a-3d-movie-of-the-model"><i class="fa fa-check"></i><b>18.5.1</b> Rendering a 3D movie of the Model</a></li>
+<li class="chapter" data-level="18.5.1" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#making-a-3d-print-file-of-the-model"><i class="fa fa-check"></i><b>18.5.1</b> Making a 3D Print File of the Model</a></li>
+<li class="chapter" data-level="18.5.2" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#rendering-a-3d-movie-of-the-model"><i class="fa fa-check"></i><b>18.5.2</b> Rendering a 3D movie of the Model</a></li>
 </ul></li>
-<li class="chapter" data-level="18.6" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-the-slopes-package-to-analyse-stage-elevation-data"><i class="fa fa-check"></i><b>18.6</b> Using the <code>slopes</code> Package to Analyse Stage Elevation Data</a></li>
-<li class="chapter" data-level="18.7" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#analysing-route-elevation-from-first-principles"><i class="fa fa-check"></i><b>18.7</b> Analysing Route Elevation from First Principles</a></li>
+<li class="chapter" data-level="18.6" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#using-the-slopes-package-to-analyse-stage-elevation-data"><i class="fa fa-check"></i><b>18.6</b> Using the <code>slopes</code> Package to Analyse Stage Elevation Data</a></li>
+<li class="chapter" data-level="18.7" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#analysing-route-elevation-from-first-principles"><i class="fa fa-check"></i><b>18.7</b> Analysing Route Elevation from First Principles</a></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html"><i class="fa fa-check"></i><b>19</b> Adding <em>OpenStreetMap</em> Data</a>
 <ul>
@@ -485,47 +438,49 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="load-in-base-data-10" class="section level2" number="19.1">
 <h2><span class="header-section-number">19.1</span> Load in Base Data</h2>
 <p>As ever, let’s load in our stage data:</p>
-<div class="sourceCode" id="cb522"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb522-1"><a href="adding-openstreetmap-data.html#cb522-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb522-2"><a href="adding-openstreetmap-data.html#cb522-2" aria-hidden="true" tabindex="-1"></a>geojson_filename <span class="ot">=</span> <span class="st">&#39;montecarlo_2021.geojson&#39;</span></span>
-<span id="cb522-3"><a href="adding-openstreetmap-data.html#cb522-3" aria-hidden="true" tabindex="-1"></a>geojson_sf <span class="ot">=</span> sf<span class="sc">::</span><span class="fu">st_read</span>(geojson_filename)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="adding-openstreetmap-data.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-2"><a href="adding-openstreetmap-data.html#cb1-2" aria-hidden="true" tabindex="-1"></a>geojson_filename <span class="ot">=</span> <span class="st">&#39;montecarlo_2021.geojson&#39;</span></span>
+<span id="cb1-3"><a href="adding-openstreetmap-data.html#cb1-3" aria-hidden="true" tabindex="-1"></a>geojson_sf <span class="ot">=</span> sf<span class="sc">::</span><span class="fu">st_read</span>(geojson_filename)</span></code></pre></div>
 <pre><code>## Reading layer `montecarlo_2021&#39; from data source `/Users/tonyhirst/Documents/GitHub/visualising-rally-stages/montecarlo_2021.geojson&#39; using driver `GeoJSON&#39;
 ## Simple feature collection with 9 features and 2 fields
 ## geometry type:  LINESTRING
 ## dimension:      XY
 ## bbox:           xmin: 5.243488 ymin: 43.87633 xmax: 6.951953 ymax: 44.81973
 ## geographic CRS: WGS 84</code></pre>
-<div class="sourceCode" id="cb524"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb524-1"><a href="adding-openstreetmap-data.html#cb524-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get stage bounding box</span></span>
-<span id="cb524-2"><a href="adding-openstreetmap-data.html#cb524-2" aria-hidden="true" tabindex="-1"></a>stage_bbox <span class="ot">=</span> <span class="fu">st_bbox</span>(geojson_sf[<span class="dv">1</span>,])</span>
-<span id="cb524-3"><a href="adding-openstreetmap-data.html#cb524-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb524-4"><a href="adding-openstreetmap-data.html#cb524-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Simplify geometry access</span></span>
-<span id="cb524-5"><a href="adding-openstreetmap-data.html#cb524-5" aria-hidden="true" tabindex="-1"></a>stages_kml <span class="ot">=</span> geojson_sf<span class="sc">$</span>geometry</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="adding-openstreetmap-data.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get stage bounding box</span></span>
+<span id="cb3-2"><a href="adding-openstreetmap-data.html#cb3-2" aria-hidden="true" tabindex="-1"></a>stage_bbox <span class="ot">=</span> <span class="fu">st_bbox</span>(geojson_sf[<span class="dv">1</span>,])</span>
+<span id="cb3-3"><a href="adding-openstreetmap-data.html#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="adding-openstreetmap-data.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Simplify geometry access</span></span>
+<span id="cb3-5"><a href="adding-openstreetmap-data.html#cb3-5" aria-hidden="true" tabindex="-1"></a>stages_kml <span class="ot">=</span> geojson_sf<span class="sc">$</span>geometry</span></code></pre></div>
 <p>And also load in the elevation data raster:</p>
-<div class="sourceCode" id="cb525"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb525-1"><a href="adding-openstreetmap-data.html#cb525-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raster)</span>
-<span id="cb525-2"><a href="adding-openstreetmap-data.html#cb525-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rayshader)</span>
-<span id="cb525-3"><a href="adding-openstreetmap-data.html#cb525-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb525-4"><a href="adding-openstreetmap-data.html#cb525-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Previously downloaded TIF digital elevation model (DEM) file</span></span>
-<span id="cb525-5"><a href="adding-openstreetmap-data.html#cb525-5" aria-hidden="true" tabindex="-1"></a>stage_tif <span class="ot">=</span> <span class="st">&quot;stage_elevation.tif&quot;</span></span>
-<span id="cb525-6"><a href="adding-openstreetmap-data.html#cb525-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb525-7"><a href="adding-openstreetmap-data.html#cb525-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load in the previously saved image raster</span></span>
-<span id="cb525-8"><a href="adding-openstreetmap-data.html#cb525-8" aria-hidden="true" tabindex="-1"></a>elev_img <span class="ot">=</span> <span class="fu">raster</span>(stage_tif)</span>
-<span id="cb525-9"><a href="adding-openstreetmap-data.html#cb525-9" aria-hidden="true" tabindex="-1"></a>auto_zscale <span class="ot">=</span> geoviz<span class="sc">::</span><span class="fu">raster_zscale</span>(elev_img)</span>
-<span id="cb525-10"><a href="adding-openstreetmap-data.html#cb525-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb525-11"><a href="adding-openstreetmap-data.html#cb525-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Note we can pass in a file name or a raster object</span></span>
-<span id="cb525-12"><a href="adding-openstreetmap-data.html#cb525-12" aria-hidden="true" tabindex="-1"></a>elmat <span class="ot">=</span> <span class="fu">raster_to_matrix</span>(stage_tif)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="adding-openstreetmap-data.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raster)</span>
+<span id="cb4-2"><a href="adding-openstreetmap-data.html#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rayshader)</span>
+<span id="cb4-3"><a href="adding-openstreetmap-data.html#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="adding-openstreetmap-data.html#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Previously downloaded TIF digital elevation model (DEM) file</span></span>
+<span id="cb4-5"><a href="adding-openstreetmap-data.html#cb4-5" aria-hidden="true" tabindex="-1"></a>stage_tif <span class="ot">=</span> <span class="st">&quot;stage_elevation.tif&quot;</span></span>
+<span id="cb4-6"><a href="adding-openstreetmap-data.html#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="adding-openstreetmap-data.html#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Load in the previously saved image raster</span></span>
+<span id="cb4-8"><a href="adding-openstreetmap-data.html#cb4-8" aria-hidden="true" tabindex="-1"></a>elev_img <span class="ot">=</span> <span class="fu">raster</span>(stage_tif)</span>
+<span id="cb4-9"><a href="adding-openstreetmap-data.html#cb4-9" aria-hidden="true" tabindex="-1"></a>auto_zscale <span class="ot">=</span> geoviz<span class="sc">::</span><span class="fu">raster_zscale</span>(elev_img)</span>
+<span id="cb4-10"><a href="adding-openstreetmap-data.html#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="adding-openstreetmap-data.html#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Note we can pass in a file name or a raster object</span></span>
+<span id="cb4-12"><a href="adding-openstreetmap-data.html#cb4-12" aria-hidden="true" tabindex="-1"></a>elmat <span class="ot">=</span> <span class="fu">raster_to_matrix</span>(stage_tif)</span></code></pre></div>
+<pre><code>## [1] &quot;Dimensions of matrix are: 382x565.&quot;</code></pre>
 <p>Create a base <code>rayshader</code> 2D map:</p>
-<div class="sourceCode" id="cb526"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb526-1"><a href="adding-openstreetmap-data.html#cb526-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add water</span></span>
-<span id="cb526-2"><a href="adding-openstreetmap-data.html#cb526-2" aria-hidden="true" tabindex="-1"></a>watermap <span class="ot">&lt;-</span> <span class="fu">detect_water</span>(elmat, <span class="at">progbar =</span> <span class="cn">FALSE</span>, <span class="at">zscale =</span> <span class="dv">8</span>)</span>
-<span id="cb526-3"><a href="adding-openstreetmap-data.html#cb526-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb526-4"><a href="adding-openstreetmap-data.html#cb526-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add shadows</span></span>
-<span id="cb526-5"><a href="adding-openstreetmap-data.html#cb526-5" aria-hidden="true" tabindex="-1"></a>shadow_layer <span class="ot">=</span> <span class="fu">height_shade</span>(elmat) <span class="sc">%&gt;%</span> </span>
-<span id="cb526-6"><a href="adding-openstreetmap-data.html#cb526-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(<span class="fu">sphere_shade</span>(elmat, <span class="at">texture =</span> <span class="st">&quot;desert&quot;</span>, </span>
-<span id="cb526-7"><a href="adding-openstreetmap-data.html#cb526-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">zscale=</span>auto_zscale, <span class="at">colorintensity =</span> <span class="dv">5</span>), <span class="at">alphalayer=</span><span class="fl">0.5</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb526-8"><a href="adding-openstreetmap-data.html#cb526-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_shadow</span>(<span class="fu">lamb_shade</span>(elmat,<span class="at">zscale =</span> auto_zscale),<span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb526-9"><a href="adding-openstreetmap-data.html#cb526-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_shadow</span>(<span class="fu">texture_shade</span>(elmat,<span class="at">detail=</span><span class="dv">8</span><span class="sc">/</span><span class="dv">10</span>,<span class="at">contrast=</span><span class="dv">9</span>,<span class="at">brightness =</span> <span class="dv">11</span>), <span class="fl">0.1</span>)</span>
-<span id="cb526-10"><a href="adding-openstreetmap-data.html#cb526-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb526-11"><a href="adding-openstreetmap-data.html#cb526-11" aria-hidden="true" tabindex="-1"></a>demo_map <span class="ot">=</span> elmat <span class="sc">%&gt;%</span></span>
-<span id="cb526-12"><a href="adding-openstreetmap-data.html#cb526-12" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(shadow_layer)  <span class="sc">%&gt;%</span> </span>
-<span id="cb526-13"><a href="adding-openstreetmap-data.html#cb526-13" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_water</span>(watermap, <span class="at">color =</span> <span class="st">&quot;desert&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="adding-openstreetmap-data.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add water</span></span>
+<span id="cb6-2"><a href="adding-openstreetmap-data.html#cb6-2" aria-hidden="true" tabindex="-1"></a>watermap <span class="ot">&lt;-</span> <span class="fu">detect_water</span>(elmat, <span class="at">progbar =</span> <span class="cn">FALSE</span>, <span class="at">zscale =</span> <span class="dv">8</span>)</span>
+<span id="cb6-3"><a href="adding-openstreetmap-data.html#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="adding-openstreetmap-data.html#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add shadows</span></span>
+<span id="cb6-5"><a href="adding-openstreetmap-data.html#cb6-5" aria-hidden="true" tabindex="-1"></a>shadow_layer <span class="ot">=</span> <span class="fu">height_shade</span>(elmat) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-6"><a href="adding-openstreetmap-data.html#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(<span class="fu">sphere_shade</span>(elmat, <span class="at">texture =</span> <span class="st">&quot;desert&quot;</span>,</span>
+<span id="cb6-7"><a href="adding-openstreetmap-data.html#cb6-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">progbar =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb6-8"><a href="adding-openstreetmap-data.html#cb6-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">zscale=</span>auto_zscale, <span class="at">colorintensity =</span> <span class="dv">5</span>), <span class="at">alphalayer=</span><span class="fl">0.5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-9"><a href="adding-openstreetmap-data.html#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_shadow</span>(<span class="fu">lamb_shade</span>(elmat,<span class="at">zscale =</span> auto_zscale),<span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-10"><a href="adding-openstreetmap-data.html#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_shadow</span>(<span class="fu">texture_shade</span>(elmat,<span class="at">detail=</span><span class="dv">8</span><span class="sc">/</span><span class="dv">10</span>,<span class="at">contrast=</span><span class="dv">9</span>,<span class="at">brightness =</span> <span class="dv">11</span>), <span class="fl">0.1</span>)</span>
+<span id="cb6-11"><a href="adding-openstreetmap-data.html#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="adding-openstreetmap-data.html#cb6-12" aria-hidden="true" tabindex="-1"></a>demo_map <span class="ot">=</span> elmat <span class="sc">%&gt;%</span></span>
+<span id="cb6-13"><a href="adding-openstreetmap-data.html#cb6-13" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(shadow_layer)  <span class="sc">%&gt;%</span> </span>
+<span id="cb6-14"><a href="adding-openstreetmap-data.html#cb6-14" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_water</span>(watermap, <span class="at">color =</span> <span class="st">&quot;desert&quot;</span>)</span></code></pre></div>
 </div>
 <div id="adding-detail-and-features-from-openstreetmap" class="section level2" number="19.2">
 <h2><span class="header-section-number">19.2</span> Adding Detail and Features from OpenStreetMap</h2>
@@ -537,21 +492,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><code>opq(BOUNDING_BOX) + add_osm_feature(REQUESTED_DATA) + osmdata_sp()</code> to return data in as a <code>spatial features</code>Spatial<code>(</code>sp`) object.</li>
 </ul>
 <p>We <em>could</em> manually obtain the bounding box co-ordinates by applying the <code>raster::extent()</code> function to a bounding box <code>bbox</code> object obtained from a spatial object using <code>sf::st_bbox()</code>:</p>
-<div class="sourceCode" id="cb527"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb527-1"><a href="adding-openstreetmap-data.html#cb527-1" aria-hidden="true" tabindex="-1"></a>stage_extent <span class="ot">=</span> <span class="fu">extent</span>(stage_bbox)</span>
-<span id="cb527-2"><a href="adding-openstreetmap-data.html#cb527-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb527-3"><a href="adding-openstreetmap-data.html#cb527-3" aria-hidden="true" tabindex="-1"></a><span class="co">#long_min, lat_min, long_max, lat_max</span></span>
-<span id="cb527-4"><a href="adding-openstreetmap-data.html#cb527-4" aria-hidden="true" tabindex="-1"></a>osm_stage_bbox <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">attr</span>(stage_extent, <span class="st">&#39;xmin&#39;</span>), <span class="fu">attr</span>(stage_extent, <span class="st">&#39;ymin&#39;</span>),</span>
-<span id="cb527-5"><a href="adding-openstreetmap-data.html#cb527-5" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">attr</span>(stage_extent, <span class="st">&#39;xmax&#39;</span>), <span class="fu">attr</span>(stage_extent, <span class="st">&#39;ymax&#39;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="adding-openstreetmap-data.html#cb7-1" aria-hidden="true" tabindex="-1"></a>stage_extent <span class="ot">=</span> <span class="fu">extent</span>(stage_bbox)</span>
+<span id="cb7-2"><a href="adding-openstreetmap-data.html#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="adding-openstreetmap-data.html#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#long_min, lat_min, long_max, lat_max</span></span>
+<span id="cb7-4"><a href="adding-openstreetmap-data.html#cb7-4" aria-hidden="true" tabindex="-1"></a>osm_stage_bbox <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">attr</span>(stage_extent, <span class="st">&#39;xmin&#39;</span>), <span class="fu">attr</span>(stage_extent, <span class="st">&#39;ymin&#39;</span>),</span>
+<span id="cb7-5"><a href="adding-openstreetmap-data.html#cb7-5" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">attr</span>(stage_extent, <span class="st">&#39;xmax&#39;</span>), <span class="fu">attr</span>(stage_extent, <span class="st">&#39;ymax&#39;</span>))</span></code></pre></div>
 <p>To pass the bounding box coordinates into the <code>opq()</code> function explicitly, they should be presented in the order: <code>min_long, min_lat, max_long, max_lat</code>. However, it’s far more convenient to just pass a <code>bbox</code> object to the <code>opq()</code> function directly: <code>opq(stage_bbox)</code>.</p>
 <p>As for the data we want to retrieve from the Overpass API, let’s grab the “highway” data, which returns routes for a wide range roads and paths in the specified area:</p>
-<div class="sourceCode" id="cb528"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb528-1"><a href="adding-openstreetmap-data.html#cb528-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(osmdata)</span>
-<span id="cb528-2"><a href="adding-openstreetmap-data.html#cb528-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb528-3"><a href="adding-openstreetmap-data.html#cb528-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Recall that: stage_bbox = sf::st_bbox(geojson_sf[1,])</span></span>
-<span id="cb528-4"><a href="adding-openstreetmap-data.html#cb528-4" aria-hidden="true" tabindex="-1"></a>stage_osm  <span class="ot">=</span> <span class="fu">opq</span>(stage_bbox) <span class="sc">%&gt;%</span> </span>
-<span id="cb528-5"><a href="adding-openstreetmap-data.html#cb528-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;highway&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb528-6"><a href="adding-openstreetmap-data.html#cb528-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>()</span>
-<span id="cb528-7"><a href="adding-openstreetmap-data.html#cb528-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb528-8"><a href="adding-openstreetmap-data.html#cb528-8" aria-hidden="true" tabindex="-1"></a>stage_osm</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="adding-openstreetmap-data.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(osmdata)</span>
+<span id="cb8-2"><a href="adding-openstreetmap-data.html#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="adding-openstreetmap-data.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Recall that: stage_bbox = sf::st_bbox(geojson_sf[1,])</span></span>
+<span id="cb8-4"><a href="adding-openstreetmap-data.html#cb8-4" aria-hidden="true" tabindex="-1"></a>stage_osm  <span class="ot">=</span> <span class="fu">opq</span>(stage_bbox) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-5"><a href="adding-openstreetmap-data.html#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;highway&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-6"><a href="adding-openstreetmap-data.html#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>()</span>
+<span id="cb8-7"><a href="adding-openstreetmap-data.html#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="adding-openstreetmap-data.html#cb8-8" aria-hidden="true" tabindex="-1"></a>stage_osm</span></code></pre></div>
 <pre><code>## Object of class &#39;osmdata&#39; with:
 ##                  $bbox : 44.735616,5.883753,44.819732,5.940715
 ##         $overpass_call : The call submitted to the overpass API
@@ -562,12 +517,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##        $osm_multilines : NULL
 ##     $osm_multipolygons : NULL</code></pre>
 <p>The routes themselves can be indexed via the <code>$osm_lines</code> dataframe in the returned object.</p>
-<div class="sourceCode" id="cb530"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb530-1"><a href="adding-openstreetmap-data.html#cb530-1" aria-hidden="true" tabindex="-1"></a>stage_lines <span class="ot">=</span> stage_osm<span class="sc">$</span>osm_lines</span>
-<span id="cb530-2"><a href="adding-openstreetmap-data.html#cb530-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb530-3"><a href="adding-openstreetmap-data.html#cb530-3" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(stage_lines)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="adding-openstreetmap-data.html#cb10-1" aria-hidden="true" tabindex="-1"></a>stage_lines <span class="ot">=</span> stage_osm<span class="sc">$</span>osm_lines</span>
+<span id="cb10-2"><a href="adding-openstreetmap-data.html#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="adding-openstreetmap-data.html#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(stage_lines)</span></code></pre></div>
 <pre><code>## [1] &quot;sf&quot;         &quot;data.frame&quot;</code></pre>
 <p>Let’s review the data frame column names:</p>
-<div class="sourceCode" id="cb532"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb532-1"><a href="adding-openstreetmap-data.html#cb532-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(stage_lines)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="adding-openstreetmap-data.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(stage_lines)</span></code></pre></div>
 <pre><code>##  [1] &quot;osm_id&quot;            &quot;name&quot;              &quot;access&quot;           
 ##  [4] &quot;bicycle&quot;           &quot;bridge&quot;            &quot;covered&quot;          
 ##  [7] &quot;fixme&quot;             &quot;foot&quot;              &quot;highway&quot;          
@@ -579,14 +534,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [25] &quot;tunnel&quot;            &quot;via_ferrata_scale&quot; &quot;width&quot;            
 ## [28] &quot;geometry&quot;</code></pre>
 <p>The line data is contained in the <em>geometry</em> and the <em>highway</em> describes the road type. Let’s see what sorts of road data we have retrieved by listing the unique items contained in the <em>highway</em> column:</p>
-<div class="sourceCode" id="cb534"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb534-1"><a href="adding-openstreetmap-data.html#cb534-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(stage_lines<span class="sc">$</span>highway)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="adding-openstreetmap-data.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(stage_lines<span class="sc">$</span>highway)</span></code></pre></div>
 <pre><code>##  [1] &quot;unclassified&quot; &quot;tertiary&quot;     &quot;secondary&quot;    &quot;track&quot;        &quot;path&quot;        
 ##  [6] &quot;residential&quot;  &quot;service&quot;      &quot;footway&quot;      &quot;steps&quot;        &quot;via_ferrata&quot;</code></pre>
 <p>From the column names, we also notice several other columns that look as if they might be able to provide us with information that might help us classify what the actual stage route is like: <em>smoothness</em>, <em>surface</em>, <em>width</em>, <em>maxspeed</em>, <em>incline</em>. On inspection, the data suggests a lot of empty fields: the most useful fields are probably just the ‘highway’ and perhaps the ‘surface’ columns:</p>
-<div class="sourceCode" id="cb536"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb536-1"><a href="adding-openstreetmap-data.html#cb536-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cast the simple features object to a dataframe, select the</span></span>
-<span id="cb536-2"><a href="adding-openstreetmap-data.html#cb536-2" aria-hidden="true" tabindex="-1"></a><span class="co"># columns of interest and then use a list apply to apply the unique </span></span>
-<span id="cb536-3"><a href="adding-openstreetmap-data.html#cb536-3" aria-hidden="true" tabindex="-1"></a><span class="co"># function to each of the selected columns</span></span>
-<span id="cb536-4"><a href="adding-openstreetmap-data.html#cb536-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(<span class="fu">as.data.frame</span>(stage_lines)[<span class="fu">c</span>(<span class="st">&#39;highway&#39;</span>, <span class="st">&#39;surface&#39;</span>)], unique)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="adding-openstreetmap-data.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cast the simple features object to a dataframe, select the</span></span>
+<span id="cb16-2"><a href="adding-openstreetmap-data.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># columns of interest and then use a list apply to apply the unique </span></span>
+<span id="cb16-3"><a href="adding-openstreetmap-data.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># function to each of the selected columns</span></span>
+<span id="cb16-4"><a href="adding-openstreetmap-data.html#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(<span class="fu">as.data.frame</span>(stage_lines)[<span class="fu">c</span>(<span class="st">&#39;highway&#39;</span>, <span class="st">&#39;surface&#39;</span>)], unique)</span></code></pre></div>
 <pre><code>## $highway
 ##  [1] &quot;unclassified&quot; &quot;tertiary&quot;     &quot;secondary&quot;    &quot;track&quot;        &quot;path&quot;        
 ##  [6] &quot;residential&quot;  &quot;service&quot;      &quot;footway&quot;      &quot;steps&quot;        &quot;via_ferrata&quot; 
@@ -596,24 +551,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="plotting-osm-highways" class="section level3" number="19.2.1">
 <h3><span class="header-section-number">19.2.1</span> Plotting OSM Highways</h3>
 <p>To get an idea of the extent of the “highways” in the bounding box area, we can plot the spatially represented lines using an appropriate projection. The lines might informatively be colored by <em>surface</em> type, or as in the following case, <em>highway</em> type:</p>
-<div class="sourceCode" id="cb538"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb538-1"><a href="adding-openstreetmap-data.html#cb538-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb538-2"><a href="adding-openstreetmap-data.html#cb538-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb538-3"><a href="adding-openstreetmap-data.html#cb538-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stage_lines, <span class="fu">aes</span>(<span class="at">color=</span>highway)) <span class="sc">+</span> </span>
-<span id="cb538-4"><a href="adding-openstreetmap-data.html#cb538-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span></span>
-<span id="cb538-5"><a href="adding-openstreetmap-data.html#cb538-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
-<span id="cb538-6"><a href="adding-openstreetmap-data.html#cb538-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map `highway attribute in stage extent&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="adding-openstreetmap-data.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb18-2"><a href="adding-openstreetmap-data.html#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="adding-openstreetmap-data.html#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stage_lines, <span class="fu">aes</span>(<span class="at">color=</span>highway)) <span class="sc">+</span> </span>
+<span id="cb18-4"><a href="adding-openstreetmap-data.html#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span></span>
+<span id="cb18-5"><a href="adding-openstreetmap-data.html#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb18-6"><a href="adding-openstreetmap-data.html#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map `highway attribute in stage extent&quot;</span>)</span></code></pre></div>
 <p><img src="images/adding-osm-data-gg-highways-1.png" width="672" /></p>
 <p>We can remove paths, footways and other pedestrian routes and narrow down the display to road types that would appear to offer vehicular access:</p>
-<div class="sourceCode" id="cb539"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb539-1"><a href="adding-openstreetmap-data.html#cb539-1" aria-hidden="true" tabindex="-1"></a>stage_roads <span class="ot">=</span> stage_lines[stage_lines<span class="sc">$</span>highway <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;unclassified&quot;</span>, <span class="st">&quot;secondary&quot;</span>, <span class="st">&quot;tertiary&quot;</span>, <span class="st">&quot;residential&quot;</span>, <span class="st">&quot;service&quot;</span>), ] </span>
-<span id="cb539-2"><a href="adding-openstreetmap-data.html#cb539-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb539-3"><a href="adding-openstreetmap-data.html#cb539-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative way of filtering road types using a pipe operator</span></span>
-<span id="cb539-4"><a href="adding-openstreetmap-data.html#cb539-4" aria-hidden="true" tabindex="-1"></a><span class="co">#stage_roads = stage_lines %&gt;% </span></span>
-<span id="cb539-5"><a href="adding-openstreetmap-data.html#cb539-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  filter(highway %in% c(&quot;unclassified&quot;, &quot;secondary&quot;, &quot;tertiary&quot;, &quot;residential&quot;, &quot;service&quot;))</span></span>
-<span id="cb539-6"><a href="adding-openstreetmap-data.html#cb539-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb539-7"><a href="adding-openstreetmap-data.html#cb539-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stage_roads, <span class="fu">aes</span>(<span class="at">color=</span>highway)) <span class="sc">+</span> </span>
-<span id="cb539-8"><a href="adding-openstreetmap-data.html#cb539-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span></span>
-<span id="cb539-9"><a href="adding-openstreetmap-data.html#cb539-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
-<span id="cb539-10"><a href="adding-openstreetmap-data.html#cb539-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map `roads`&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="adding-openstreetmap-data.html#cb19-1" aria-hidden="true" tabindex="-1"></a>stage_roads <span class="ot">=</span> stage_lines[stage_lines<span class="sc">$</span>highway <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;unclassified&quot;</span>, <span class="st">&quot;secondary&quot;</span>, <span class="st">&quot;tertiary&quot;</span>, <span class="st">&quot;residential&quot;</span>, <span class="st">&quot;service&quot;</span>), ] </span>
+<span id="cb19-2"><a href="adding-openstreetmap-data.html#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="adding-openstreetmap-data.html#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative way of filtering road types using a pipe operator</span></span>
+<span id="cb19-4"><a href="adding-openstreetmap-data.html#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#stage_roads = stage_lines %&gt;% </span></span>
+<span id="cb19-5"><a href="adding-openstreetmap-data.html#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  filter(highway %in% c(&quot;unclassified&quot;, &quot;secondary&quot;, &quot;tertiary&quot;, &quot;residential&quot;, &quot;service&quot;))</span></span>
+<span id="cb19-6"><a href="adding-openstreetmap-data.html#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="adding-openstreetmap-data.html#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stage_roads, <span class="fu">aes</span>(<span class="at">color=</span>highway)) <span class="sc">+</span> </span>
+<span id="cb19-8"><a href="adding-openstreetmap-data.html#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span></span>
+<span id="cb19-9"><a href="adding-openstreetmap-data.html#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb19-10"><a href="adding-openstreetmap-data.html#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map `roads`&quot;</span>)</span></code></pre></div>
 <p><img src="images/adding-osm-data-gg-roads-1.png" width="672" /></p>
 </div>
 </div>
@@ -623,86 +578,86 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>To do this, we can create a buffered region around the route and then find the intersection of the that region and the highways lines.</p>
 <p>The <code>sf::st_buffer()</code> will create a buffered area around a simple features object to a specified distance in the units of the projection.</p>
 <p>Suppose that we want to create a buffered region 200m wide around our stage route. We can define that distance, along with its units, using the `units::set_units() function:</p>
-<div class="sourceCode" id="cb540"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb540-1"><a href="adding-openstreetmap-data.html#cb540-1" aria-hidden="true" tabindex="-1"></a>buffer_margin_200m <span class="ot">=</span> units<span class="sc">::</span><span class="fu">set_units</span>(<span class="dv">200</span>, m)</span>
-<span id="cb540-2"><a href="adding-openstreetmap-data.html#cb540-2" aria-hidden="true" tabindex="-1"></a>buffer_margin_200m</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="adding-openstreetmap-data.html#cb20-1" aria-hidden="true" tabindex="-1"></a>buffer_margin_200m <span class="ot">=</span> units<span class="sc">::</span><span class="fu">set_units</span>(<span class="dv">200</span>, m)</span>
+<span id="cb20-2"><a href="adding-openstreetmap-data.html#cb20-2" aria-hidden="true" tabindex="-1"></a>buffer_margin_200m</span></code></pre></div>
 <pre><code>## 200 [m]</code></pre>
 <p>To create the buffered region (a polygon) around the stage route (a line), we need to project the latlong values, whose unit of distance is measured in <em>degrees</em> to a rectangular projection with a distance unit of <em>meters</em>.</p>
 <p>The coordinates used in the route data are WGS84 latitude and longitude degrees. As we have done previously, we can convert the CRS to one based on units of meters, such as the UTM projection.</p>
-<div class="sourceCode" id="cb542"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb542-1"><a href="adding-openstreetmap-data.html#cb542-1" aria-hidden="true" tabindex="-1"></a>lonlat2UTM_hemisphere <span class="ot">&lt;-</span> <span class="cf">function</span>(lonlat) {</span>
-<span id="cb542-2"><a href="adding-openstreetmap-data.html#cb542-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(lonlat[<span class="dv">1</span>] <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">&quot;north&quot;</span>, <span class="st">&quot;south&quot;</span>)</span>
-<span id="cb542-3"><a href="adding-openstreetmap-data.html#cb542-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb542-4"><a href="adding-openstreetmap-data.html#cb542-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb542-5"><a href="adding-openstreetmap-data.html#cb542-5" aria-hidden="true" tabindex="-1"></a>lonlat2UTMzone <span class="ot">=</span> <span class="cf">function</span>(lonlat) {</span>
-<span id="cb542-6"><a href="adding-openstreetmap-data.html#cb542-6" aria-hidden="true" tabindex="-1"></a>  utm <span class="ot">=</span> (<span class="fu">floor</span>((lonlat[<span class="dv">1</span>] <span class="sc">+</span> <span class="dv">180</span>) <span class="sc">/</span> <span class="dv">6</span>) <span class="sc">%%</span> <span class="dv">60</span>) <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb542-7"><a href="adding-openstreetmap-data.html#cb542-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(lonlat[<span class="dv">2</span>] <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb542-8"><a href="adding-openstreetmap-data.html#cb542-8" aria-hidden="true" tabindex="-1"></a>    utm <span class="sc">+</span> <span class="dv">32600</span></span>
-<span id="cb542-9"><a href="adding-openstreetmap-data.html#cb542-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
-<span id="cb542-10"><a href="adding-openstreetmap-data.html#cb542-10" aria-hidden="true" tabindex="-1"></a>    utm <span class="sc">+</span> <span class="dv">32700</span></span>
-<span id="cb542-11"><a href="adding-openstreetmap-data.html#cb542-11" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb542-12"><a href="adding-openstreetmap-data.html#cb542-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb542-13"><a href="adding-openstreetmap-data.html#cb542-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb542-14"><a href="adding-openstreetmap-data.html#cb542-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Grab a copy of the original projection</span></span>
-<span id="cb542-15"><a href="adding-openstreetmap-data.html#cb542-15" aria-hidden="true" tabindex="-1"></a>original_crs <span class="ot">=</span> <span class="fu">st_crs</span>(geojson_sf[<span class="dv">1</span>,])</span>
-<span id="cb542-16"><a href="adding-openstreetmap-data.html#cb542-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb542-17"><a href="adding-openstreetmap-data.html#cb542-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the UTM zone for a sample a point on the route</span></span>
-<span id="cb542-18"><a href="adding-openstreetmap-data.html#cb542-18" aria-hidden="true" tabindex="-1"></a>crs_zone <span class="ot">=</span> <span class="fu">lonlat2UTMzone</span>(<span class="fu">c</span>(<span class="fu">st_coordinates</span>(geojson_sf[<span class="dv">1</span>,])[<span class="dv">1</span>,<span class="dv">1</span>],</span>
-<span id="cb542-19"><a href="adding-openstreetmap-data.html#cb542-19" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">st_coordinates</span>(geojson_sf[<span class="dv">1</span>,])[<span class="dv">1</span>,<span class="dv">2</span>]))</span>
-<span id="cb542-20"><a href="adding-openstreetmap-data.html#cb542-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb542-21"><a href="adding-openstreetmap-data.html#cb542-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the projection string</span></span>
-<span id="cb542-22"><a href="adding-openstreetmap-data.html#cb542-22" aria-hidden="true" tabindex="-1"></a>utm_pro4_string <span class="ot">=</span> <span class="fu">st_crs</span>(crs_zone)<span class="sc">$</span>proj4string</span>
-<span id="cb542-23"><a href="adding-openstreetmap-data.html#cb542-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&quot;+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs&quot;</span></span>
-<span id="cb542-24"><a href="adding-openstreetmap-data.html#cb542-24" aria-hidden="true" tabindex="-1"></a><span class="co"># units in meters e.g. https://epsg.io/32632</span></span>
-<span id="cb542-25"><a href="adding-openstreetmap-data.html#cb542-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb542-26"><a href="adding-openstreetmap-data.html#cb542-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Transform the route projection</span></span>
-<span id="cb542-27"><a href="adding-openstreetmap-data.html#cb542-27" aria-hidden="true" tabindex="-1"></a>utm_route <span class="ot">=</span> <span class="fu">st_transform</span>(geojson_sf[<span class="dv">1</span>,], <span class="at">crs =</span> <span class="fu">st_crs</span>(utm_pro4_string))</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="adding-openstreetmap-data.html#cb22-1" aria-hidden="true" tabindex="-1"></a>lonlat2UTM_hemisphere <span class="ot">&lt;-</span> <span class="cf">function</span>(lonlat) {</span>
+<span id="cb22-2"><a href="adding-openstreetmap-data.html#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(lonlat[<span class="dv">1</span>] <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">&quot;north&quot;</span>, <span class="st">&quot;south&quot;</span>)</span>
+<span id="cb22-3"><a href="adding-openstreetmap-data.html#cb22-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-4"><a href="adding-openstreetmap-data.html#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="adding-openstreetmap-data.html#cb22-5" aria-hidden="true" tabindex="-1"></a>lonlat2UTMzone <span class="ot">=</span> <span class="cf">function</span>(lonlat) {</span>
+<span id="cb22-6"><a href="adding-openstreetmap-data.html#cb22-6" aria-hidden="true" tabindex="-1"></a>  utm <span class="ot">=</span> (<span class="fu">floor</span>((lonlat[<span class="dv">1</span>] <span class="sc">+</span> <span class="dv">180</span>) <span class="sc">/</span> <span class="dv">6</span>) <span class="sc">%%</span> <span class="dv">60</span>) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb22-7"><a href="adding-openstreetmap-data.html#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(lonlat[<span class="dv">2</span>] <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb22-8"><a href="adding-openstreetmap-data.html#cb22-8" aria-hidden="true" tabindex="-1"></a>    utm <span class="sc">+</span> <span class="dv">32600</span></span>
+<span id="cb22-9"><a href="adding-openstreetmap-data.html#cb22-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span>{</span>
+<span id="cb22-10"><a href="adding-openstreetmap-data.html#cb22-10" aria-hidden="true" tabindex="-1"></a>    utm <span class="sc">+</span> <span class="dv">32700</span></span>
+<span id="cb22-11"><a href="adding-openstreetmap-data.html#cb22-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb22-12"><a href="adding-openstreetmap-data.html#cb22-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-13"><a href="adding-openstreetmap-data.html#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-14"><a href="adding-openstreetmap-data.html#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Grab a copy of the original projection</span></span>
+<span id="cb22-15"><a href="adding-openstreetmap-data.html#cb22-15" aria-hidden="true" tabindex="-1"></a>original_crs <span class="ot">=</span> <span class="fu">st_crs</span>(geojson_sf[<span class="dv">1</span>,])</span>
+<span id="cb22-16"><a href="adding-openstreetmap-data.html#cb22-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-17"><a href="adding-openstreetmap-data.html#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the UTM zone for a sample a point on the route</span></span>
+<span id="cb22-18"><a href="adding-openstreetmap-data.html#cb22-18" aria-hidden="true" tabindex="-1"></a>crs_zone <span class="ot">=</span> <span class="fu">lonlat2UTMzone</span>(<span class="fu">c</span>(<span class="fu">st_coordinates</span>(geojson_sf[<span class="dv">1</span>,])[<span class="dv">1</span>,<span class="dv">1</span>],</span>
+<span id="cb22-19"><a href="adding-openstreetmap-data.html#cb22-19" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">st_coordinates</span>(geojson_sf[<span class="dv">1</span>,])[<span class="dv">1</span>,<span class="dv">2</span>]))</span>
+<span id="cb22-20"><a href="adding-openstreetmap-data.html#cb22-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-21"><a href="adding-openstreetmap-data.html#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the projection string</span></span>
+<span id="cb22-22"><a href="adding-openstreetmap-data.html#cb22-22" aria-hidden="true" tabindex="-1"></a>utm_pro4_string <span class="ot">=</span> <span class="fu">st_crs</span>(crs_zone)<span class="sc">$</span>proj4string</span>
+<span id="cb22-23"><a href="adding-openstreetmap-data.html#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&quot;+proj=utm +zone=32 +datum=WGS84 +units=m +no_defs&quot;</span></span>
+<span id="cb22-24"><a href="adding-openstreetmap-data.html#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="co"># units in meters e.g. https://epsg.io/32632</span></span>
+<span id="cb22-25"><a href="adding-openstreetmap-data.html#cb22-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-26"><a href="adding-openstreetmap-data.html#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Transform the route projection</span></span>
+<span id="cb22-27"><a href="adding-openstreetmap-data.html#cb22-27" aria-hidden="true" tabindex="-1"></a>utm_route <span class="ot">=</span> <span class="fu">st_transform</span>(geojson_sf[<span class="dv">1</span>,], <span class="at">crs =</span> <span class="fu">st_crs</span>(utm_pro4_string))</span></code></pre></div>
 <div id="using-sfst_buffer-to-create-buffered-areas" class="section level3" number="19.3.1">
 <h3><span class="header-section-number">19.3.1</span> Using <code>sf::st_buffer</code> to Create Buffered Areas</h3>
 <p>We can now create the buffered area around the route using the <code>sf::st_buffer</code> function:</p>
-<div class="sourceCode" id="cb543"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb543-1"><a href="adding-openstreetmap-data.html#cb543-1" aria-hidden="true" tabindex="-1"></a>buffered_route_utm <span class="ot">&lt;-</span> <span class="fu">st_buffer</span>(utm_route, buffer_margin_200m)</span>
-<span id="cb543-2"><a href="adding-openstreetmap-data.html#cb543-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb543-3"><a href="adding-openstreetmap-data.html#cb543-3" aria-hidden="true" tabindex="-1"></a>buffered_route <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(buffered_route_utm, original_crs)</span>
-<span id="cb543-4"><a href="adding-openstreetmap-data.html#cb543-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb543-5"><a href="adding-openstreetmap-data.html#cb543-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(buffered_route) <span class="sc">+</span> </span>
-<span id="cb543-6"><a href="adding-openstreetmap-data.html#cb543-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>()                </span></code></pre></div>
-<p><img src="images/adding-osm-data-unnamed-chunk-248-1.png" width="672" /></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="adding-openstreetmap-data.html#cb23-1" aria-hidden="true" tabindex="-1"></a>buffered_route_utm <span class="ot">&lt;-</span> <span class="fu">st_buffer</span>(utm_route, buffer_margin_200m)</span>
+<span id="cb23-2"><a href="adding-openstreetmap-data.html#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="adding-openstreetmap-data.html#cb23-3" aria-hidden="true" tabindex="-1"></a>buffered_route <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(buffered_route_utm, original_crs)</span>
+<span id="cb23-4"><a href="adding-openstreetmap-data.html#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="adding-openstreetmap-data.html#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(buffered_route) <span class="sc">+</span> </span>
+<span id="cb23-6"><a href="adding-openstreetmap-data.html#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>()                </span></code></pre></div>
+<p><img src="images/adding-osm-data-gg-buffered-route-1.png" width="672" /></p>
 <p>Let’s also save that as a shapefile:</p>
-<div class="sourceCode" id="cb544"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb544-1"><a href="adding-openstreetmap-data.html#cb544-1" aria-hidden="true" tabindex="-1"></a><span class="co"># st_write will try to automatically determine the file driver</span></span>
-<span id="cb544-2"><a href="adding-openstreetmap-data.html#cb544-2" aria-hidden="true" tabindex="-1"></a><span class="co"># from the filename suffix</span></span>
-<span id="cb544-3"><a href="adding-openstreetmap-data.html#cb544-3" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(buffered_route, <span class="st">&quot;buffered_route.shp&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="adding-openstreetmap-data.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># st_write will try to automatically determine the file driver</span></span>
+<span id="cb24-2"><a href="adding-openstreetmap-data.html#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># from the filename suffix</span></span>
+<span id="cb24-3"><a href="adding-openstreetmap-data.html#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(buffered_route, <span class="st">&quot;buffered_route.shp&quot;</span>)</span></code></pre></div>
 <pre><code>## Layer buffered_route in dataset buffered_route.shp already exists:
 ## use either append=TRUE to append to layer or append=FALSE to overwrite layer</code></pre>
 <pre><code>## Error in CPL_write_ogr(obj, dsn, layer, driver, as.character(dataset_options), : Dataset already exists.</code></pre>
 <p>We can view the roads that appear within the buffered area around a stage route by finding the intersection of the road lines and the buffered area:</p>
-<div class="sourceCode" id="cb547"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb547-1"><a href="adding-openstreetmap-data.html#cb547-1" aria-hidden="true" tabindex="-1"></a>roads_by_stage <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(stage_roads, buffered_route)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="adding-openstreetmap-data.html#cb27-1" aria-hidden="true" tabindex="-1"></a>roads_by_stage <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(stage_roads, buffered_route)</span></code></pre></div>
 <pre><code>## although coordinates are longitude/latitude, st_intersection assumes that they are planar</code></pre>
-<div class="sourceCode" id="cb549"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb549-1"><a href="adding-openstreetmap-data.html#cb549-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb549-2"><a href="adding-openstreetmap-data.html#cb549-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>buffered_route) <span class="sc">+</span></span>
-<span id="cb549-3"><a href="adding-openstreetmap-data.html#cb549-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>roads_by_stage, <span class="at">color=</span><span class="st">&#39;red&#39;</span>) </span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="adding-openstreetmap-data.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb29-2"><a href="adding-openstreetmap-data.html#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>buffered_route) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="adding-openstreetmap-data.html#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>roads_by_stage, <span class="at">color=</span><span class="st">&#39;red&#39;</span>) </span></code></pre></div>
 <p><img src="images/adding-osm-data-gg-stage-buffer-route-1.png" width="672" />
 Note that we actually get a warning: <em>although coordinates are longitude/latitude, st_intersection assumes that they are planar</em>. So we really should have projected the roads into UTM and done the intersection using that CRS:</p>
-<div class="sourceCode" id="cb550"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb550-1"><a href="adding-openstreetmap-data.html#cb550-1" aria-hidden="true" tabindex="-1"></a>stage_roads_utm <span class="ot">=</span> <span class="fu">st_transform</span>(stage_roads,</span>
-<span id="cb550-2"><a href="adding-openstreetmap-data.html#cb550-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">crs =</span> <span class="fu">st_crs</span>(utm_pro4_string))</span>
-<span id="cb550-3"><a href="adding-openstreetmap-data.html#cb550-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb550-4"><a href="adding-openstreetmap-data.html#cb550-4" aria-hidden="true" tabindex="-1"></a>roads_by_stage_utm <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(stage_roads_utm, buffered_route_utm)</span>
-<span id="cb550-5"><a href="adding-openstreetmap-data.html#cb550-5" aria-hidden="true" tabindex="-1"></a><span class="co">#although coordinates are longitude/latitude, st_intersection assumes that they are planar, so we really should project into something else</span></span>
-<span id="cb550-6"><a href="adding-openstreetmap-data.html#cb550-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb550-7"><a href="adding-openstreetmap-data.html#cb550-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb550-8"><a href="adding-openstreetmap-data.html#cb550-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>buffered_route_utm) <span class="sc">+</span></span>
-<span id="cb550-9"><a href="adding-openstreetmap-data.html#cb550-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>roads_by_stage_utm, <span class="at">color=</span><span class="st">&#39;red&#39;</span>) </span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="adding-openstreetmap-data.html#cb30-1" aria-hidden="true" tabindex="-1"></a>stage_roads_utm <span class="ot">=</span> <span class="fu">st_transform</span>(stage_roads,</span>
+<span id="cb30-2"><a href="adding-openstreetmap-data.html#cb30-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">crs =</span> <span class="fu">st_crs</span>(utm_pro4_string))</span>
+<span id="cb30-3"><a href="adding-openstreetmap-data.html#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="adding-openstreetmap-data.html#cb30-4" aria-hidden="true" tabindex="-1"></a>roads_by_stage_utm <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(stage_roads_utm, buffered_route_utm)</span>
+<span id="cb30-5"><a href="adding-openstreetmap-data.html#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co">#although coordinates are longitude/latitude, st_intersection assumes that they are planar, so we really should project into something else</span></span>
+<span id="cb30-6"><a href="adding-openstreetmap-data.html#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="adding-openstreetmap-data.html#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb30-8"><a href="adding-openstreetmap-data.html#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>buffered_route_utm) <span class="sc">+</span></span>
+<span id="cb30-9"><a href="adding-openstreetmap-data.html#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>roads_by_stage_utm, <span class="at">color=</span><span class="st">&#39;red&#39;</span>) </span></code></pre></div>
 <p><img src="images/adding-osm-data-gg-stage-buffer-route2-1.png" width="672" /></p>
 </div>
 <div id="using-rgeosgbuffer-to-create-buffered-areas" class="section level3" number="19.3.2">
 <h3><span class="header-section-number">19.3.2</span> Using <code>rgeos::gBuffer</code> to Create Buffered Areas</h3>
 <p>Alternatively, we can create a buffered area using the <code>rgeos::gBuffer()</code> function, this time applied to a projected <em>Spatial</em> object with units of meters.</p>
 <p>For example, we can buffer our stage roads in their UTM (units of meters) projection:</p>
-<div class="sourceCode" id="cb551"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb551-1"><a href="adding-openstreetmap-data.html#cb551-1" aria-hidden="true" tabindex="-1"></a>buffered_roads <span class="ot">=</span> rgeos<span class="sc">::</span><span class="fu">gBuffer</span>(<span class="fu">as</span>(stage_roads_utm, <span class="st">&#39;Spatial&#39;</span>),</span>
-<span id="cb551-2"><a href="adding-openstreetmap-data.html#cb551-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">width=</span><span class="dv">200</span>)</span>
-<span id="cb551-3"><a href="adding-openstreetmap-data.html#cb551-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb551-4"><a href="adding-openstreetmap-data.html#cb551-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot expects a simple features, rather than Spatial, object</span></span>
-<span id="cb551-5"><a href="adding-openstreetmap-data.html#cb551-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">st_as_sf</span>(buffered_roads)) <span class="sc">+</span> </span>
-<span id="cb551-6"><a href="adding-openstreetmap-data.html#cb551-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span></span>
-<span id="cb551-7"><a href="adding-openstreetmap-data.html#cb551-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Tweak the presentation angle of the x-tick labels</span></span>
-<span id="cb551-8"><a href="adding-openstreetmap-data.html#cb551-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="adding-openstreetmap-data.html#cb31-1" aria-hidden="true" tabindex="-1"></a>buffered_roads <span class="ot">=</span> rgeos<span class="sc">::</span><span class="fu">gBuffer</span>(<span class="fu">as</span>(stage_roads_utm, <span class="st">&#39;Spatial&#39;</span>),</span>
+<span id="cb31-2"><a href="adding-openstreetmap-data.html#cb31-2" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">width=</span><span class="dv">200</span>)</span>
+<span id="cb31-3"><a href="adding-openstreetmap-data.html#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="adding-openstreetmap-data.html#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot expects a simple features, rather than Spatial, object</span></span>
+<span id="cb31-5"><a href="adding-openstreetmap-data.html#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">st_as_sf</span>(buffered_roads)) <span class="sc">+</span> </span>
+<span id="cb31-6"><a href="adding-openstreetmap-data.html#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span></span>
+<span id="cb31-7"><a href="adding-openstreetmap-data.html#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Tweak the presentation angle of the x-tick labels</span></span>
+<span id="cb31-8"><a href="adding-openstreetmap-data.html#cb31-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
 <p><img src="images/adding-osm-data-gg-roads-buffer-1.png" width="672" /></p>
 </div>
 </div>
@@ -710,97 +665,97 @@ Note that we actually get a warning: <em>although coordinates are longitude/lati
 <h2><span class="header-section-number">19.4</span> Adding Additional Data From OSM</h2>
 <p>As well as highways data, <em>OpenStreetMap</em> also provides data on a wide range of other features.</p>
 <p>For example, we can identify <em>waterways</em>:</p>
-<div class="sourceCode" id="cb552"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb552-1"><a href="adding-openstreetmap-data.html#cb552-1" aria-hidden="true" tabindex="-1"></a>stage_water_lines <span class="ot">=</span> <span class="fu">opq</span>(osm_stage_bbox) <span class="sc">%&gt;%</span> </span>
-<span id="cb552-2"><a href="adding-openstreetmap-data.html#cb552-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;waterway&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb552-3"><a href="adding-openstreetmap-data.html#cb552-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>() </span>
-<span id="cb552-4"><a href="adding-openstreetmap-data.html#cb552-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb552-5"><a href="adding-openstreetmap-data.html#cb552-5" aria-hidden="true" tabindex="-1"></a>stage_waterways <span class="ot">=</span> stage_water_lines<span class="sc">$</span>osm_lines</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="adding-openstreetmap-data.html#cb32-1" aria-hidden="true" tabindex="-1"></a>stage_water_lines <span class="ot">=</span> <span class="fu">opq</span>(osm_stage_bbox) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-2"><a href="adding-openstreetmap-data.html#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;waterway&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-3"><a href="adding-openstreetmap-data.html#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>() </span>
+<span id="cb32-4"><a href="adding-openstreetmap-data.html#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="adding-openstreetmap-data.html#cb32-5" aria-hidden="true" tabindex="-1"></a>stage_waterways <span class="ot">=</span> stage_water_lines<span class="sc">$</span>osm_lines</span></code></pre></div>
 <p>Let’s preview those to see how they extends in our bounded box area:</p>
-<div class="sourceCode" id="cb553"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb553-1"><a href="adding-openstreetmap-data.html#cb553-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stage_waterways) <span class="sc">+</span> </span>
-<span id="cb553-2"><a href="adding-openstreetmap-data.html#cb553-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">color=</span><span class="st">&#39;blue&#39;</span>) <span class="sc">+</span></span>
-<span id="cb553-3"><a href="adding-openstreetmap-data.html#cb553-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>stages_kml[<span class="dv">1</span>], <span class="at">color=</span><span class="st">&#39;red&#39;</span>) <span class="sc">+</span></span>
-<span id="cb553-4"><a href="adding-openstreetmap-data.html#cb553-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
-<span id="cb553-5"><a href="adding-openstreetmap-data.html#cb553-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map `waterways`&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="adding-openstreetmap-data.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stage_waterways) <span class="sc">+</span> </span>
+<span id="cb33-2"><a href="adding-openstreetmap-data.html#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">color=</span><span class="st">&#39;blue&#39;</span>) <span class="sc">+</span></span>
+<span id="cb33-3"><a href="adding-openstreetmap-data.html#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>stages_kml[<span class="dv">1</span>], <span class="at">color=</span><span class="st">&#39;red&#39;</span>) <span class="sc">+</span></span>
+<span id="cb33-4"><a href="adding-openstreetmap-data.html#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb33-5"><a href="adding-openstreetmap-data.html#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map `waterways`&quot;</span>)</span></code></pre></div>
 <p><img src="images/adding-osm-data-gg-waterways-1.png" width="672" />
 <em>One thing to note about this plot is that data has been returned for an area that exceeds the extent of our request.</em></p>
 <p>We can create a <code>rayshader</code> layer for the waterways that we can then add as another overlay to a rendered map:</p>
-<div class="sourceCode" id="cb554"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb554-1"><a href="adding-openstreetmap-data.html#cb554-1" aria-hidden="true" tabindex="-1"></a>waterways_layer <span class="ot">=</span> <span class="fu">generate_line_overlay</span>(stage_waterways,</span>
-<span id="cb554-2"><a href="adding-openstreetmap-data.html#cb554-2" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">extent =</span> stage_extent,</span>
-<span id="cb554-3"><a href="adding-openstreetmap-data.html#cb554-3" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">heightmap =</span> elmat,</span>
-<span id="cb554-4"><a href="adding-openstreetmap-data.html#cb554-4" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">color=</span><span class="st">&quot;skyblue2&quot;</span>,</span>
-<span id="cb554-5"><a href="adding-openstreetmap-data.html#cb554-5" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">linewidth =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="adding-openstreetmap-data.html#cb34-1" aria-hidden="true" tabindex="-1"></a>waterways_layer <span class="ot">=</span> <span class="fu">generate_line_overlay</span>(stage_waterways,</span>
+<span id="cb34-2"><a href="adding-openstreetmap-data.html#cb34-2" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">extent =</span> stage_extent,</span>
+<span id="cb34-3"><a href="adding-openstreetmap-data.html#cb34-3" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">heightmap =</span> elmat,</span>
+<span id="cb34-4"><a href="adding-openstreetmap-data.html#cb34-4" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">color=</span><span class="st">&quot;skyblue2&quot;</span>,</span>
+<span id="cb34-5"><a href="adding-openstreetmap-data.html#cb34-5" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">linewidth =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p>Let’s also create a new route layer, this time in red:</p>
-<div class="sourceCode" id="cb555"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb555-1"><a href="adding-openstreetmap-data.html#cb555-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a route layer in red</span></span>
-<span id="cb555-2"><a href="adding-openstreetmap-data.html#cb555-2" aria-hidden="true" tabindex="-1"></a>red_route <span class="ot">=</span> <span class="fu">generate_line_overlay</span>(geojson_sf[<span class="dv">1</span>,],</span>
-<span id="cb555-3"><a href="adding-openstreetmap-data.html#cb555-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">extent =</span> stage_extent,</span>
-<span id="cb555-4"><a href="adding-openstreetmap-data.html#cb555-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">heightmap =</span> elmat,</span>
-<span id="cb555-5"><a href="adding-openstreetmap-data.html#cb555-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">linewidth =</span> <span class="dv">5</span>, <span class="at">color=</span><span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="adding-openstreetmap-data.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a route layer in red</span></span>
+<span id="cb35-2"><a href="adding-openstreetmap-data.html#cb35-2" aria-hidden="true" tabindex="-1"></a>red_route <span class="ot">=</span> <span class="fu">generate_line_overlay</span>(geojson_sf[<span class="dv">1</span>,],</span>
+<span id="cb35-3"><a href="adding-openstreetmap-data.html#cb35-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">extent =</span> stage_extent,</span>
+<span id="cb35-4"><a href="adding-openstreetmap-data.html#cb35-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">heightmap =</span> elmat,</span>
+<span id="cb35-5"><a href="adding-openstreetmap-data.html#cb35-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">linewidth =</span> <span class="dv">5</span>, <span class="at">color=</span><span class="st">&quot;red&quot;</span>)</span></code></pre></div>
 <p>Create a roads layer:</p>
-<div class="sourceCode" id="cb556"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb556-1"><a href="adding-openstreetmap-data.html#cb556-1" aria-hidden="true" tabindex="-1"></a>roads_layer <span class="ot">=</span> <span class="fu">generate_line_overlay</span>(stage_roads, <span class="at">extent =</span> stage_extent,</span>
-<span id="cb556-2"><a href="adding-openstreetmap-data.html#cb556-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">color=</span><span class="st">&quot;yellow&quot;</span>,</span>
-<span id="cb556-3"><a href="adding-openstreetmap-data.html#cb556-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">heightmap =</span> elmat)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="adding-openstreetmap-data.html#cb36-1" aria-hidden="true" tabindex="-1"></a>roads_layer <span class="ot">=</span> <span class="fu">generate_line_overlay</span>(stage_roads, <span class="at">extent =</span> stage_extent,</span>
+<span id="cb36-2"><a href="adding-openstreetmap-data.html#cb36-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">color=</span><span class="st">&quot;yellow&quot;</span>,</span>
+<span id="cb36-3"><a href="adding-openstreetmap-data.html#cb36-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">heightmap =</span> elmat)</span></code></pre></div>
 <p>Adding the waterway layer to the map potentially allows us to read additional detail into it. For example, a waterway under a highway presumable means a bridge (or a ford), and may also mean “narrows” or “care”…</p>
-<div class="sourceCode" id="cb557"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb557-1"><a href="adding-openstreetmap-data.html#cb557-1" aria-hidden="true" tabindex="-1"></a>demo_map <span class="sc">%&gt;%</span></span>
-<span id="cb557-2"><a href="adding-openstreetmap-data.html#cb557-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(waterways_layer)  <span class="sc">%&gt;%</span></span>
-<span id="cb557-3"><a href="adding-openstreetmap-data.html#cb557-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(roads_layer)  <span class="sc">%&gt;%</span></span>
-<span id="cb557-4"><a href="adding-openstreetmap-data.html#cb557-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(red_route) <span class="sc">%&gt;%</span></span>
-<span id="cb557-5"><a href="adding-openstreetmap-data.html#cb557-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="adding-openstreetmap-data.html#cb37-1" aria-hidden="true" tabindex="-1"></a>demo_map <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="adding-openstreetmap-data.html#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(waterways_layer)  <span class="sc">%&gt;%</span></span>
+<span id="cb37-3"><a href="adding-openstreetmap-data.html#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(roads_layer)  <span class="sc">%&gt;%</span></span>
+<span id="cb37-4"><a href="adding-openstreetmap-data.html#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(red_route) <span class="sc">%&gt;%</span></span>
+<span id="cb37-5"><a href="adding-openstreetmap-data.html#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
 <p><img src="images/adding-osm-data-map-roads-1.png" width="672" /></p>
 <p>The waterway plotted over the water map area looks a bit odd, but we could address that by changing the layer order: layers are placed on top of each other in the order we present them, so all we need to do is overplot
 the waterways by the watermap, rather than the plotting the waterways over the watermap:</p>
-<div class="sourceCode" id="cb558"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb558-1"><a href="adding-openstreetmap-data.html#cb558-1" aria-hidden="true" tabindex="-1"></a>rich_map <span class="ot">=</span>  elmat <span class="sc">%&gt;%</span></span>
-<span id="cb558-2"><a href="adding-openstreetmap-data.html#cb558-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(shadow_layer) <span class="sc">%&gt;%</span></span>
-<span id="cb558-3"><a href="adding-openstreetmap-data.html#cb558-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(waterways_layer) <span class="sc">%&gt;%</span></span>
-<span id="cb558-4"><a href="adding-openstreetmap-data.html#cb558-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(roads_layer) <span class="sc">%&gt;%</span></span>
-<span id="cb558-5"><a href="adding-openstreetmap-data.html#cb558-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(red_route) <span class="sc">%&gt;%</span></span>
-<span id="cb558-6"><a href="adding-openstreetmap-data.html#cb558-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_water</span>(watermap, <span class="at">color =</span> <span class="st">&quot;desert&quot;</span>)</span>
-<span id="cb558-7"><a href="adding-openstreetmap-data.html#cb558-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb558-8"><a href="adding-openstreetmap-data.html#cb558-8" aria-hidden="true" tabindex="-1"></a>rich_map <span class="sc">%&gt;%</span></span>
-<span id="cb558-9"><a href="adding-openstreetmap-data.html#cb558-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="adding-openstreetmap-data.html#cb38-1" aria-hidden="true" tabindex="-1"></a>rich_map <span class="ot">=</span>  elmat <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="adding-openstreetmap-data.html#cb38-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(shadow_layer) <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="adding-openstreetmap-data.html#cb38-3" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(waterways_layer) <span class="sc">%&gt;%</span></span>
+<span id="cb38-4"><a href="adding-openstreetmap-data.html#cb38-4" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(roads_layer) <span class="sc">%&gt;%</span></span>
+<span id="cb38-5"><a href="adding-openstreetmap-data.html#cb38-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_overlay</span>(red_route) <span class="sc">%&gt;%</span></span>
+<span id="cb38-6"><a href="adding-openstreetmap-data.html#cb38-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">add_water</span>(watermap, <span class="at">color =</span> <span class="st">&quot;desert&quot;</span>)</span>
+<span id="cb38-7"><a href="adding-openstreetmap-data.html#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-8"><a href="adding-openstreetmap-data.html#cb38-8" aria-hidden="true" tabindex="-1"></a>rich_map <span class="sc">%&gt;%</span></span>
+<span id="cb38-9"><a href="adding-openstreetmap-data.html#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
 <p><img src="images/adding-osm-data-map-rich-1.png" width="672" /></p>
 <div id="adding-building-layers-from-openstreetmap" class="section level3" number="19.4.1">
 <h3><span class="header-section-number">19.4.1</span> Adding Building Layers from <em>OpenStreetMap</em></h3>
 <p>Another class of feature that we seen on certain map tiles, and that may be useful to add directly to map layers, are building outlines. In a rally stage, buildings may add to the hazard or otherwise help us get an feel for what a particular part of a stage is like.</p>
 <p>We can download building outlines from the OSM Overpass API by requesting feature objects of type <em>building</em>.</p>
 <p>The objects of interest to us are the building outline polygons:</p>
-<div class="sourceCode" id="cb559"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb559-1"><a href="adding-openstreetmap-data.html#cb559-1" aria-hidden="true" tabindex="-1"></a>stage_buildings_polygons <span class="ot">=</span> <span class="fu">opq</span>(osm_stage_bbox) <span class="sc">%&gt;%</span> </span>
-<span id="cb559-2"><a href="adding-openstreetmap-data.html#cb559-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;building&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb559-3"><a href="adding-openstreetmap-data.html#cb559-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>() </span>
-<span id="cb559-4"><a href="adding-openstreetmap-data.html#cb559-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb559-5"><a href="adding-openstreetmap-data.html#cb559-5" aria-hidden="true" tabindex="-1"></a>stage_buildings <span class="ot">=</span> stage_buildings_polygons<span class="sc">$</span>osm_polygons</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="adding-openstreetmap-data.html#cb39-1" aria-hidden="true" tabindex="-1"></a>stage_buildings_polygons <span class="ot">=</span> <span class="fu">opq</span>(osm_stage_bbox) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="adding-openstreetmap-data.html#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;building&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-3"><a href="adding-openstreetmap-data.html#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>() </span>
+<span id="cb39-4"><a href="adding-openstreetmap-data.html#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="adding-openstreetmap-data.html#cb39-5" aria-hidden="true" tabindex="-1"></a>stage_buildings <span class="ot">=</span> stage_buildings_polygons<span class="sc">$</span>osm_polygons</span></code></pre></div>
 <p>Let’s quickly plot those to see how they look:</p>
-<div class="sourceCode" id="cb560"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb560-1"><a href="adding-openstreetmap-data.html#cb560-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb560-2"><a href="adding-openstreetmap-data.html#cb560-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>stage_buildings,) <span class="sc">+</span></span>
-<span id="cb560-3"><a href="adding-openstreetmap-data.html#cb560-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>stages_kml[<span class="dv">1</span>], <span class="at">color=</span><span class="st">&#39;darkgrey&#39;</span>) <span class="sc">+</span></span>
-<span id="cb560-4"><a href="adding-openstreetmap-data.html#cb560-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
-<span id="cb560-5"><a href="adding-openstreetmap-data.html#cb560-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map `buildings`&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="adding-openstreetmap-data.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb40-2"><a href="adding-openstreetmap-data.html#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>stage_buildings,) <span class="sc">+</span></span>
+<span id="cb40-3"><a href="adding-openstreetmap-data.html#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>stages_kml[<span class="dv">1</span>], <span class="at">color=</span><span class="st">&#39;darkgrey&#39;</span>) <span class="sc">+</span></span>
+<span id="cb40-4"><a href="adding-openstreetmap-data.html#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb40-5"><a href="adding-openstreetmap-data.html#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map `buildings`&quot;</span>)</span></code></pre></div>
 <p><img src="images/adding-osm-data-gg-buildings-1.png" width="672" /></p>
 <p>As before, we can create a layer from the OSM polygons data that we can add to a <code>rayshader</code> rendered view:</p>
-<div class="sourceCode" id="cb561"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb561-1"><a href="adding-openstreetmap-data.html#cb561-1" aria-hidden="true" tabindex="-1"></a>buildings_layer <span class="ot">=</span> <span class="fu">generate_polygon_overlay</span>(stage_buildings, </span>
-<span id="cb561-2"><a href="adding-openstreetmap-data.html#cb561-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">extent =</span> stage_extent,</span>
-<span id="cb561-3"><a href="adding-openstreetmap-data.html#cb561-3" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">heightmap =</span> elmat,</span>
-<span id="cb561-4"><a href="adding-openstreetmap-data.html#cb561-4" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">palette=</span><span class="st">&#39;darkred&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="adding-openstreetmap-data.html#cb41-1" aria-hidden="true" tabindex="-1"></a>buildings_layer <span class="ot">=</span> <span class="fu">generate_polygon_overlay</span>(stage_buildings, </span>
+<span id="cb41-2"><a href="adding-openstreetmap-data.html#cb41-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">extent =</span> stage_extent,</span>
+<span id="cb41-3"><a href="adding-openstreetmap-data.html#cb41-3" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">heightmap =</span> elmat,</span>
+<span id="cb41-4"><a href="adding-openstreetmap-data.html#cb41-4" aria-hidden="true" tabindex="-1"></a>                                           <span class="at">palette=</span><span class="st">&#39;darkred&#39;</span>)</span></code></pre></div>
 <p>Now add the buildings layer to the map:</p>
-<div class="sourceCode" id="cb562"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb562-1"><a href="adding-openstreetmap-data.html#cb562-1" aria-hidden="true" tabindex="-1"></a>rich_map <span class="sc">%&gt;%</span></span>
-<span id="cb562-2"><a href="adding-openstreetmap-data.html#cb562-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(buildings_layer) <span class="sc">%&gt;%</span></span>
-<span id="cb562-3"><a href="adding-openstreetmap-data.html#cb562-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="adding-openstreetmap-data.html#cb42-1" aria-hidden="true" tabindex="-1"></a>rich_map <span class="sc">%&gt;%</span></span>
+<span id="cb42-2"><a href="adding-openstreetmap-data.html#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_overlay</span>(buildings_layer) <span class="sc">%&gt;%</span></span>
+<span id="cb42-3"><a href="adding-openstreetmap-data.html#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_map</span>()</span></code></pre></div>
 <p><img src="images/adding-osm-data-map-buildings-1.png" width="672" /></p>
 </div>
 <div id="the-wide-variety-of-osm-features" class="section level3" number="19.4.2">
 <h3><span class="header-section-number">19.4.2</span> The Wide Variety of OSM Features</h3>
 <p>Another feature that might be useful to stage planners is locating any car parks in the area using the <code>add_osm_feature("parking")</code> feature. The <code>add_osm_feature("tourism")</code> feature also identifies a range of “touristy” features, such as <em>picnic_site</em>, <em>camp_site</em>, <em>information</em> and <em>viewpoints</em> elements, returning a combination of polygons and points.</p>
-<div class="sourceCode" id="cb563"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb563-1"><a href="adding-openstreetmap-data.html#cb563-1" aria-hidden="true" tabindex="-1"></a>tourism <span class="ot">=</span> <span class="fu">opq</span>(osm_stage_bbox) <span class="sc">%&gt;%</span> </span>
-<span id="cb563-2"><a href="adding-openstreetmap-data.html#cb563-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;tourism&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb563-3"><a href="adding-openstreetmap-data.html#cb563-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>()</span>
-<span id="cb563-4"><a href="adding-openstreetmap-data.html#cb563-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb563-5"><a href="adding-openstreetmap-data.html#cb563-5" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(tourism<span class="sc">$</span>osm_points<span class="sc">$</span>tourism)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="adding-openstreetmap-data.html#cb43-1" aria-hidden="true" tabindex="-1"></a>tourism <span class="ot">=</span> <span class="fu">opq</span>(osm_stage_bbox) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-2"><a href="adding-openstreetmap-data.html#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_osm_feature</span>(<span class="st">&quot;tourism&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-3"><a href="adding-openstreetmap-data.html#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">osmdata_sf</span>()</span>
+<span id="cb43-4"><a href="adding-openstreetmap-data.html#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="adding-openstreetmap-data.html#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(tourism<span class="sc">$</span>osm_points<span class="sc">$</span>tourism)</span></code></pre></div>
 <pre><code>## [1] &quot;information&quot; &quot;picnic_site&quot; &quot;viewpoint&quot;   NA            &quot;attraction&quot; 
 ## [6] &quot;camp_site&quot;</code></pre>
 <p>We can filter on selected tourist feature types:</p>
-<div class="sourceCode" id="cb565"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb565-1"><a href="adding-openstreetmap-data.html#cb565-1" aria-hidden="true" tabindex="-1"></a>tourist_points <span class="ot">=</span> tourism<span class="sc">$</span>osm_points <span class="sc">%&gt;%</span> </span>
-<span id="cb565-2"><a href="adding-openstreetmap-data.html#cb565-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(tourism <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;picnic_site&quot;</span>, <span class="st">&quot;camp_site&quot;</span>, <span class="st">&quot;viewpoint&quot;</span>))</span>
-<span id="cb565-3"><a href="adding-openstreetmap-data.html#cb565-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb565-4"><a href="adding-openstreetmap-data.html#cb565-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tourist_points)</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="adding-openstreetmap-data.html#cb45-1" aria-hidden="true" tabindex="-1"></a>tourist_points <span class="ot">=</span> tourism<span class="sc">$</span>osm_points <span class="sc">%&gt;%</span> </span>
+<span id="cb45-2"><a href="adding-openstreetmap-data.html#cb45-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(tourism <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;picnic_site&quot;</span>, <span class="st">&quot;camp_site&quot;</span>, <span class="st">&quot;viewpoint&quot;</span>))</span>
+<span id="cb45-3"><a href="adding-openstreetmap-data.html#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="adding-openstreetmap-data.html#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tourist_points)</span></code></pre></div>
 <pre><code>## Simple feature collection with 6 features and 7 fields
 ## geometry type:  POINT
 ## dimension:      XY
@@ -821,11 +776,11 @@ the waterways by the watermap, rather than the plotting the waterways over the w
 ## 3053467199   viewpoint POINT (5.925582 44.78287)
 ## 3625424363   camp_site  POINT (5.927669 44.8167)</code></pre>
 <p>And then plot them relative to our stage route:</p>
-<div class="sourceCode" id="cb567"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb567-1"><a href="adding-openstreetmap-data.html#cb567-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb567-2"><a href="adding-openstreetmap-data.html#cb567-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>tourist_points, <span class="fu">aes</span>(<span class="at">color=</span>tourism)) <span class="sc">+</span></span>
-<span id="cb567-3"><a href="adding-openstreetmap-data.html#cb567-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>stages_kml[<span class="dv">1</span>]) <span class="sc">+</span></span>
-<span id="cb567-4"><a href="adding-openstreetmap-data.html#cb567-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#theme(legend.position = &quot;none&quot;) +</span></span>
-<span id="cb567-5"><a href="adding-openstreetmap-data.html#cb567-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map tourism&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="adding-openstreetmap-data.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb47-2"><a href="adding-openstreetmap-data.html#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>tourist_points, <span class="fu">aes</span>(<span class="at">color=</span>tourism)) <span class="sc">+</span></span>
+<span id="cb47-3"><a href="adding-openstreetmap-data.html#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data=</span>stages_kml[<span class="dv">1</span>]) <span class="sc">+</span></span>
+<span id="cb47-4"><a href="adding-openstreetmap-data.html#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#theme(legend.position = &quot;none&quot;) +</span></span>
+<span id="cb47-5"><a href="adding-openstreetmap-data.html#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Open Street Map tourism&quot;</span>)</span></code></pre></div>
 <p><img src="images/adding-osm-data-gg-tourism-1.png" width="672" /></p>
 <p><em>See the <code>rayshader</code> tutorial on <a href="https://www.tylermw.com/adding-open-street-map-data-to-rayshader-maps-in-r/"><em>Tutorial: </em>Adding Open Street Map Data to Rayshader Maps in R*</a> for more examples.</em></p>
 
@@ -837,7 +792,7 @@ the waterways by the watermap, rather than the plotting the waterways over the w
           </div>
         </div>
       </div>
-<a href="revisiting-elevation-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="elevation-data-revisited.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="creating-a-road-book.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

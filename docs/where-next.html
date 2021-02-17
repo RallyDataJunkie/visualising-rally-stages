@@ -50,8 +50,121 @@
 
 
 
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.3.9000/leaflet.js"></script>
+<script src="libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
+<script src="libs/leaflet-providers-plugin-2.0.3.9000/leaflet-providers-plugin.js"></script>
+<link href="libs/leaflet-minimap-3.3.1/Control.MiniMap.min.css" rel="stylesheet" />
+<script src="libs/leaflet-minimap-3.3.1/Control.MiniMap.min.js"></script>
+<script src="libs/leaflet-minimap-3.3.1/Minimap-binding.js"></script>
+<script src="libs/FlatGeoBuf-3.3.3/fgb.js"></script>
+<script src="libs/FlatGeoBuf-3.3.3/flatgeobuf-geojson.min.js"></script>
+<script src="libs/chromajs-2.1.0/chroma.min.js"></script>
+<link id="geojson_sf-1-attachment" rel="attachment" href="libs/geojson_sf-0.0.1/geojson_sf_layer.fgb"/>
+<link href="libs/HomeButton-0.0.1/home-button.css" rel="stylesheet" />
+<script src="libs/HomeButton-0.0.1/home-button.js"></script>
+<script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
+<script src="libs/clipboard-0.0.1/setClipboardText.js"></script>
+<link href="libs/mapviewCSS-0.0.1/mapview-popup.css" rel="stylesheet" />
+<link href="libs/mapviewCSS-0.0.1/mapview.css" rel="stylesheet" />
+<link href="libs/leaflet-awesomemarkers-2.0.3/leaflet.awesome-markers.css" rel="stylesheet" />
+<script src="libs/leaflet-awesomemarkers-2.0.3/leaflet.awesome-markers.min.js"></script>
+<link href="libs/fontawesome-4.7.0/font-awesome.min.css" rel="stylesheet" />
+<link href="libs/style-1/style.css" rel="stylesheet" />
+<script src="libs/plainView-binding-2.9.0/plainView.js"></script>
+<link id="image-1-attachment" rel="attachment" href="libs/image-1/img.png"/>
+<script src="libs/elev_img-1/data_stars_elev_imgdacf38.txt"></script>
+<script src="libs/joda-0.0.1/joda.js"></script>
+<script src="libs/joda-0.0.1/addImageQuery-bindings.js"></script>
+<script src="libs/rglWebGL-binding-0.105.14/rglWebGL.js"></script>
+<link href="libs/rglwidgetClass-0.105.14/rgl.css" rel="stylesheet" />
+<script src="libs/rglwidgetClass-0.105.14/rglClass.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/utils.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/subscenes.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/shaders.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/textures.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/projection.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/mouse.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/init.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/pieces.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/draw.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/controls.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/selection.src.js"></script>
+<script src="libs/rglwidgetClass-0.105.14/rglTimer.src.js"></script>
+<script src="libs/CanvasMatrix4-0.105.14/CanvasMatrix.src.js"></script>
+<link href="libs/vembedr-0.1.4/css/vembedr.css" rel="stylesheet" />
 
 
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 </head>
 
@@ -65,6 +178,7 @@
       <nav role="navigation">
 
 <ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Index</a></li>
 <li class="chapter" data-level="" data-path="in-the-beginning.html"><a href="in-the-beginning.html"><i class="fa fa-check"></i>In the beginning…</a></li>
 <li class="chapter" data-level="" data-path="acknowledgements.html"><a href="acknowledgements.html"><i class="fa fa-check"></i>Acknowledgements</a></li>
 <li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a></li>
@@ -217,7 +331,7 @@
 <ul>
 <li class="chapter" data-level="11.5.1" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html#rendering-the-image-directly-from-ggplot2"><i class="fa fa-check"></i><b>11.5.1</b> Rendering the image directly from <code>ggplot2</code></a></li>
 </ul></li>
-<li class="chapter" data-level="11.6" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html#rendering-a-movie"><i class="fa fa-check"></i><b>11.6</b> Rendering a Movie</a></li>
+<li class="chapter" data-level="" data-path="an-aside-the-penny-red.html"><a href="an-aside-the-penny-red.html#rendering-a-movie"><i class="fa fa-check"></i>Rendering a Movie</a></li>
 </ul></li>
 <li class="chapter" data-level="12" data-path="introducing-3d-rayshader-models.html"><a href="introducing-3d-rayshader-models.html"><i class="fa fa-check"></i><b>12</b> Introducing 3D <code>rayshader</code> Models</a>
 <ul>
@@ -296,24 +410,24 @@
 <li class="chapter" data-level="17.5.14" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-rlft-for-profiling-along-a-stage-route"><i class="fa fa-check"></i><b>17.5.14</b> Using `rLFT`` for Profiling Along a Stage Route</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="18" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html"><i class="fa fa-check"></i><b>18</b> Revisiting Elevation Data</a>
+<li class="chapter" data-level="18" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html"><i class="fa fa-check"></i><b>18</b> Elevation Data Revisited</a>
 <ul>
-<li class="chapter" data-level="18.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#load-in-base-data-9"><i class="fa fa-check"></i><b>18.1</b> Load in Base Data</a></li>
-<li class="chapter" data-level="18.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#generating-elevation-maps"><i class="fa fa-check"></i><b>18.2</b> Generating Elevation Maps</a>
+<li class="chapter" data-level="18.1" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#load-in-base-data-9"><i class="fa fa-check"></i><b>18.1</b> Load in Base Data</a></li>
+<li class="chapter" data-level="18.2" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#generating-elevation-maps"><i class="fa fa-check"></i><b>18.2</b> Generating Elevation Maps</a>
 <ul>
-<li class="chapter" data-level="18.2.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#accessing-elevation-values-along-a-route-from-an-elevation-raster"><i class="fa fa-check"></i><b>18.2.1</b> Accessing Elevation Values Along a Route from an Elevation Raster</a></li>
-<li class="chapter" data-level="18.2.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-geospheredistgeo-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.2</b> Using <code>geosphere::distGeo</code> to Find Distance Along a Route</a></li>
-<li class="chapter" data-level="18.2.3" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-spspdists-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.3</b> Using <code>sp::spDists</code> to Find Distance Along a Route</a></li>
+<li class="chapter" data-level="18.2.1" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#accessing-elevation-values-along-a-route-from-an-elevation-raster"><i class="fa fa-check"></i><b>18.2.1</b> Accessing Elevation Values Along a Route from an Elevation Raster</a></li>
+<li class="chapter" data-level="18.2.2" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#using-geospheredistgeo-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.2</b> Using <code>geosphere::distGeo</code> to Find Distance Along a Route</a></li>
+<li class="chapter" data-level="18.2.3" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#using-spspdists-to-find-distance-along-a-route"><i class="fa fa-check"></i><b>18.2.3</b> Using <code>sp::spDists</code> to Find Distance Along a Route</a></li>
 </ul></li>
-<li class="chapter" data-level="18.3" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#generating-a-3d-ribbon-plot-of-the-stage-route"><i class="fa fa-check"></i><b>18.3</b> Generating a 3D Ribbon Plot of the Stage Route</a></li>
-<li class="chapter" data-level="18.4" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#identifying-road-type"><i class="fa fa-check"></i><b>18.4</b> Identifying Road Type</a></li>
-<li class="chapter" data-level="18.5" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#displaying-route-twistiness-and-elevation"><i class="fa fa-check"></i><b>18.5</b> Displaying Route Twistiness and Elevation</a>
+<li class="chapter" data-level="18.3" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#generating-a-3d-ribbon-plot-of-the-stage-route"><i class="fa fa-check"></i><b>18.3</b> Generating a 3D Ribbon Plot of the Stage Route</a></li>
+<li class="chapter" data-level="18.4" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#identifying-road-type"><i class="fa fa-check"></i><b>18.4</b> Identifying Road Type</a></li>
+<li class="chapter" data-level="18.5" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#displaying-route-twistiness-and-elevation"><i class="fa fa-check"></i><b>18.5</b> Displaying Route Twistiness and Elevation</a>
 <ul>
-<li class="chapter" data-level="18.5.1" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#making-a-3d-print-file-of-the-model"><i class="fa fa-check"></i><b>18.5.1</b> Making a 3D Print File of the Model</a></li>
-<li class="chapter" data-level="18.5.2" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#rendering-a-3d-movie-of-the-model"><i class="fa fa-check"></i><b>18.5.2</b> Rendering a 3D movie of the Model</a></li>
+<li class="chapter" data-level="18.5.1" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#making-a-3d-print-file-of-the-model"><i class="fa fa-check"></i><b>18.5.1</b> Making a 3D Print File of the Model</a></li>
+<li class="chapter" data-level="18.5.2" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#rendering-a-3d-movie-of-the-model"><i class="fa fa-check"></i><b>18.5.2</b> Rendering a 3D movie of the Model</a></li>
 </ul></li>
-<li class="chapter" data-level="18.6" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#using-the-slopes-package-to-analyse-stage-elevation-data"><i class="fa fa-check"></i><b>18.6</b> Using the <code>slopes</code> Package to Analyse Stage Elevation Data</a></li>
-<li class="chapter" data-level="18.7" data-path="revisiting-elevation-data.html"><a href="revisiting-elevation-data.html#analysing-route-elevation-from-first-principles"><i class="fa fa-check"></i><b>18.7</b> Analysing Route Elevation from First Principles</a></li>
+<li class="chapter" data-level="18.6" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#using-the-slopes-package-to-analyse-stage-elevation-data"><i class="fa fa-check"></i><b>18.6</b> Using the <code>slopes</code> Package to Analyse Stage Elevation Data</a></li>
+<li class="chapter" data-level="18.7" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html#analysing-route-elevation-from-first-principles"><i class="fa fa-check"></i><b>18.7</b> Analysing Route Elevation from First Principles</a></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="adding-openstreetmap-data.html"><a href="adding-openstreetmap-data.html"><i class="fa fa-check"></i><b>19</b> Adding <em>OpenStreetMap</em> Data</a>
 <ul>
