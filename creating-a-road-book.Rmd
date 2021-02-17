@@ -32,6 +32,60 @@ The FIA Safety Guidelines illustrate how speeds might be visualised over a Googl
 
 A Wikipedia page describing the [*Jemba Inertia Notes System*](https://en.wikipedia.org/wiki/Jemba_Inertia_Notes_System) gives examples of the descriptive and numerical labels that the Jemba system can generate as it converts odemtery and interal accelerometer data into something rather more human understandable. A [visual grading](http://www.jemba.se/GradeUSA.jpg) shows how descriptive labels correspond to turn angle.
 
+
+## Motorsport UK Specific Regulations for Rallying
+
+Motorsport UK regulates motorsport in the UK. A set of specific regulations for rallying describe certain constraints on stage routes:
+
+> 26.1.2. A control or check shall be considered to extend for 50m around the actual point at which Officials are making their records, unless clearly visible signs are displayed to define a different area.
+>
+> 26.2. It is not Permitted to define the route of a special stage by grid references or any other method requiring Competitors to choose their own route.
+>
+> 26.2.1. Any Flying Finish should be located at a point where cars can be expected to be travelling slowly as a result of a preceding bend or hazard.
+>
+> 26.2.2. The Flying Finish line must be at least 200m before the stop line which should be at least 100m before any public highway. Bad weather, slippery conditions and the potential speed of cars crossing the Flying Finish line may require these distances to be extended.
+>
+> 26.2.3. The area between the Flying Finish and the stop line should be free from bends, sharp or deceptive corners, or hazards such as gates, etc. This area is prohibited to spectators.
+>
+> 26.4.1. Organisers should allow at least 100m separation from the start of the stage before Competitors join other cars already on the stage.
+>
+> 26.6.2. Authorisation for stages not covered above must be obtained in writing from Motorsport UK and will only be considered when the following information has been submitted:
+>
+> (a) The individual stage name, number and location.
+>
+> (b) The length of the stage.
+>
+> (c) The type of surface (forest, tarmac, etc).
+>
+> (d) The average width of the road.
+>
+> (e) Diagram(s) of the venue showing stage routes and safety provisions.
+>
+> (f) The number of times Competitors are attempting the stage.
+>
+> (g) If the Competitors are attempting the stage more than once, the time interval between their first and second run, and the possibility of catching previous Competitors.
+>
+> (h) Whether Competitors attempting their second run will be interposed with those still attempting their first.
+>
+> (i) Whether the stage has a split route, and if so how far this is into the stage. On unsealed surfaces the stage must not consist of more than 21⁄2 miles of common route.
+>
+> (j) Whether extreme weather (eg heavy rain, dust, etc) will adversely affect a fair Competition.
+>
+> (k) Competitors have been seeded by performance in accordance with 24.1.4, without dispensation.
+>
+>(l) Suitable timing arrangements have been made at the Finish Line.
+> 
+> 28.1.1. Special Stages must be over a distance of not less than half a mile and no stage may exceed 20 miles in length without written permission from Motorsport UK.
+>
+> 28.2.1. If the stage is wholly on a sealed surface, no Competitor should be able to achieve an average speed of more than 75mph.
+>
+> 28.2.2. If the stage is run partly or wholly on unsealed surfaces, no Competitor should be able to achieve an average speed of more than 70mph.
+>
+> 28.3. Special Stages should not use any sections of a venue in opposite directions at the same time, unless there is at least a 15m separation between the two routes with a continuous barrier to prevent a car crossing.
+>
+> 29.1.6. Along with the arrows and signs displayed on the Special Stage, each Competitor must be issued with a Tulip diagram of each stage showing location or hazard numbers or letters, and indicating the intermediate mileages between junctions, danger spots or hazards and the direction to be
+taken.
+
 ## Load in Base Data 
 
 As ever, let's load in our stage data:
@@ -413,4 +467,11 @@ graph <- weight_streetnet(stage_osm$osm_lines,
 
 The `dodgr` packages allows edges to be characterised by two values: the distance, and a weighted distance. The weighted distance may be of interest to us if we want to make time estimations or models based on road surface or road surface and tyre combination. For example, the time taken to travel 1km on snow using snow tyres may be expected to differ from the time taken to travel 1km on tarmac. The twistiness of of each section of a route may also be used to weight anticipated travel times.
 
+The `dodgr` package provides a range of tricks for modifying travel times on normal road netwroks, e.g. to account for time crossing roundabouts (for example, [Street networks and time-based routing
+](https://atfutures.github.io/dodgr/articles/times.html)). It might be possible to add dummy nodes to a route prior to tight corners, for example, to add time weights to a route (or can `dodgr` route times take into account twistiness, elevation change etc?)
+
 It might be quite amusing to try to define weight profiles for *rally_car* or rally cars under different weather and/or tyre conditions, perhaps based on models created from datasets of previous rally stage times or even car telemetry? A weighting profile determines the weighting applied to different road types. The default weighting profiles are stored in the `dodgr::weighting_profiles` list.
+
+## Route Stage Time Simulation
+
+Road network representations, as well as curvature, distance and gradient measures for each step of a route set up some interesting possibility for very simple stage time simulations that might be interesting for storytelling purposes, if not actual stage time prediction. 
