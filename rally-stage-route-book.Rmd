@@ -22,6 +22,7 @@ new_session: no
 knitr::opts_chunk$set(cache = T)
 library(tidyr)
 ```
+# Index {-}
 
 <!--chapter:end:index.Rmd-->
 
@@ -264,7 +265,7 @@ Placeholder
 
 ## 3D Rendering of Colour Images Using `rayshader` {-}
 ### Rendering the image directly from `ggplot2`
-## Rendering a Movie
+## Rendering a Movie {-}
 
 <!--chapter:end:aside-penny-red.Rmd-->
 
@@ -341,54 +342,28 @@ Placeholder
 
 <!--chapter:end:rayshader-3d-landscapes.Rmd-->
 
+```{r cache = T, echo = F, message=F}
+# 9Allow knitr to continue to execute even in the presence of errors
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(fig.path = "images/route-metrics-")
+```
 
 # Stage Route Analysis
 
-Placeholder
+This chapter introduces several ideas relating to *stage route analysis* and the generation of "stage route profiles" that describe various features of the the route, such as its twistiness. 
 
+To a certain extent, stage route analysis could be considered as a static analysis complement to the pace notes created for a stage:
 
-## Load in Base Data 
-## Generating Stage Route Profiles
-### An Aside - Twists and Turns of Rally Stages
-## Finding Stage Route Lengths
-## Using Ecological Movement Analysis Tools to Analyse Stage Routes
-## Using `trajr` for Stage Route Profiling
-### Smoothing a Trajectory
-### Resampling Locations
-### Resampling Against Distance
-### Splitting a Trajectory
-### Rotating the Stage Trajectory
-### Straightness and Sinuosity
-### Directional Change
-### Tracking Turning Angles
-### Visualising Trajectory Direction Changes
-### Using `amt` for Stage Route Profiling
-### Creating Tracks
-### Converting to Other Track Formats
-### Using `amt` for Stage Route Analysis
-### Using `rLFT`` for Profiling Along a Stage Route
+```{r}
+library("vembedr")
+# Hayden Paddon describes pace notes
+embed_url("https://www.youtube.com/watch?v=9q7EYVJL9XU")
 
-<!--chapter:end:route-metrics.Rmd-->
-
-```{r, cache = T, echo = F, message=F}
-# Allow knitr to continue to execute even in the presence of errors
-knitr::opts_chunk$set(error = TRUE)
-knitr::opts_chunk$set(fig.path = "images/revisiting-elevation-data-")
+# See also this Team O'Neil tutorial:
+# "Rally Stage Notes and Pace Notes Explained" https://www.youtube.com/watch?v=earjqfXGYzw
 ```
 
-# Revisiting Elevation Data
-
-Having access to elevation data is essential for rendering 3D terrain maps. But we can also plot elevation data along a single dimension: the *distance along route*.
-
-For winter mountain rallies, such as Monte Carlo, elevation data may be important when estimating temperature drops along a stage caused by elevation changes, and hence the likelihood, or otherwise, of snow. (Shadow models and the time of day a stage is running, as well as the weather conditions, may also play into that).
-
-When planning hill climbs, or rally stages that perhaps involve electric vehicle competitors, a good understanding of elevation changes, and potential energy requirements resulting from climbs, may also be important,
-
-[*Rally Maps*](https://www.rally-maps.com/Rallye-Monte-Carlo-2021/Saint-Disdier-Corps) routes come with elevation profiles of this sort, and stage reports for major cycling races such as *le Tour de France* are rarely complete with a stage elevation maps show the *cols* to be encountered along the route. The [`cyclingcols.com`](https://www.cyclingcols.com/col/HolmeMoss) website demonstrates several interesting ways of analysing cycling *cols*.
-
-So can we produce our own elevation profiles from the stage route and elevation data? We surely can...
-
-*Elevation along route profiles are extracted from an elevation raster. Note that we can also extract shadow along route information from a shade raster generated for a particular data and time of day.*
+Stage route analysis also includes a consideration of elevation along the route. Analysis and review of route elevation is explored in more detail in a separate chapter.
 
 ## Load in Base Data 
 
@@ -401,10 +376,11 @@ library(rayshader)
 
 geojson_filename = 'montecarlo_2021.geojson'
 geojson_sf = sf::st_read(geojson_filename)
+
 stage_route_gj = geojsonio::geojson_json(geojson_sf[1,]$geometry)
 
-# Previously downloaded buffered TIF digital elevation model (DEM) file
-stage_tif = "buffered_stage_elevation.tif"
+# Previously downloaded TIF digital elevation model (DEM) file
+stage_tif = "stage_elevation.tif"
 
 # Load in the previously saved image raster
 elev_img = raster(stage_tif)
@@ -413,308 +389,826 @@ elev_img = raster(stage_tif)
 elmat = raster_to_matrix(stage_tif)
 
 demo_map = elmat %>%
-              sphere_shade(texture = "desert", progbar = FALSE)
-
+              sphere_shade(texture = "desert",
+                           progbar = FALSE)
 ```
 
-## Generating Elevation Maps
+Let's also get a UTM projection of the stage routes:
 
-With the geo data provided for the stage route, we only have access to the latitude and longitude of each point along the route, *not* the elevation.
+```{r message=FALSE, warning=FALSE}
+# Detect the UTM zone as an EPSG code
+lonlat2UTMzone = function(lonlat) {
+  utm = (floor((lonlat[1] + 180) / 6) %% 60) + 1
+  if(lonlat[2] > 0) {
+    utm + 32600
+  } else{
+    utm + 32700
+  }
+}
 
-We have already seen how we can create a route layer that we can overlay on the 3D model, with the elevation then inferred so that the route is plotted correctly on the 3D rendered model. But can we access the actual elevation values along the route somehow?
+get_utm_projection = function(routes){
+  # Keep track of the original proj4 string
+  old_crs = st_crs(geojson_sf[1,])$proj4string
 
-### Accessing Elevation Values Along a Route from an Elevation Raster
+  sample_location_x = st_coordinates(st_centroid(routes[1,]))[1]
+  sample_location_y = st_coordinates(st_centroid(routes[1,]))[2]
+  
+  # Generate a new projection in the appropriate UTM zone
+  crs_zone = lonlat2UTMzone(c(sample_location_x,
+                              sample_location_y))
 
-The elevation raster provides an elevation value for each pixel in the raster image. We can transect the raster with a route to get the elevation value for each point along the route.
+  new_proj4_string = st_crs(crs_zone)$proj4string
 
-To get a routepoints list, we can extract the coordinates from a linestring geometry, casting the result to a dataframe and then selecting just the X (longitude) and Y (latitude) values:
+  # Transform the route to the UTM projection
+  utm_routes = st_transform(geojson_sf, crs=new_proj4_string)
+  
+  utm_routes
+  # Or should we returned a named list
+  # e.g. including the original projection?
+  #list(utm_routes = utm_routes, orig_crs=old_crs)
+}
+
+utm_routes = get_utm_projection(geojson_sf)
+```
+
+## Generating Stage Route Profiles
+
+Although there are no `R` packages (yet!) that are specifically focused on representing and analysing rally stage data, there are several packages designed to support the representation and analysis of animal tracks and route trajectories. These packages are capable of loading and analysing route co-ordinate data specified in a variety of ways and have no difficulty in working with our stage route data.
+
+As to the question of "why bother?", several possibilities come to mind.
+
+In the first case, for the rally fan or rally journalist, learning a bit more about the make up of a stage may add colour when watching or reporting on a stage, or help make sense of why time appears capable of being made up, or lost, on particular stages or particular parts of a stage.
+
+In the second case, an understanding of the detail of a particular stage may help understand strategy, or tyre selection.
+
+In the third case, understanding stage routes may help in setting strategy, or even in planning a stage or hill climb route. With the potential for electric vehicles being used in stage rallies and for hill climbs, energy management and budgeting becomes a key issue. Ensuring that an electric vehicle has enough stored energy to allow it to complete even a single stage, let alone multiple stages with road sections in between, requires an understanding of the likely energy consumption requirements. Knowing the distances involved is one component, but elevation changes may also feed into to energy question, particularly on a a hill climb where the only way is up, and opportunities for regenerative breaking are reduced. Knowing how tortuous a stage is, and the relative mix of fast straights flat corners and slower corners may also help produce simple kinetic energy requirement models for a stage.
+
+### An Aside - Twists and Turns of Rally Stages
+
+Whilst an understanding of the state of the road surface and the current weather conditions may be the key factors in determining tyre choice, how "twisty and turny" a stage route may also influence tyre selection and driving style. 
+
+The tread pattern of rally tyres are designed to support acceleration even when turning, so if tyres are wearing thin and the last stage of day has far more aggressive right corners than turns to a left, knowing the stage profile may help save a second or two.
+
+```{r tyre-video, message=FALSE}
+embed_url("https://www.youtube.com/watch?v=-I74uopkcro")
+```
+
+## Finding Stage Route Lengths
+
+To begin with, let's start with a very simple metric, *stage route length*.
+
+We can find the length of each stage route in meters using the `sf::st_length()` function:
 
 ```{r}
-routepoints = subset(as.data.frame(st_coordinates(geojson_sf[1,])),
-                     select = c('X', 'Y'))
-head(routepoints)
+st_length(geojson_sf)
 ```
 
-We can add a Z (elevation) column to the dataframe by extracting the elevation at each point (that is, for each row of the dataframe) from the elevation raster image:
+Or for a single stage:
 
 ```{r}
-routepoints$elevation = raster::extract(elev_img, routepoints)
-head(routepoints)
+st_length(geojson_sf[1,])
+# 21069.62
 ```
 
-Finding the minimum and and maximum altitude along the route is trivial:
+The `rgeos::gLength()` function will generate the length of a *Spatial* object using its natural units. Which is to say, we'd need to project into something like UTM co-ordinates first if we wanted to use it to calculate the distance in meters.
+
+We can also find the route length directly from a geojson string that encodes latitude and longitude locations using the *turf.js* like `geoops::geo_line_distance()` function:
 
 ```{r}
-c(max(routepoints$elevation, na.rm=T), min(routepoints$elevation, na.rm=T))
+route_as_geojson = geojsonio::geojson_json(geojson_sf[1,]$geometry)
+
+geoops::geo_line_distance(route_as_geojson)
+# 21.05409
 ```
 
-### Using `geosphere::distGeo` to Find Distance Along a Route
 
-We can use the `geosphere::distGeo()` function to calculate distance in meters between each point under the WGS84 projection without having to first convert to a projection with units of meters.
-
-The function returns the distance between consecutive locations, with a null value returned for the final step. If we want to back refer distances — how far since the last point, rather than how far to the next point — we can drop the last `NA` distance and prepend a distance of `0` to the start of the list of distances:
+The `geosphere::distGeo()` function provides a way of calculating distances for each step of the route represented using the lonlat projection:
 
 ```{r}
-stage_coords = st_coordinates(geojson_sf[1,])[,c('X','Y')]
-stage_step_distances = geosphere::distGeo(stage_coords)
+# Get the coordinates for each step
+lonlat_coords = st_coordinates(geojson_sf[1,])[,1:2]
 
-# The last step distance is NA, so drop it
-# Also prepend the distances with 0 for the first step
-routepoints$gs_dist = c(0, head(stage_step_distances,-1))
-routepoints$gs_cum_dist = cumsum(routepoints$gs_dist)
+# Omit the final NA value
+route_step_lengths = head(geosphere::distGeo(lonlat_coords), -1)
 
-head(routepoints)
+# Calculate the accumulated distance at each step
+# and return the final (maximum) value:
+max(cumsum(route_step_lengths))
+# 21069.62
 ```
 
-We can now preview the elevation against the distance along the route:
+One thing we notice is that some of these distances are: a) different to each other; b) different to the officially stated stage distance of 20.58 km.
 
-```{r gg-routepoints, message=FALSE}
+The projection and parameters used in a projection to calculate the distance all contribute to the actual calculated value. In addition, our distance calculations are base on summing the lengths of the multiple straight line segments described by the route data rather than the tighter (shorter) racing line. It's also not clear from the route data where the extent of the route is the extent of the competitive portion of the stage, or whether the start and end points refer to the time control locations rather than competitive timing lines.
+
+On the other hand, the  actual route is likely to be longer than what we might term the "ground distance" as you can tell from an elevation chart that shows elevation of the route against distance into the route. If we elevation and distance axes on the same scale, the elevation line is unlikely to be a straight line: the elevation may go up or down. If we straighten out the elevation line to a flat line and place on the x-axis, it will be longer than the original "on the flat" route distance.
+
+
+## Using Ecological Movement Analysis Tools to Analyse Stage Routes
+
+Ecologists researching animal movements have produced a wide range of tools for categorising and classifying the trajectories of routes followed by one or more animals. Trajectories are typically recorded as sequences of locations recorded at particular times.
+
+The [`adehabitatLT` *R* package](https://cran.r-project.org/web/packages/adehabitatLT/index.html)  usefully categorises animal trajectories in the following ways:
+
+- *type I*: location data is available but a sample timestamp is not precisely known or not available for each step;
+- *type II*: as well as location data, a timestamp for each step is also available; this type is then further subdivided into:
+  - *regular trajectories*, where there is a constant delay or period between each step sample;
+– *irregular trajectories*, where there is a variable delay between each step sample.
+
+As far as rally data goes, stage route data may be trivially classed as either *type 1*. However, if we use distance into route as a time proxy, we can also create  *type II irregular* traces; telemetry data should ideally be *type II regular*.
+
+One intuition behind using animal movement analysis tools to categorise rally stage routes is that we can analyse the route as if it were a *type 1* style animal track. Another intuition is that we can use distance into route as a dummy time variable (e.g. use a dummy equivalence mapping of 1m into route as 1s, although we could also attempt to use proxy times, such as setting *time = distance_into_stage x nominal_speed*, or even use a speed model that may depend on route properties at each step of the stage).
+
+## Using `trajr` for Stage Route Profiling
+
+The [`trajr` *R* package](https://cran.r-project.org/web/packages/trajr/vignettes/trajr-vignette.html) was developed to help characterise and analyse the trajectories or paths followed by a moving animal given various location coordinates along its route.
+
+Trajectories are created using Cartesian co-ordinates, so it makes sense to use data that has been cast into UTM coordinate system as the basis for the trajectory.
+
+```{r}
+library(trajr)
+
+trj <- TrajFromCoords(as.data.frame(st_coordinates(utm_routes[1,])))
+```
+
+To cast all the routes to trajectories, we could do something like the following:
+
+```{r}
+get_trj = function(route){
+  TrajFromCoords(as.data.frame(st_coordinates(route$geometry)))
+}
+
+trjs = apply(utm_routes, 1, get_trj)
+```
+
+We can retrieve the stage length using the `trajr::TrajLength` function:
+
+```{r}
+TrajLength(trjs[[1]])
+```
+
+We can create also create a simple plot of the trajectory, and overplot it with the location points used to construct the route:
+
+```{r trajr-plot}
+# Create a simple plot the route
+plot(trj)
+
+# Overlay points onto the plot
+points(trj, draw.start.pt = FALSE,
+       #pch = 16,  # symbol
+       col = "black", 
+       cex = 0.4 # scale
+       )
+```
+
+For each fragment of the line we can calculate the distance from its displacement, or directly using `trajr::TrajStepLengths` function, and then cumulatively sum them to get the overall route distance so far:
+
+```{r}
+# displacement is a complex number, so we can get the actual distance:
+trj$distance = Mod(trj$displacement)
+
+# Find the distance of the just completed step
+trj$distance2 = c(0, TrajStepLengths(trj))
+
+# Find the distance of the upcoming step
+trj$predist = c(TrajStepLengths(trj), 0)
+
+# Find the accumulated distance at each step
+trj$cum_dist = cumsum(trj$distance)
+
+head(trj[,c('distance', 'distance2', 'predist', 'cum_dist')])
+```
+
+
+### Smoothing a Trajectory
+
+Sometimes a stage route may appear rather "ragged" as an artefact of using multiple straight line segments to construct the route.
+
+We can smooth a route with a Savitzky-Golay smoothing filter called from `signal::sgolayfilt` using the `trajr::TrajSmoothSGorder(order, filter_length_odd)` function.
+
+Using a third order filter applied to a window size of 5 steps retains quite a smooth fitting line whilst removing some of the sharp edges caused by concatenating straight line segments
+
+```{r trajr-plot-smoothed}
+smoothed <- TrajSmoothSG(trj, p=3, n=5)
+#p polynomial order
+#n filter length (window size); must be an odd integer
+plot(trj)
+plot(smoothed, col = "red", add = TRUE)
+```
+
+The [`smoothr` *R* package](https://cran.r-project.org/web/packages/smoothr/vignettes/smoothr.html) also provides several useful smoothing utilities.
+
+So that we can more clearly see what's going on, let's grab just a fragment of our stage route:
+
+```{r}
+get_route_segment = function(i, steps){
+  cc = as.data.frame(st_coordinates(geojson_sf[i,]))[steps,]
+
+  st_linestring(cbind(x=cc[,1], y=cc[,2]))
+}
+
+route_segment = get_route_segment(1, 1:10)
+```
+
+For example, the `smoothr::smooth` function allows us to apply various smoothing approaches. Let's see how well its *ksmooth* kernel smoothing approach works, that applies a Gaussian kernel regression to the x and y coordinates independently:
+
+```{r smoothr_ksmooth}
+smoothr_route_segment = smoothr::smooth(route_segment,
+                                        method = "ksmooth")
+
+plot(st_geometry(route_segment), col = 'grey', lwd = 3)
+plot(st_geometry(smoothr_route_segment),
+     col = "red", add = TRUE)
+```
+
+Alternatively, we could use the `smoothr` *spline* method, which calculates a spline interpolation over the x and y coordinates independently:
+
+```{r smoothr_spline}
+plot(st_geometry(geojson_sf[1,]), col = 'grey', lwd = 3)
+plot(st_geometry(smoothr::smooth(geojson_sf[1,], method = "spline")),
+     col = "red", add = TRUE)
+
+smoothr_route_segment2 = smoothr::smooth(route_segment, method = "spline")
+
+plot(st_geometry(route_segment), col = 'grey', lwd = 3)
+plot(st_geometry(smoothr_route_segment),
+     col = "red", add = TRUE)
+```
+
+For a more detailed look at smoothing trajectories and finding racing lines, albeit in circuit racing, see  *Heilmeier, A., Wischnewski, A., Hermansdorfer, L., Betz, J., Lienkamp, M. and Lohmann, B., 2019. Minimum curvature trajectory planning and control for an autonomous race car. Vehicle System Dynamics. DOI: 10.1080/00423114.2019.1631455* and the related Python laptime simulation package, [`TUMFTM/laptime-simulation`](https://github.com/TUMFTM/laptime-simulation).
+
+### Resampling Locations
+
+We can use the `trajr::TrajRediscretize` function to resample locations from the line that are a fixed distance apart as the crow flies. s well as finding sample points, a new trajectory is also calculated that connects those points.
+
+For example, if we discretise the route to points 500m apart as the crow flies, we note that the newly discretised route now has straight line segments between each of the sample points. This is perhaps not so good for stage route analysis, but it does provide one way of obtaining sample point locations from telemetry data. Ideally, though, sample points would be a fixed distance apart *along the route*:
+
+```{r trajr-rediscretized}
+# Resample to step length 1
+resampled <- TrajRediscretize(trj, 500)
+plot(trj)
+
+# Plot rediscretized trajectory in red
+lines(resampled, col = "#FF0000A0", lwd = 2)
+points(resampled, type = 'p', col = "#FF0000A0", pch = 16)
+legend("topright", c("Original", "Rediscretized"),
+       col = c("black", "red"), 
+       lwd = 2, inset = c(0.01, 0.02))
+```
+
+Can we see how many splits there are?
+
+```{r}
+nrow(resampled)
+```
+
+### Resampling Against Distance
+
+The `trajr` package doesn't seem to support resampling by distance along the line but it does allow resampling by time. So if we set the time to the accumulated basis, we can use time as a proxy for distance...
+
+```{r}
+# Backup the original (dummy) timestamps
+trj$displacementTime_ = trj$time
+
+# Use the accumulated distance as a time proxy
+trj$time = trj$cum_dist
+```
+
+Let's see what happens if we resample based on this use of time as a proxy for distance sampling the route every 2km:
+
+```{r trackr-resampled}
+# The time units for the route are in seconds: TrajGetTimeUnits(trj)
+resampled_t = TrajResampleTime(trj, 2000 )
+plot(trj)
+
+#lines(resampled_t, col = "#FF0000A0", lwd = 2)
+points(resampled_t, type = 'p', col = "#FF0000A0", pch = 16)
+legend("topright", c("Original", "Resampled"),
+       col = c("black", "red"), 
+       lwd = 2, inset = c(0.01, 0.02))
+```
+
+### Splitting a Trajectory
+
+We can split a trajectory using the `trajr::TrajSplit()` function. This takes a trajectory and an index of split points along the path and returns a list of trajectories containing the segment starting from each of the index values to the next supplied value.
+
+If we try to use this function to split the route by split points applied generated by discretising or sampling the route, the resolution of the original line is lost: we are not cutting the *original() line at the sample points, we are cutting the *new* line created from the sample points:
+
+```{r split-resampled}
+plot(TrajSplit(resampled_t, c(1, 2, 4))[[3]])
+```
+
+However, we *can* cut the original lines using the `stplanr::route_split()` function:
+
+```{r split-route-colours}
+#https://www.rdocumentation.org/packages/stplanr/versions/0.6.2/topics/route_split
+library(stplanr)
+
+# Get the second resampled point
+pt = st_sfc(st_point(c(resampled_t[2,'x'],resampled_t[2,'y'])),
+             crs=st_crs(utm_routes[1,])$proj4string)
+
+# Get the third resampled point
+pt2 = st_sfc(st_point(c(resampled_t[3,'x'],resampled_t[3,'y'])),
+             crs=st_crs(utm_routes[1,])$proj4string)
+
+# Plot the original route in grep
+plot(utm_routes[1,]$geometry, lwd = 9, col = "grey")
+
+# Split the route about the second point
+split_route = route_split(utm_routes[1,], pt)
+
+# And plot the two parts
+plot(split_route$geometry, col = c("red", "blue"), add = TRUE)
+```
+
+We can view each line segment separately:
+
+```{r segmented-stage-parts}
+# Use two columns to display plots side by side
+par(mfrow=c(1,2))
+
+plot(split_route[1,]$geometry)
+plot(split_route[2,]$geometry)
+```
+
+We can automate the extraction of segmented lines using the following approach, which takes a route, splits it by the first point, splits the second half of the segment by the second point, and so on. Note that this requires us to order the points we want to split the line along in the order they appear along the route:
+
+```{r}
+split_line = function(route_, pts_) {
+  segments = c()
+  for(i in 1:length(pts_)) { 
+    split_ = route_split(route_, pts_[i])
+    segments = c(segments, split_[1])
+    route_ = split_[2]
+  }
+  route_
+}
+
+# Points we wish to segment on
+pts = c(pt, pt2)
+
+split_route2 = split_line(utm_routes[1,], pts)
+
+split_route2
+```
+
+Now we can plot out three segment line (two split points):
+
+```{r three-segment-line}
+plot(utm_routes[1,]$geometry, lwd = 9, col = "grey")
+plot(split_route2$geometry, col = c("red", "blue", "green"), add = TRUE)
+```
+
+### Rotating the Stage Trajectory
+
+To visualise routes in a similar profile, we can use the `trajr::trajr-rotate()` function to align the start and finish points. An *angle* parameter gives the angle in radians between the first and last points.
+
+For example, for a horizontal, left to right right stage view:
+
+```{r trajr-rotate-horiz}
+plot(TrajRotate(trj, angle = 0, relative = TRUE))
+```
+
+Or for a view where we read the stage up from the bottom:
+
+```{r trajr-rotate-vert}
+plot(TrajRotate(trj, angle = pi/2, relative = TRUE))
+#Arguments
+#trj The trajectory to be rotated.
+#angle The angle in radians between the first and last points in th
+```
+It might be handy to rebase the coordinates of the start to (0,0).
+
+### Straightness and Sinuosity
+
+Several simple measures exist that try to provide a single number measure describing something about the straightness or sinuosity of a trajectory.
+
+For example, the `trajr::TrajStraightness()` function determines *straightness* from the start to the end of a route as the ratio *D/L*, where *D* is the distance from the start to the end of the trajectory, and *L* is the length of the trajectory:
+
+```{r}
+TrajStraightness(trj)
+```
+
+We can get the straightness for each stage as follows:
+
+```{r}
+utm_routes['straightness'] = unlist(lapply(trjs, TrajStraightness))
+utm_routes[,c('Name', 'straightness')]
+```
+
+This suggests that SS 5 is perhaps the most least straight, and SS13/15 is most straight.
+
+If reading data from tables is not your thing, here's a chart...
+
+```{r straight_bar, message=FALSE}
 library(ggplot2)
 
-ggplot(routepoints, aes(x=gs_cum_dist, y=elevation)) + geom_line()
+g1 = ggplot(utm_routes) +
+        geom_col(aes(x=as.numeric(row.names(utm_routes)),
+                     y=straightness)) +
+  scale_x_discrete(limits=utm_routes$Name) + xlab('Stage')
+
+g1
+#ggpubr::ggarrange(c(g1, g2))
 ```
 
-### Using `sp::spDists` to Find Distance Along a Route
+Let's render them both, with a simple indicator to show where the *start* of each stage is.
 
-The `sp::spDists` function also allows us to find the distance between *Spatial* point WPS84 / longlat projected points in meters without first having to convert the points to a projection with units of meters. The function returns the "step" distance as well as the accumulated distance:
+```{r straightness-stages, warning=FALSE, message=FALSE}
+start_location = function(i) {
+  as.data.frame(st_coordinates(utm_routes[i, ]$geometry))[1,]
+}
+
+plot_stage = function(i, label){
+   ggplot(data=utm_routes[i,]) + 
+          geom_sf() + 
+          geom_point(aes(x=X, y=Y), size=2,
+                     col='red', alpha = 0.5,
+             data=start_location(i)) +
+          ggtitle(label) + coord_sf()
+}
+
+g_SS5 = plot_stage(5, 'SS5 - least straight' )
+
+g_SS13 = plot_stage(9, 'SS13/15 - most straight')
+
+ggpubr::ggarrange(g_SS5, g_SS13)
+```
+
+Note that where we have multiple split point tines and locations for a stage available, we could slice the stage into split segments and analyse the straightness of each one separately.
+
+Another single value measure is the *sinuosity*, "a function of the mean cosine of the turning angle", calculated in a corrected form that does not require constant step size by the [`traj::TrajSinuosity2()` function](https://rdrr.io/github/JimMcL/trajr/man/TrajSinuosity2.html) (based on equation 8 of *Benhamou, S. (2004). [How to reliably estimate the tortuosity of an animal's pat](http://www.seaturtle.org/library/BenhamouS_2004_JTheorBiol.pdf), Journal of Theoretical Biology, 229(2), 209-220. doi:10.1016/j.jtbi.2004.03.016*):
+
+Let's see how the sinuosity compares with straightness on each stage:
 
 ```{r}
-# Find the distance between points in two lists of coordinates
-distances = sp::spDists(rbind(stage_coords[1,], stage_coords),
-                        stage_coords,
-                        longlat = TRUE)
-
-# Extract the step and accumulated distances in km
-# and convert to meters
-routepoints['sp_cum_dist'] = distances[1,] * 1000
-routepoints['sp_dist'] = distances[2,] * 1000
-
-head(routepoints)
+utm_routes['sinuosity'] = unlist(lapply(trjs, TrajSinuosity2))
+utm_routes[, c('Name', 'straightness', 'sinuosity')]
 ```
 
-Note that the actual distances calculated vary slightly depending on the internals and settings used in the function used to calculate them. The numbers are close enough for storytelling!
+Again, if reading data from tables is not your thing, we can visualise how straightness and sinuosity relate on each stage using a scatterplot:
 
-## Generating a 3D Ribbon Plot of the Stage Route
-
-A `ggplot2::geom_ribbon()` plot provides a familiar way of rendering the elevation plot in the form a line chart with a fill that extends down to the x-axis:
-
-```{r gg-elevation}
-library(ggplot2)
-
-# Find a nice minimum elevation
-min_elevation = max(0, 100*round(((min(routepoints$elevation)/100)-1.6)))
-max_elevation = max(routepoints$elevation)
-
-g = ggplot(routepoints, aes(x = gs_cum_dist)) +
-      geom_ribbon(aes(ymin = min_elevation,
-                      ymax = elevation),
-                  fill = "#1B9E77") + 
-      labs(x = "kilometers", y = "Elevation") +
-      scale_y_continuous(limits = c(min_elevation, max_elevation))
-
-g
-```
-
-We can get a 3D plot from the ribbon chart via the `rayshader::plot_gg()` function:
-
-```{r}
-options(rgl.useNULL = TRUE,
-        rgl.printRglwidget = TRUE)
-
-rgl::clear3d()
-plot_gg(g, height=5, width=6, scale=500, raytrace=FALSE)
-
-rgl::rglwidget()
-```
-
-
-## Identifying Road Type
-
-The OSM highways data often includes information about road class. We can use this information to add an aesthetic to the line that distinguishes the road class along the route, either by color or by width.
-
-```{r}
-#Precautionary measure to clean the data
-routepoints = routepoints %>% tidyr::drop_na('elevation')
-
-# Create a min colour value 10% of the max-min range below the min value
-min_val = min(routepoints$elevation) - 0.1 * (max(routepoints$elevation) -  min(routepoints$elevation))
-```
-
-We can use the `ggplot2::coord_sf(crs=st_crs(geojson_sf))` function to allow us to a non-spatial dataframe containing latitude and longitude coordinates in a spatial way:
-
-```{r gg-path}
-# We need to use the geom_path to render the route
-# geom_line will plot against ordered, not consecutive, x and y
-g2 = ggplot(routepoints, aes(x=X, y=Y, color=elevation))+
-  geom_point(size=3) +
-  geom_path(size=3.5) +
-  
-  # Set the coordinate system to the original projection
-  coord_sf(crs=st_crs(geojson_sf)) +
-  
-  lims(color=c(min_val, max(routepoints$elevation)))
-
+```{r str_sin_scatter}
+g2 = ggplot(utm_routes, aes(x=straightness,
+                            y=sinuosity,
+                            label = Name)) + 
+        geom_point(size=1)  +
+        # hjust: left justiifcation (0), right justification (1)
+        geom_text(size=3, hjust = 1, nudge_y = -0.001)
 g2
 ```
 
-It might also be interesting to explore a line width setting to reflect the likely width of the road. For example, we might image A roads to nominally have a width of 8m, enough for two cars to pass one another, B class roads to have a width of 6m (a close squeeze) and C roads or other tracks to have a width of 4m (single track road).
- 
+Under this measure we see that the most sinuous state is actually SS 13/15 and SS5 also has high sinuosity, whereas SS 2 is the least sinuous stage:
+
+```{r trajr_sinuosity}
+g_SS2 = plot_stage(2, 'SS2 - least sinuous')
+
+g_SS13b = g_SS13 + ggtitle('SS13 - most sinuous')
+
+ggpubr::ggarrange(g_SS2, g_SS13b) 
+```
+
+### Directional Change
+
+Another possible measure of how twisty a route is the *directional change*. As this measure is defined for each pair of steps, the directional change measure applied to a route is given as the mean (DC) and standard deviation (SDDC) calculated over all directional changes. Directional change itself is defined as the angular change (in degrees) between any two points in the trajectory, divided by the time difference between the two points. According to the [`trajr` vignette](https://cran.r-project.org/web/packages/trajr/vignettes/trajr-vignette.html), *DC may be used as an index of nonlinearity, and SDDC as a measure of irregularity*.
+
+The time basis of this measure means we have to use some sort of poetic license when using this measure for route analysis: do steps go up one time unit per step, or do we use the accumulated distance for time stamps?
+
+```{r}
+calc_dc = function(route){
+  mean(TrajDirectionalChange(route))
+}
+
+calc_sd = function(route){
+  sd(TrajDirectionalChange(route))
+}
+
+utm_routes['DC'] = unlist(lapply(trjs, calc_dc))
+utm_routes['SDDC'] = unlist(lapply(trjs, calc_sd))
+utm_routes[, c('Name', 'DC', 'SDDC')]
+```
+
+Exploring these measures with different time bases is left for another day...
+
+### Tracking Turning Angles
+One final single value, albeit, a complex value, metric we can get is the mean vector of the turning angle, given via the `trajr::TrajMeanVectorOfTurningAngle()` function.
+
+This function takes a *compass.direction* (default `NULL`) which indicates whether the angle should be calculated relative to the angle (in radians) or, if `NULL`, relative to the previous step.
+
+```{r}
+utm_routes['meanTurn'] = unlist(lapply(trjs,
+                                       TrajMeanVectorOfTurningAngles))
+
+utm_routes[, c('Name', 'meanTurn')]
+```
+
+For example, SS2 and SS13 appear to rotate in different directions?
+
+```{r trajr-mean-turn}
+ggpubr::ggarrange(g_SS2, g_SS13) 
+```
+
+Hmm... maybe!
+
+This is perhaps useful if we try to parse it in terms of the general direction of travel over the course of the route. This may be relevant when trying to identify whether a driver might be driving into the sun, for example (recall that we can look up sun angle and elevation by date and time easily enough using the `suncalc` *R* package.
+
+For example, how about if we calculate the angle relative to due North, which I think(?!) has the compass angle of 0 radians:
+
+```{r}
+compass_relative_turn = function(route, angle=0) {
+  TrajMeanVectorOfTurningAngles(route, angle)
+}
+
+utm_routes['meanCompass'] = unlist(lapply(trjs,
+                                          compass_relative_turn))
+
+utm_routes[, c('Name', 'meanCompass')]
+```
+
+So... do SS2 and SS6 appear to go in different directions?
+
+```{r trajr-mean-compass-different}
+g_SS2 = plot_stage(2, 'SS2 - one way..')
+
+g_SS5 = plot_stage(5, 'SS5 - and another?')
+
+ggpubr::ggarrange(g_SS2, g_SS5) 
+```
+
+And do SS9 and SS11 appear to go in roughly the same direction?
+
+```{r trajr-mean-compass-same}
+g_SS9 = plot_stage(6, 'SS9 - and the same?')
+
+ggpubr::ggarrange(g_SS2, g_SS9) 
+```
+
+### Visualising Trajectory Direction Changes
+
+As well as providing single number metrics, we can also get information back at the level of each step of the trajectory. We have already seen how the complex *displacement* is given for each step, from which we can calculate the distance of each step.
+
+We can also get access to the angle of each step in a route using the `trajr::TrajAngles()` function. This function also takes a *compass.direction*, again indicating whether the angle should be calculated relative to the angle (in radians) or, if `NULL`, relative to the previous step.
+
+```{r}
+# Step angle in radians relative to previous
+trj$stepangle = c(NA, TrajAngles(trj, compass.direction = NULL) * 180 / pi, NA) 
+
+trj$cumstepangle = cumsum(c(0, TrajAngles(trj, compass.direction = NULL) * 180 / pi, NA))
+trj$stepheading = c(TrajAngles(trj, compass.direction = 0)* 180 / pi, NA) 
+
+
+head(trj[,c('stepangle', 'cumstepangle', 'stepheading')], 5)
+```
+
+We can plot the route using colour to give the general heading, by quadrant:
+
+```{r trajr-route-headings, warning=FALSE}
+# Cut styling via https://stackoverflow.com/a/29966785/454773
+
+ggplot(data=tidyr::drop_na(trj, stepheading ),
+       aes(x=x, y=y, color=col)) + 
+  geom_point(aes(colour = cut(stepheading,
+                              c(-180, -90, 0, 90, 180))),
+             size = 1) +
+  coord_sf() + 
+  geom_point(aes(x=X, y=Y), size=1, col='black',
+             data=start_location(1))
+```
+
+Can we identify tight turns? The following chart plots each step location, using a distinct marker to highlight turns with a large *stepangle*:
+
+```{r trajr-tight-turns, warning=FALSE}
+ggplot(data=trj,
+       aes(x=x, y=y), size=0.5) + geom_path(color='grey')+
+  geom_point( pch=0, color='blue',
+             data=trj[abs(trj$stepangle)>45,]) +
+    geom_point(data=trj[abs(trj$stepangle)<=45,],
+                pch=1, color='red', size=0.1) +
+  coord_sf() + 
+  geom_point(aes(x=X, y=Y), size=1, col='black',
+             data=start_location(1))
+```
+
+The instantaneous angle is okay for trying to identify particularly tight turns, but to identify whether a corner increase the angle in the same step direction, which is to say, whether the corner *tightens*, for example, we need process the data a bit further.
+
+One way of doing this is to determine the gradient of the accumulated angle using the [`pracma::gradient` function](https://www.rdocumentation.org/packages/pracma/versions/1.9.9/topics/gradient). 
+
+```{r}
+trj$step_gradient = pracma::gradient(trj$cumstepangle, trj$cum_dist)
+```
+
+The sign of the gradient then identifies the turn direction but the magnitude of the gradient is harder to parse because the step sizes are not constant. 
+
+A plot using colour to depict gradient sign may help identify whether a route involves turn predominantly to the left or to the right. We could use a related approach to display a table of locations labeled as tight right or left corners, for example:
+
+```{r trajr-gradient-lr, warning=FALSE}
+ggplot(data=trj,
+       aes(x=x, y=y)) + geom_path(color='grey')+
+  geom_point( size=0.2, color='blue',
+             data=trj[trj$step_gradient>0.2,]) +
+    geom_point(size=0.2,
+               data=trj[trj$step_gradient<=-0.2,],
+               color='red') +
+  coord_sf() + 
+  geom_point(aes(x=X, y=Y), size=1, col='black',
+             data=start_location(1))
+
+```
+
+If nothing else, however, this approach also gives us an immediate way of detecting stationary points in the gradient. As a consequence, we can identify directional changes from left to right, or *vice versa*.
+
+```{r trajr-gradient, warning=FALSE}
+ggplot(trj,aes(x=cum_dist)) + 
+    geom_hline(yintercept=0, color='grey' ) +
+    geom_hline(yintercept=-500, color='grey' ) +
+    geom_line(aes( y=cumstepangle)) +
+    geom_line(aes( y=-500+50 * step_gradient),
+              color='red')
+```
+
+By creating simple rules, we might be able to identify features like *tightens* (for example, if we have three angles in the same direction with increasing magnitude and the final angle exceeding some threshold limit). We might similarly be able to create rules around elevation data, for example to identify *crests* (for example, a maximum in elevation, found by finding stationary points of elevation / first derivative).
+
+Finally, it's worth briefly mentioning a couple more `trajr` functions that may be useful when it comes to analysing telemetry data: `trajr::TrajVelocity` and `trajr:TrajAcceleration`, which estimate velocity and acceleration as vectors at each point along a trajectory. But that's for another book...
+
+
+### Using `amt` for Stage Route Profiling
+
+The [`amt` (animal movement tools) *R* package](https://cran.r-project.org/web/packages/amt/index.html) was designed to support the management and analysis of animal movement data. Routes are represented as *tracks* in the form of tibbles with at least an *x_* and *y_* column and, if required, a `t_` (time) column. Consecutive rows, which might be assumed to be collected with fixed period, identify straightline *steps*. A `track_xy`track type only has coordinates, and a
+`track_xyt` track type has a timestamp associated to each coordinate pair.
+
+An additional *burst* column, `burst_`, provides us with a potential grouping parameter that lets us perform analyses on sections of the track. This could be used to identify segments of the route between split points, for example, if we can apply appropriate burst labels to each part of the track.
+
+For our purposes here, it is clear to see how we might imagine a mapping the X and Y co-ordinates from a route linestring in a UTM/meters based projection directly into a a track tibble. The `amt::make_track()` function provides a straightforward way of doing this:
+
+```{r}
+library(amt)
+
+amt_track = make_track(st_coordinates(utm_routes[1,]), X, Y)
+amt_track
+```
+
+### Creating Tracks
+
+The `make_track` function has a further optional argument (`crs`), which allows the user to set a coordinate reference system (CRS) of the track. The CRS needs to be provided as valid proj4string, see the documentation of sp::CRS for further details; see also [*proj4* projections](https://proj.org/usage/projections.html).
+
+We can segment the track into a series of straightline steps from one point to the next, also returning the step distance (`sl`) and angle (`direction_p` radians):
+
+```{r}
+# Create a "steps" object from each sample
+amt_steps = steps(amt_track)
+head(amt_steps)
+```
+
+### Converting to Other Track Formats
+
+The `amt` package provides a range of tools that allow us to *coerce* `amt` tracks to other movement analysis packages.
+
+For example, we can cast a `track_xy` object to a *Spatial* object:
+
+```{r}
+as_sp(amt_track)
+```
+
+Conversions to other movement data structures is possible from `track_xyt` objects.
+
+### Using `amt` for Stage Route Analysis
+We can also obtain step lengths directly from the track via the `amt::step_lengths()` function:
+
+```{r}
+# Obtain the step lengths and omit / drop the final NA value
+amt_step_lengths = head(step_lengths(amt_track), -1)
+```
+
+Directions can be determined absolutely, e.g. with reference to a North, South, East or West basis, using `amt::direction_abs()` or relatively to the previous step using ``amt::direction_rel()`:
+
+```{r}
+absolute_step_directions = direction_abs(amt_track)
+relative_step_directions = direction_rel(amt_track)
+```
+
+In terms of route complexity measures, the `amt` package provides functions for calculating single number metrics of *sinuosity* (`amt::sinuosity()`), 
+*straightness* (`amt::straightness()`), *accumulated track distance* (`amt::cum_dist()`) and *total straightline distance* (`amt::tot_dist()`). The *intensity use* metric is calculated by dividing the total movement distance (`tot_dist`) by the square of the area of movement:
+
+```{r}
+amt::sinuosity(amt_track)
+amt::straightness(amt_track)
+amt::cum_dist(amt_track)
+amt::tot_dist(amt_track)
+amt::intensity_use(amt_track)
+```
+
+Let's generate a list of tracks, one for each stage:
+
+```{r}
+to_amt_track = function(route){
+  make_track(st_coordinates(route$geometry), X, Y)
+}
+
+amt_tracks = apply(utm_routes, 1, to_amt_track)
+```
+
+Now we can generate reports for all the stages:
+
+```{r}
+utm_routes['amt_sin'] = unlist(lapply(amt_tracks, amt::sinuosity))
+utm_routes['amt_str'] = unlist(lapply(amt_tracks, amt::straightness))
+utm_routes['amt_cumd'] = unlist(lapply(amt_tracks, amt::cum_dist))
+utm_routes['amt_totd'] = unlist(lapply(amt_tracks, amt::tot_dist))
+utm_routes['amt_int'] = unlist(lapply(amt_tracks, amt::intensity_use))
+
+utm_routes[, c('amt_sin','amt_str','amt_cumd','amt_totd','amt_int')]
+```
+
+We can resample locations from the track using `amt::track_resample()`. Once again, if we use distance as a proxy for time, this allows us to sample by distance along the line.
+
+
+### Using `rLFT`` for Profiling Along a Stage Route
+
+The [`rLFT` (Linear Feature Tools) *R* package](https://cran.r-project.org/web//packages/rLFT/vignettes/rLFT_Introduction.html) was developed in order to support the processing of simple linear features.
+
+The boundary convexity tool function, `rLFT::bct()` generates a convexity measure for a sliding window of points along a route; the route must be provided in a projected (*not* geographic) coordinate system. The sign of the convexity measure identifies whether the curve is concave (negative) or convex (positive), the increasing values identifying tightness of the curve.  A normalised convexity index and a sinuosity measure  are also created.
+
+```{r rlft-route}
+library(rLFT)
+
+outputTable <- bct(utm_routes[1,],
+                   # distance between measurements 
+                   step = 10,
+                   window = 20, ridName = "Name")
+
+head(outputTable)
+```
+
+By filtering the table to rows with with a large absolute *ConvexityIndex* we can identify and label tight corners. The `ggrepel::geom_text_repel()` function attempts to minimise the extent to which labels overlap, using arrows to identify points referenced by the label where the label location is dodged away from the point:
+
+```{r rLFT-route, message=FALSE, warning=FALSE}
+tight_corners = outputTable[abs(outputTable$ConvexityIndex)>0.45,]
+
+ggplot() +
+  geom_sf(data=utm_routes[1,]) +
+  ggrepel::geom_text_repel(data=tight_corners,
+                           aes(label = ConvexityIndex,
+                               x=Midpoint_X, y=Midpoint_Y,
+                               color= (ConvexityIndex>0) ),
+                           size=2,
+                           nudge_x = 2000, nudge_y = 500) +
+  geom_point(data=tight_corners,
+             aes(x=Midpoint_X, y=Midpoint_Y,
+                 color= (ConvexityIndex>0) ), size=1) +
+  theme_classic()
+```
+
+We can also get the output table as a *simple features* object where the midpoint co-ordinates are cast to a point geometry type:
+
+```{r}
+outSF <- st_as_sf(outputTable,
+                 coords = c("Midpoint_X", "Midpoint_Y"), 
+                 stringsAsFactors = FALSE)
+```
+
+The convexity measures are defined in *Albeke, S.E. et al. [Measuring boundary convexity at multiple spatial scales using a linear 'moving window' analysis: an application to coastal river otter habitat selection](https://www.d.umn.edu/biology/documents/Nibbelink2_000.pdf) Landscape Ecology 25 (2010): 1575-1587.
+
+In terms of categorising turns in a way that's meaningful in a rally context, let's have a recap on what sorts of thing a rally navigator or co-driver is likely to be saying:
+
+```{r rally-notes-codriver}
+embed_url("https://www.youtube.com/watch?v=KFjRj25uclQ")
+```
+
+And let's review what we actually mean by a corner...
+
+```{r chain-bear-corner-video}
+embed_url("https://www.youtube.com/watch?v=YXOYckDATWE")
+```
+
+In terms of actual corners, the convexity interesting may be one of the more interesting properties. Finding a good way of representing variable radius turns (you did watch the "corners" video, didn't you?!) will also be important if we want to be able to identify "tightens" or "lessens" corner features. ANnd elevation changes in the vicinity of a corner are likely to be important if we are trying to characterise braking zone requirements...
+
+## Generating Stage Descriptions
+
+Being able to display route profiles on a map as a colour highlighted routeis very useful and could be made more so adding the data to a *leaflet.js* extension such as [`Leaflet.Heightgraph`](https://github.com/GIScience/Leaflet.Heightgraph), which displays arbitrary traces (to integrate this in the current workflow properly would require the development of an extension to the *R* `leaflet` package).
+
+Another possibility would be to try to automate the creation of text based route descriptions ("robot journalism"), which I've crudely explored in other contexts elsewhere. The [*It Gets Faster Now*](https://itgetsfasternow.com/2021/01/19/route-preview-rallye-monte-carlo-2021/) blog publishes stage descriptions for WRC stage routes, so this could be a good place to learn tropes from.
+
+<!--chapter:end:route-metrics.Rmd-->
+
+
+# Elevation Data Revisited
+
+Placeholder
+
+
+## Load in Base Data 
+## Generating Elevation Maps
+### Accessing Elevation Values Along a Route from an Elevation Raster
+### Using `geosphere::distGeo` to Find Distance Along a Route
+### Using `sp::spDists` to Find Distance Along a Route
+## Generating a 3D Ribbon Plot of the Stage Route
+## Identifying Road Type
 ## Displaying Route Twistiness and Elevation
-
-The 3D rendered ribbon chart is amusing, but not necessarily very informative. What would be far more compelling would be if we could render elevation and also the twists and turns take by the route.
-
-So let's do that in the form of a plot of elevation against latitude and longitude:
-
-```{r message=FALSE}
-rgl::clear3d()
-
-gg = plot_gg(g2, height=5, width=6, scale=500,
-             raytrace=FALSE)
-
-r = rgl::rglwidget()
-
-widget_fn = 'elev_model.html'
-htmlwidgets::saveWidget(r, widget_fn)
-```
-
-Embed the HTML back in an iframe:
-
-```{r}
-htmltools::includeHTML(widget_fn)
-```
-
-```
-
 ### Making a 3D Print File of the Model
-
-As well as making movies of the stage route it is also worth reminding ourselves that we can also export the model as a 3D printer ready model. The `rayshader::save_3dprint()` function will export an `.stl` format model file directly from our model:
-
-```{r}
-# We can also save the file to a 3d print stl file
-model_fn = "stage_3d.stl"
-save_3dprint(model_fn, maxwidth = 10, unit = "in")
-```
-
-With model file in hand,it can then be uploaded to 3D print on demand service such as [*3dpeople*](https://www.3dpeople.uk/), [*3d print UK*](https://www.3dprint-uk.co.uk/), [*MakeitQuick Manufacturing*](https://makeitquick.co.uk/orders/) or [*Champion 3D*](https://champion3d.com/) to provide us with a physical model of a stage.
-
 ### Rendering a 3D movie of the Model
-
-Render a 3D movie to provide a rotating view of the 3D rendered line char showing the route path and elevation:
-
-```{r message=FALSE, warning=FALSE}
-library(av)
-
-options(rgl.useNULL = FALSE,
-        rgl.printRglwidget = FALSE)
-
-rgl::rgl.open()
-rgl::clear3d()
-
-g = plot_gg(g2 + theme(legend.position = "none"),
-            height=5, width=6, scale=500,
-            raytrace=FALSE)
-
-# 3D movie
-video_fn = 'demo_stage_line.mp4'
-
-#render_movie(video_fn, progbar=FALSE)
-rgl::rgl.close()
-
-embedr::embed_video(video_fn, width = "256", height = "256")
-```
-
-
 ## Using the `slopes` Package to Analyse Stage Elevation Data
-
-Having got the elevation profile as elevation by distance into stage, we can borrow some ideas from the chapter on route profiling to try to identify certain features in the route, for example in terms of gradient or even "elevation-twistiness" of a climb / descent.
-
-The [`slopes` *R* package](https://github.com/ITSLeeds/slopes) simplifies obtaining elevation data considerably, and provides an easy way to visualise slopes and steepness as well as packaging various functions relate to the ones we developed in the previous sections.
-
-For example, the `slopes::slope_3d()` function takes a route linestring and a raster and adds the elevation as the Z coordinate to the linestring:
-
-```{r}
-library(slopes)
-
-route_slope_elevation = slope_3d(geojson_sf[1,], elev_img)
-```
-
-There is also automated support for finding elevation data from a route by omitting the raster data when calling the `slopes::slope_3d()` function with just the linestring.
-
-The `slopes::plot_slope()` function visualises the gradient at each step along the 3D linestring route using base graphics:
-
-```{r slopes_plot_slope}
-plot_slope(route_slope_elevation)
-```
-
-Within the `slopes` package are several utility function for extracting step distance, elevation and gradient along the route:
-
-```{r}
-route_coords = sf::st_coordinates(geojson_sf[1,])
-# lonlat: is the order lonlat?
-d = sequential_dist(route_coords, lonlat = TRUE)
-```
-
-We can get the elevation for each line segment in the linestring using the `slopes::elevation_extract()` function:
-
-```{r}
-e = elevation_extract(route_coords, elev_img)
-```
-
-Simple plot:
-
-```{r slopes_df_plot_elev}
-slopes_df = data.frame(d=c(0,d), e=e)
-
-# Find the accumulated distanced over route steps
-slopes_df$cum_d = cumsum(slopes_df$d)
-
-ggplot(slopes_df)+geom_line(aes(x=cum_d, y=e))
-```
-
-We can get slope associated with each line segment using the `slopes::slope_distance()` function, or from the 3D linestring using the `slopes::slope_matrix()` function. (The *lonlat* parameter flags the order of longitude and latitude values.)
-
-```{r}
-step_gradients = slope_distance(d, e) # d is 1 item shorter than e
-step_gradients2 = slope_matrix(st_coordinates(route_slope_elevation),
-                               lonlat = TRUE)
-```
-
 ## Analysing Route Elevation from First Principles
-
-The simplest thing to calculate is probably gradient, which tells us how steep an incline / descent is at any part of the stage, as well as as where the turning points (in gradient terms) are: crests and plateaus, for example.
-
-```{r simple-elevation-gradient}
-ggplot(routepoints, aes(x=gs_cum_dist)) + geom_line(aes( y=elevation)) +
-  geom_line(aes( y=1000*pracma::gradient(elevation, gs_cum_dist)), color='red')
-```
-
-Areas where the gradient is greater than show the route is climbing; where the gradient is less than one shows a descent. A gradient near zero is on the flat.
-
-We might get a slightly cleaner trace if we smooth the elevation profile and then find its gradient.
-
-```{r smoothed-elevation-gradient}
-trj <- TrajFromCoords(routepoints[,c('gs_cum_dist', 'elevation')])
-smoothed <- trajr::TrajSmoothSG(trj, p=3, n=9)
-
-smoothed['y_gradient'] = 1000*pracma::gradient(smoothed$y,smoothed$x)
-ggplot()+geom_line(data=routepoints,aes(x=gs_cum_dist, y=elevation)) +geom_line(data=smoothed, aes(x=x, y=y), color='red') +
-  geom_line(data=smoothed, aes(x=x, y=y_gradient), color='blue')
-```
-
-Another technique we might use to display the data is to create coloured bands, as per a ribbon plot, coloured according to the whether the gradient is positive or negative, using the magnitude of the gradient to set the colour intensity as per a heat map.
-
-```{r smoothed-elevation-gradient-filled}
-smoothed$col[smoothed$y_gradient >= 0] <- "climbing"
-smoothed$col[smoothed$y_gradient < 0] <- "descending"
-
-# Doing something wrong with the fills here?
-ggplot(smoothed, aes(x=x, y=y_gradient)) +
-  geom_area(aes(fill=col)) +
-  geom_line() +
-  geom_hline(yintercept=0)
-
-# geom_ribbon has the same issue
-```
 
 <!--chapter:end:revisiting-elevation.Rmd-->
 
@@ -742,6 +1236,8 @@ Placeholder
 Placeholder
 
 
+## Jemba Inertia Notes System
+## Motorsport UK Specific Regulations for Rallying
 ## Load in Base Data 
 ## Using `sfnetworks` to Represent Routes and Road Networks
 ## Analysing Road Networks with `sfnetworks`
@@ -751,6 +1247,7 @@ Placeholder
 ### Snapping a Route to a Road Network
 ### Snapping a Full Stage Route to the Road Network
 ## Using `dodgr` to Represent Routes and Road Networks
+## Route Stage Time Simulation
 
 <!--chapter:end:creating-a-road-book.Rmd-->
 

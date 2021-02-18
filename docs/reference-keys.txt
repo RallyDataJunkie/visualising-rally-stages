@@ -196,3 +196,4 @@ where-next
 jemba-inertia-notes-system
 motorsport-uk-specific-regulations-for-rallying
 route-stage-time-simulation
+generating-stage-descriptions

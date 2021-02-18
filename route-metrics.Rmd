@@ -838,3 +838,9 @@ embed_url("https://www.youtube.com/watch?v=YXOYckDATWE")
 ```
 
 In terms of actual corners, the convexity interesting may be one of the more interesting properties. Finding a good way of representing variable radius turns (you did watch the "corners" video, didn't you?!) will also be important if we want to be able to identify "tightens" or "lessens" corner features. ANnd elevation changes in the vicinity of a corner are likely to be important if we are trying to characterise braking zone requirements...
+
+## Generating Stage Descriptions
+
+Being able to display route profiles on a map as a colour highlighted routeis very useful and could be made more so adding the data to a *leaflet.js* extension such as [`Leaflet.Heightgraph`](https://github.com/GIScience/Leaflet.Heightgraph), which displays arbitrary traces (to integrate this in the current workflow properly would require the development of an extension to the *R* `leaflet` package).
+
+Another possibility would be to try to automate the creation of text based route descriptions ("robot journalism"), which I've crudely explored in other contexts elsewhere. The [*It Gets Faster Now*](https://itgetsfasternow.com/2021/01/19/route-preview-rallye-monte-carlo-2021/) blog publishes stage descriptions for WRC stage routes, so this could be a good place to learn tropes from.
