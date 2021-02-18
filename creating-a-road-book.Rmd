@@ -467,11 +467,15 @@ graph <- weight_streetnet(stage_osm$osm_lines,
 
 The `dodgr` packages allows edges to be characterised by two values: the distance, and a weighted distance. The weighted distance may be of interest to us if we want to make time estimations or models based on road surface or road surface and tyre combination. For example, the time taken to travel 1km on snow using snow tyres may be expected to differ from the time taken to travel 1km on tarmac. The twistiness of of each section of a route may also be used to weight anticipated travel times.
 
-The `dodgr` package provides a range of tricks for modifying travel times on normal road netwroks, e.g. to account for time crossing roundabouts (for example, [Street networks and time-based routing
-](https://atfutures.github.io/dodgr/articles/times.html)). It might be possible to add dummy nodes to a route prior to tight corners, for example, to add time weights to a route (or can `dodgr` route times take into account twistiness, elevation change etc?)
+The `dodgr` package provides a range of tricks for modifying travel times on normal road networks. In the [*Street networks and time-based routing* vignette
+](https://atfutures.github.io/dodgr/articles/times.html)) the roadtype weight matrix and a *turn_penalty* weighting that introduces a time cost to turning across oncoming traffic might be a co-optable way of increasing travel time weights on curved sections by adding contraflow junction nodes to tight corners? 
 
-It might be quite amusing to try to define weight profiles for *rally_car* or rally cars under different weather and/or tyre conditions, perhaps based on models created from datasets of previous rally stage times or even car telemetry? A weighting profile determines the weighting applied to different road types. The default weighting profiles are stored in the `dodgr::weighting_profiles` list.
+It might be quite amusing to try to define [weight profiles ](https://atfutures.github.io/dodgr/articles/times.html#weighting-profiles-and-the-write_dodgr_wt_profile-function) for a new *rally_car* type or rally cars under different weather and/or tyre conditions, perhaps based on models created from datasets of previous rally stage times or even car telemetry? A weighting profile determines the weighting applied to different road types. The default weighting profiles are stored in the `dodgr::weighting_profiles` list.
 
 ## Route Stage Time Simulation
 
-Road network representations, as well as curvature, distance and gradient measures for each step of a route set up some interesting possibility for very simple stage time simulations that might be interesting for storytelling purposes, if not actual stage time prediction. 
+Road network representations, as well as curvature, distance and gradient measures for each step of a route set up some interesting possibility for very simple stage time simulations that might be interesting for storytelling purposes, if not actual stage time prediction.
+
+The weight profiles in `dodgr` provide one way of exploring this off-the-shelf; the `sfnetworks` package can also support [`custom weighted routing`](https://luukvdmeer.github.io/sfnetworks/articles/routing.html#custom-routing).
+
+A simpler way of accounting for different speeds along a route would be to just weight the distance of each line segment in the route by a speed value, perhaps identified as a function of curvature and elevation gradient? This would essentially map route segments onto distance onto distance / speed, which is to say time. A simple model might use a speed determined simply as a function of curvature and road type. A more complex model may try to model acceleration through a segment based on the previous and next segments, and calculate the time  also as a function of the segment distance and the input speed
