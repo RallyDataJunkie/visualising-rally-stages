@@ -22,5 +22,6 @@ rmd_files:  ["index.Rmd", "welcome.Rmd", "preface.Rmd",
              "route-metrics.Rmd",
              "revisiting-elevation.Rmd",
              "adding-osm-data.Rmd",
+             "creating-stage-descriptions.Rmd",
              "creating-a-road-book.Rmd",
              "where-next.Rmd"]
