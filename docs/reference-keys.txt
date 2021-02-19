@@ -197,3 +197,8 @@ jemba-inertia-notes-system
 motorsport-uk-specific-regulations-for-rallying
 route-stage-time-simulation
 generating-stage-descriptions
+automatically-generating-stage-descriptions
+identifying-corners-based-on-trajr-step-gradients
+numbering-corners
+categorising-corners-using-rlft-convexity
+load-in-base-data-12

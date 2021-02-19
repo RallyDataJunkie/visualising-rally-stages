@@ -35,3 +35,330 @@ A Wikipedia page describing the [*Jemba Inertia Notes System*](https://en.wikipe
 Being able to display route profiles on a map as a colour highlighted routeis very useful and could be made more so adding the data to a *leaflet.js* extension such as [`Leaflet.Heightgraph`](https://github.com/GIScience/Leaflet.Heightgraph), which displays arbitrary traces (to integrate this in the current workflow properly would require the development of an extension to the *R* `leaflet` package).
 
 Another possibility would be to try to automate the creation of text based route descriptions ("robot journalism"), which I've crudely explored in other contexts elsewhere. The [*It Gets Faster Now*](https://itgetsfasternow.com/2021/01/19/route-preview-rallye-monte-carlo-2021/) blog publishes stage descriptions for WRC stage routes, so this could be a good place to learn tropes from.
+
+
+## Load in Base Data 
+
+As ever, let's load in our stage data and the elevation raster and create a demo map:
+
+```{r message=FALSE}
+library(sf)
+library(raster)
+library(rayshader)
+
+geojson_filename = 'montecarlo_2021.geojson'
+geojson_sf = sf::st_read(geojson_filename)
+
+stage_route_gj = geojsonio::geojson_json(geojson_sf[1,]$geometry)
+
+# Previously downloaded TIF digital elevation model (DEM) file
+stage_tif = "stage_elevation.tif"
+
+# Load in the previously saved image raster
+elev_img = raster(stage_tif)
+
+# Note we can pass in a file name or a raster object
+elmat = raster_to_matrix(stage_tif)
+
+demo_map = elmat %>%
+              sphere_shade(texture = "desert",
+                           progbar = FALSE)
+```
+
+Let's also get a UTM projection of the stage routes:
+
+```{r message=FALSE, warning=FALSE}
+# Detect the UTM zone as an EPSG code
+lonlat2UTMzone = function(lonlat) {
+  utm = (floor((lonlat[1] + 180) / 6) %% 60) + 1
+  if(lonlat[2] > 0) {
+    utm + 32600
+  } else{
+    utm + 32700
+  }
+}
+
+get_utm_projection = function(routes){
+  # Keep track of the original proj4 string
+  old_crs = st_crs(geojson_sf[1,])$proj4string
+
+  sample_location_x = st_coordinates(st_centroid(routes[1,]))[1]
+  sample_location_y = st_coordinates(st_centroid(routes[1,]))[2]
+  
+  # Generate a new projection in the appropriate UTM zone
+  crs_zone = lonlat2UTMzone(c(sample_location_x,
+                              sample_location_y))
+
+  new_proj4_string = st_crs(crs_zone)$proj4string
+
+  # Transform the route to the UTM projection
+  utm_routes = st_transform(geojson_sf, crs=new_proj4_string)
+  
+  utm_routes
+  # Or should we returned a named list
+  # e.g. including the original projection?
+  #list(utm_routes = utm_routes, orig_crs=old_crs)
+}
+
+utm_routes = get_utm_projection(geojson_sf)
+```
+
+## Identifying Corners Based on `trajr` Step Gradients
+
+Let's start by trying to identify straight sections. Trivially, given that the stage route is given by a linestring made of straight line segments arranged at different angles relative to each other, every line segment is a straight. So what we really mean by a straight is a sequence of connected lines segments where each line segment is at an angle less than +/- 5 degrees to the to segment before it, for example, where the start of the straight has a preceding segment more than +/- 5 degrees to it (for example) and the end of the straight has a following line segment at more than +/- five degrees to it.
+
+Let's use the `trajr` *stepangle* to try to categorise straights:
+
+```{r}
+library(trajr)
+
+trj <- TrajFromCoords(as.data.frame(st_coordinates(utm_routes[1,])))
+
+# displacement is a complex number, so we can get the actual distance:
+trj$distance = Mod(trj$displacement)
+
+# Find the accumulated distance at each step
+trj$cum_dist = cumsum(trj$distance)
+
+# Step angle in radians relative to previous
+trj$stepangle = c(NA, TrajAngles(trj, compass.direction = NULL) * 180 / pi, NA) 
+
+trj$cumstepangle = cumsum(c(0, TrajAngles(trj, compass.direction = NULL) * 180 / pi, NA))
+
+trj$stepheading = c(TrajAngles(trj, compass.direction = 0)* 180 / pi, NA) 
+
+# Find the gradient of the acculmulated angle
+trj$step_gradient = pracma::gradient(trj$cumstepangle, trj$cum_dist)
+```
+
+We can view the gradients:
+
+```{r sd-preview, warning=FALSE}
+g = ggplot(data=trj,
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf()
+
+g + geom_point( size=0.2, color='blue',
+             data=trj[trj$step_gradient>0.2,]) +
+    geom_point(size=0.2,
+               data=trj[trj$step_gradient<=-0.2,],
+               color='red')
+```
+
+If we have several consecutive points with a gradient of the *same* sign, then we migth consider them to be part of the same corner, albeit one that maybe tightens or lessens. If the gradients of consecutive segments have a *different* sign, then we have a change of direction from eg left to right or right to left.
+
+We can create a flag that identifies when the sign changes across consecutive rows of the *step_gradient* column. We can check this by lagging the contents of the *step_gradient* column by one step using the `dplyr::lag()` function and comparing its sign to the sign of the unlagged value. If we then *dplyr::lead()* the result, we can see if a change in direction happens at the end of a step:
+
+```{r}
+trj = trj %>%
+  mutate(dirChange = lead(sign(step_gradient) != sign(lag(step_gradient))))
+
+head(trj[,c('step_gradient', 'dirChange')])
+```
+Let's plot points on the route where we seem to have a direction change:
+
+```{r sd-dirchange, warning=FALSE}
+g +
+  geom_point( size=0.2, color='blue',
+             data=trj[trj$dirChange,]) +
+  theme(axis.text.x = element_text(angle = 45))
+
+```
+Let's zoom in a bit:
+
+```{r sd-dirchange-zoom}
+# Zoom in on part of the route
+zoom1 = trj$y>4964000 & trj$y<4965000 
+
+g1 = ggplot(data=trj[zoom1, ],
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf()
+
+g1 +  geom_point( size=0.2, color='blue',
+             data=trj[zoom1 & trj$dirChange,]) +
+      theme(axis.text.x = element_text(angle = 45))
+
+```
+We notice that we seem to be missing some corners that are perhaps not direction changes, but significant angle changes in the same direction. And we also notice a direction change flagged in what appears to be the middle of a straight.
+
+Let's look at the apparent turn in the middle of the straight first. If we have opposing angles from one segment to the next, then we currently class the first point as a corner because the direction has changed. But we aren't really interested in slight direction changes or even slight direction changes in the same direction. 
+
+
+```{r sd-straightish}
+slight_gradient = 0.35
+
+trj = trj %>% 
+        mutate(straightish =  (abs(step_gradient) < slight_gradient))
+
+ggplot(data=trj[zoom1, ],
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
+  geom_point( size=1, aes(color = straightish)) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+We now want to identify the first node in a close sequence of nodes that idenfitify a turn that doesnlt change direction.
+
+Which is to say we want a not straightish node whose next node is nearby and not straightish and in the same direction, or not nearby:
+
+```{r sd-firstish}
+# Close distance threshold
+closeby = 25
+
+trj = trj %>%
+  mutate(nearby = (distance < closeby) ) %>%
+  mutate(firstish = !straightish & 
+                    ((nearby & !lag(straightish) & lag(dirChange)) |
+                     (!nearby) ) )
+
+ggplot(data=trj[zoom1, ],
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
+  geom_point( size=1, aes(color = firstish)) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+That's identifiying some of the corners, but what's going on top left?
+
+```{r sd-firstish-zoom}
+zoom2 = zoom1 & trj$x<730100
+
+ggplot(data=trj[zoom2,],
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
+  geom_point( size=1, aes(color = firstish)) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+Ah, ok, maybe we could categorise those as turns, but perhaps gentle ones. We maybe need to flag these as "flowing" if they aren't too tight and have a long run in and out:
+
+```{r sd-flowing}
+tight_gradient = 0.5
+
+trj = trj %>%
+  mutate(significant = abs(step_gradient) > tight_gradient ) %>%
+  mutate(flowing = !nearby & !lead(nearby) & 
+                   !straightish & !significant )
+
+ggplot(data=trj[zoom2,],
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
+  geom_point( size=3, aes(color = flowing,
+                          shape = dirChange)) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+And how about over a wider part of the stage?
+
+```{r sd-flowing2}
+ggplot(data=trj[zoom1, ],
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
+  geom_point( size=2, aes(color = firstish,
+                          shape = flowing)) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+We could also then create a *!flowing & firstish* flag to provide better indexing of the starts of corners.
+
+We'd need to test the approach on further stages to see whether it gives false positives or false negatives on identifying various corners, and we'd maybe also want to try to identfy tightens and lessens.
+
+Let's have a go at tightens. At a first approximation, a corner *tightens* if a node isn't firstsh, is above a certain gradient, is close to the previous step and the magnitude of the gradient has increased and is the same sign as the previous step:
+
+```{r sd-tightens}
+trj = trj %>% 
+        mutate(tightens = !firstish & significant & lead(nearby) &
+                            ((sign(lead(step_gradient))==sign(step_gradient)) & (abs(lead(stepangle)) > abs(step_gradient))))
+
+
+ggplot(data=trj[zoom1, ],
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
+  geom_point( size=2, aes(color = tightens,
+                          shape = firstish)) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+The corner *lessens* if a node isn't firstish, is above a certain gradient, is close to the previous step and the gradient is in the same direction and has decreased:
+
+```{r sd-lessens}
+trj = trj %>% 
+        mutate(lessens = !firstish & significant & lead(nearby) &
+                            ((sign(lead(step_gradient))==sign(step_gradient)) & (abs(lead(stepangle)) < abs(step_gradient))))
+
+
+ggplot(data=trj[zoom1, ],
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
+  geom_point( size=2, aes(color = lessens,
+                          shape = firstish)) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+We might also try for "continues" if the angle is about the same gradient but not tightening.
+
+### Numbering Corners
+
+To make it easier to refer to corners, can we use the *firstish* flag as a way of counting corners?
+
+```{r sd-numbered-corners, warning=FALSE}
+
+trj_corners = trj[trj$firstish,]
+trj_corners$corner_num = cumsum(trj_corners$firstish)
+
+zoom1_corners = trj_corners[trj_corners$y>4964000 & trj_corners$y<4965000,]
+
+ggplot(data=trj[zoom1, ],
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
+       geom_text(data= zoom1_corners,
+              aes(x=x, y=y, label=corner_num),
+              size=3) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+## Categorising Corners Using `rLFT` Convexity
+
+The previous approach works to a certain extent with the limited dataset we tested it against but it feels rather contrived. Generally, just by *looking* at a curve we get a feel for how tight it is, rather than having to apply all sorts of decision-making rules and logical reasoning. Is there a simple metric we can use?
+
+One approach might be to consider using *convexity* measure, such as the one provided by the `rLFT` package. Let's see how that might work.
+
+```{r}
+library(rLFT)
+
+outputTable <- bct(utm_routes[1,],
+                   # distance between measurements 
+                   step = 10,
+                   window = 20, ridName = "Name")
+
+head(outputTable)
+```
+
+Recalling the prvious chapter:
+
+```{r sd-convexity-route}
+tight_corners = outputTable[abs(outputTable$ConvexityIndex)>0.1,]
+tight_corners_zoom1 = tight_corners$Midpoint_Y>4964000 & tight_corners$Midpoint_Y<4965000
+
+ggplot(data=trj[zoom1, ],
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
+  geom_text(data=tight_corners[tight_corners_zoom1,],
+                           aes(label = ConvexityIndex,
+                               x=Midpoint_X, y=Midpoint_Y),
+                           size=2) +
+  geom_point(data=tight_corners[tight_corners_zoom1,],
+             aes(x=Midpoint_X, y=Midpoint_Y,
+                 color= (ConvexityIndex>0) ), size=1) +
+  theme_classic()+
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+So the absolute convexity index can help us find corners but we still need to do some work to find find the start of a corner.
+
+How does that top right area look?
+
+```{r sd-convexity-zoom}
+tight_corners_zoom2 = tight_corners_zoom1 & tight_corners$Midpoint_X<730100
+
+ggplot(data=trj[zoom2,],
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
+  geom_text(data=tight_corners[tight_corners_zoom2,],
+                           aes(label = ConvexityIndex,
+                               x=Midpoint_X, y=Midpoint_Y),
+                           size=3) +
+  geom_point(data=tight_corners[tight_corners_zoom2,],
+             aes(x=Midpoint_X, y=Midpoint_Y,
+                 color= (ConvexityIndex>0) ), size=1) +
+  theme_classic()+
+  theme(axis.text.x = element_text(angle = 45))
+```
+So we can probably apply a similar logic to previously to group these and identify the corner entry node and the tightens or lessens etc.
+
