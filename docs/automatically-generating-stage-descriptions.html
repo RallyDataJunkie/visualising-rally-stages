@@ -569,7 +569,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb10-6"><a href="automatically-generating-stage-descriptions.html#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size=</span><span class="fl">0.2</span>,</span>
 <span id="cb10-7"><a href="automatically-generating-stage-descriptions.html#cb10-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">data=</span>trj[trj<span class="sc">$</span>step_gradient<span class="sc">&lt;=-</span><span class="fl">0.2</span>,],</span>
 <span id="cb10-8"><a href="automatically-generating-stage-descriptions.html#cb10-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">color=</span><span class="st">&#39;red&#39;</span>)</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/sd-preview-1.png" width="672" /></p>
+<p><img src="images/stage-description-sd-preview-1.png" width="672" /></p>
 <p>If we have several consecutive points with a gradient of the <em>same</em> sign, then we migth consider them to be part of the same corner, albeit one that maybe tightens or lessens. If the gradients of consecutive segments have a <em>different</em> sign, then we have a change of direction from eg left to right or right to left.</p>
 <p>We can create a flag that identifies when the sign changes across consecutive rows of the <em>step_gradient</em> column. We can check this by lagging the contents of the <em>step_gradient</em> column by one step using the <code>dplyr::lag()</code> function and comparing its sign to the sign of the unlagged value. If we then <em>dplyr::lead()</em> the result, we can see if a change in direction happens at the end of a step:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="automatically-generating-stage-descriptions.html#cb11-1" aria-hidden="true" tabindex="-1"></a>trj <span class="ot">=</span> trj <span class="sc">%&gt;%</span></span>
@@ -588,7 +588,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb13-2"><a href="automatically-generating-stage-descriptions.html#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>( <span class="at">size=</span><span class="fl">0.2</span>, <span class="at">color=</span><span class="st">&#39;blue&#39;</span>,</span>
 <span id="cb13-3"><a href="automatically-generating-stage-descriptions.html#cb13-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">data=</span>trj[trj<span class="sc">$</span>dirChange,]) <span class="sc">+</span></span>
 <span id="cb13-4"><a href="automatically-generating-stage-descriptions.html#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/sd-dirchange-1.png" width="672" />
+<p><img src="images/stage-description-sd-dirchange-1.png" width="672" />
 Let’s zoom in a bit:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="automatically-generating-stage-descriptions.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Zoom in on part of the route</span></span>
 <span id="cb14-2"><a href="automatically-generating-stage-descriptions.html#cb14-2" aria-hidden="true" tabindex="-1"></a>zoom1 <span class="ot">=</span> trj<span class="sc">$</span>y<span class="sc">&gt;</span><span class="dv">4964000</span> <span class="sc">&amp;</span> trj<span class="sc">$</span>y<span class="sc">&lt;</span><span class="dv">4965000</span> </span>
@@ -599,7 +599,7 @@ Let’s zoom in a bit:</p>
 <span id="cb14-7"><a href="automatically-generating-stage-descriptions.html#cb14-7" aria-hidden="true" tabindex="-1"></a>g1 <span class="sc">+</span>  <span class="fu">geom_point</span>( <span class="at">size=</span><span class="fl">0.2</span>, <span class="at">color=</span><span class="st">&#39;blue&#39;</span>,</span>
 <span id="cb14-8"><a href="automatically-generating-stage-descriptions.html#cb14-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">data=</span>trj[zoom1 <span class="sc">&amp;</span> trj<span class="sc">$</span>dirChange,]) <span class="sc">+</span></span>
 <span id="cb14-9"><a href="automatically-generating-stage-descriptions.html#cb14-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/sd-dirchange-zoom-1.png" width="672" />
+<p><img src="images/stage-description-sd-dirchange-zoom-1.png" width="672" />
 We notice that we seem to be missing some corners that are perhaps not direction changes, but significant angle changes in the same direction. And we also notice a direction change flagged in what appears to be the middle of a straight.</p>
 <p>Let’s look at the apparent turn in the middle of the straight first. If we have opposing angles from one segment to the next, then we currently class the first point as a corner because the direction has changed. But we aren’t really interested in slight direction changes or even slight direction changes in the same direction.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="automatically-generating-stage-descriptions.html#cb15-1" aria-hidden="true" tabindex="-1"></a>slight_gradient <span class="ot">=</span> <span class="fl">0.35</span></span>
@@ -611,7 +611,7 @@ We notice that we seem to be missing some corners that are perhaps not direction
 <span id="cb15-7"><a href="automatically-generating-stage-descriptions.html#cb15-7" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span> <span class="fu">geom_path</span>(<span class="at">color=</span><span class="st">&#39;grey&#39;</span>) <span class="sc">+</span> <span class="fu">coord_sf</span>() <span class="sc">+</span></span>
 <span id="cb15-8"><a href="automatically-generating-stage-descriptions.html#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>( <span class="at">size=</span><span class="dv">1</span>, <span class="fu">aes</span>(<span class="at">color =</span> straightish)) <span class="sc">+</span></span>
 <span id="cb15-9"><a href="automatically-generating-stage-descriptions.html#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/sd-straightish-1.png" width="672" /></p>
+<p><img src="images/stage-description-sd-straightish-1.png" width="672" /></p>
 <p>We now want to identify the first node in a close sequence of nodes that idenfitify a turn that doesnlt change direction.</p>
 <p>Which is to say we want a not straightish node whose next node is nearby and not straightish and in the same direction, or not nearby:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="automatically-generating-stage-descriptions.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Close distance threshold</span></span>
@@ -627,7 +627,7 @@ We notice that we seem to be missing some corners that are perhaps not direction
 <span id="cb16-11"><a href="automatically-generating-stage-descriptions.html#cb16-11" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span> <span class="fu">geom_path</span>(<span class="at">color=</span><span class="st">&#39;grey&#39;</span>) <span class="sc">+</span> <span class="fu">coord_sf</span>() <span class="sc">+</span></span>
 <span id="cb16-12"><a href="automatically-generating-stage-descriptions.html#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>( <span class="at">size=</span><span class="dv">1</span>, <span class="fu">aes</span>(<span class="at">color =</span> firstish)) <span class="sc">+</span></span>
 <span id="cb16-13"><a href="automatically-generating-stage-descriptions.html#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/sd-firstish-1.png" width="672" /></p>
+<p><img src="images/stage-description-sd-firstish-1.png" width="672" /></p>
 <p>That’s identifiying some of the corners, but what’s going on top left?</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="automatically-generating-stage-descriptions.html#cb17-1" aria-hidden="true" tabindex="-1"></a>zoom2 <span class="ot">=</span> zoom1 <span class="sc">&amp;</span> trj<span class="sc">$</span>x<span class="sc">&lt;</span><span class="dv">730100</span></span>
 <span id="cb17-2"><a href="automatically-generating-stage-descriptions.html#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -635,7 +635,7 @@ We notice that we seem to be missing some corners that are perhaps not direction
 <span id="cb17-4"><a href="automatically-generating-stage-descriptions.html#cb17-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span> <span class="fu">geom_path</span>(<span class="at">color=</span><span class="st">&#39;grey&#39;</span>) <span class="sc">+</span> <span class="fu">coord_sf</span>() <span class="sc">+</span></span>
 <span id="cb17-5"><a href="automatically-generating-stage-descriptions.html#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>( <span class="at">size=</span><span class="dv">1</span>, <span class="fu">aes</span>(<span class="at">color =</span> firstish)) <span class="sc">+</span></span>
 <span id="cb17-6"><a href="automatically-generating-stage-descriptions.html#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/sd-firstish-zoom-1.png" width="672" />
+<p><img src="images/stage-description-sd-firstish-zoom-1.png" width="672" />
 Ah, ok, maybe we could categorise those as turns, but perhaps gentle ones. We maybe need to flag these as “flowing” if they aren’t too tight and have a long run in and out:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="automatically-generating-stage-descriptions.html#cb18-1" aria-hidden="true" tabindex="-1"></a>tight_gradient <span class="ot">=</span> <span class="fl">0.5</span></span>
 <span id="cb18-2"><a href="automatically-generating-stage-descriptions.html#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -649,14 +649,14 @@ Ah, ok, maybe we could categorise those as turns, but perhaps gentle ones. We ma
 <span id="cb18-10"><a href="automatically-generating-stage-descriptions.html#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>( <span class="at">size=</span><span class="dv">3</span>, <span class="fu">aes</span>(<span class="at">color =</span> flowing,</span>
 <span id="cb18-11"><a href="automatically-generating-stage-descriptions.html#cb18-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">shape =</span> dirChange)) <span class="sc">+</span></span>
 <span id="cb18-12"><a href="automatically-generating-stage-descriptions.html#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/sd-flowing-1.png" width="672" /></p>
+<p><img src="images/stage-description-sd-flowing-1.png" width="672" /></p>
 <p>And how about over a wider part of the stage?</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="automatically-generating-stage-descriptions.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>trj[zoom1, ],</span>
 <span id="cb19-2"><a href="automatically-generating-stage-descriptions.html#cb19-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span> <span class="fu">geom_path</span>(<span class="at">color=</span><span class="st">&#39;grey&#39;</span>) <span class="sc">+</span> <span class="fu">coord_sf</span>() <span class="sc">+</span></span>
 <span id="cb19-3"><a href="automatically-generating-stage-descriptions.html#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>( <span class="at">size=</span><span class="dv">2</span>, <span class="fu">aes</span>(<span class="at">color =</span> firstish,</span>
 <span id="cb19-4"><a href="automatically-generating-stage-descriptions.html#cb19-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">shape =</span> flowing)) <span class="sc">+</span></span>
 <span id="cb19-5"><a href="automatically-generating-stage-descriptions.html#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/sd-flowing2-1.png" width="672" /></p>
+<p><img src="images/stage-description-sd-flowing2-1.png" width="672" /></p>
 <p>We could also then create a <em>!flowing &amp; firstish</em> flag to provide better indexing of the starts of corners.</p>
 <p>We’d need to test the approach on further stages to see whether it gives false positives or false negatives on identifying various corners, and we’d maybe also want to try to identfy tightens and lessens.</p>
 <p>Let’s have a go at tightens. At a first approximation, a corner <em>tightens</em> if a node isn’t firstsh, is above a certain gradient, is close to the previous step and the magnitude of the gradient has increased and is the same sign as the previous step:</p>
@@ -670,7 +670,7 @@ Ah, ok, maybe we could categorise those as turns, but perhaps gentle ones. We ma
 <span id="cb20-8"><a href="automatically-generating-stage-descriptions.html#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>( <span class="at">size=</span><span class="dv">2</span>, <span class="fu">aes</span>(<span class="at">color =</span> tightens,</span>
 <span id="cb20-9"><a href="automatically-generating-stage-descriptions.html#cb20-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">shape =</span> firstish)) <span class="sc">+</span></span>
 <span id="cb20-10"><a href="automatically-generating-stage-descriptions.html#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/sd-tightens-1.png" width="672" />
+<p><img src="images/stage-description-sd-tightens-1.png" width="672" />
 The corner <em>lessens</em> if a node isn’t firstish, is above a certain gradient, is close to the previous step and the gradient is in the same direction and has decreased:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="automatically-generating-stage-descriptions.html#cb21-1" aria-hidden="true" tabindex="-1"></a>trj <span class="ot">=</span> trj <span class="sc">%&gt;%</span> </span>
 <span id="cb21-2"><a href="automatically-generating-stage-descriptions.html#cb21-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">lessens =</span> <span class="sc">!</span>firstish <span class="sc">&amp;</span> significant <span class="sc">&amp;</span> <span class="fu">lead</span>(nearby) <span class="sc">&amp;</span></span>
@@ -682,7 +682,7 @@ The corner <em>lessens</em> if a node isn’t firstish, is above a certain gradi
 <span id="cb21-8"><a href="automatically-generating-stage-descriptions.html#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>( <span class="at">size=</span><span class="dv">2</span>, <span class="fu">aes</span>(<span class="at">color =</span> lessens,</span>
 <span id="cb21-9"><a href="automatically-generating-stage-descriptions.html#cb21-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">shape =</span> firstish)) <span class="sc">+</span></span>
 <span id="cb21-10"><a href="automatically-generating-stage-descriptions.html#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/sd-lessens-1.png" width="672" /></p>
+<p><img src="images/stage-description-sd-lessens-1.png" width="672" /></p>
 <p>We might also try for “continues” if the angle is about the same gradient but not tightening.</p>
 <div id="numbering-corners" class="section level3" number="20.4.1">
 <h3><span class="header-section-number">20.4.1</span> Numbering Corners</h3>
@@ -698,7 +698,7 @@ The corner <em>lessens</em> if a node isn’t firstish, is above a certain gradi
 <span id="cb22-9"><a href="automatically-generating-stage-descriptions.html#cb22-9" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y, <span class="at">label=</span>corner_num),</span>
 <span id="cb22-10"><a href="automatically-generating-stage-descriptions.html#cb22-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">size=</span><span class="dv">3</span>) <span class="sc">+</span></span>
 <span id="cb22-11"><a href="automatically-generating-stage-descriptions.html#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/sd-numbered-corners-1.png" width="672" /></p>
+<p><img src="images/stage-description-sd-numbered-corners-1.png" width="672" /></p>
 </div>
 </div>
 <div id="categorising-corners-using-rlft-convexity" class="section level2" number="20.5">
@@ -714,7 +714,7 @@ The corner <em>lessens</em> if a node isn’t firstish, is above a certain gradi
 <span id="cb23-7"><a href="automatically-generating-stage-descriptions.html#cb23-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">step =</span> stepdist,</span>
 <span id="cb23-8"><a href="automatically-generating-stage-descriptions.html#cb23-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">window =</span> window, <span class="at">ridName =</span> <span class="st">&quot;Name&quot;</span>)</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.161   0.030   0.191 
+##   0.164   0.032   0.196 
 ## [1] &quot;Features skipped due to size: &quot;
 ## logical(0)</code></pre>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="automatically-generating-stage-descriptions.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(routeConvTable)</span></code></pre></div>
@@ -732,7 +732,7 @@ The corner <em>lessens</em> if a node isn’t firstish, is above a certain gradi
 ## 4    4957694
 ## 5    4957703
 ## 6    4957713</code></pre>
-<p>Recalling the prvious chapter:</p>
+<p>Recalling the previous chapter:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="automatically-generating-stage-descriptions.html#cb27-1" aria-hidden="true" tabindex="-1"></a>corner_conv <span class="ot">=</span> <span class="fl">0.1</span></span>
 <span id="cb27-2"><a href="automatically-generating-stage-descriptions.html#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-3"><a href="automatically-generating-stage-descriptions.html#cb27-3" aria-hidden="true" tabindex="-1"></a>tight_corners <span class="ot">=</span> routeConvTable[<span class="fu">abs</span>(routeConvTable<span class="sc">$</span>ConvexityIndex)<span class="sc">&gt;</span>corner_conv,]</span>
@@ -749,7 +749,7 @@ The corner <em>lessens</em> if a node isn’t firstish, is above a certain gradi
 <span id="cb27-14"><a href="automatically-generating-stage-descriptions.html#cb27-14" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span> (ConvexityIndex<span class="sc">&gt;</span><span class="dv">0</span>) ), <span class="at">size=</span><span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb27-15"><a href="automatically-generating-stage-descriptions.html#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
 <span id="cb27-16"><a href="automatically-generating-stage-descriptions.html#cb27-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/sd-convexity-route-1.png" width="672" /></p>
+<p><img src="images/stage-description-sd-convexity-route-1.png" width="672" /></p>
 <p>So the absolute convexity index can help us find corners but we still need to do some work to find find the start of a corner.</p>
 <p>How does that top right area look?</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="automatically-generating-stage-descriptions.html#cb28-1" aria-hidden="true" tabindex="-1"></a>tight_corners_zoom2 <span class="ot">=</span> tight_corners_zoom1 <span class="sc">&amp;</span> tight_corners<span class="sc">$</span>Midpoint_X<span class="sc">&lt;</span><span class="dv">730100</span></span>
@@ -765,23 +765,21 @@ The corner <em>lessens</em> if a node isn’t firstish, is above a certain gradi
 <span id="cb28-11"><a href="automatically-generating-stage-descriptions.html#cb28-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span> (ConvexityIndex<span class="sc">&gt;</span><span class="dv">0</span>) ), <span class="at">size=</span><span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb28-12"><a href="automatically-generating-stage-descriptions.html#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
 <span id="cb28-13"><a href="automatically-generating-stage-descriptions.html#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/sd-convexity-zoom-1.png" width="672" />
+<p><img src="images/stage-description-sd-convexity-zoom-1.png" width="672" />
 So we can probably apply a similar logic to previously to group these and identify the corner entry node, although we need to tweak the rules slightly so that we are identifying a corner entry node that is far from a previous tight corner node:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="automatically-generating-stage-descriptions.html#cb29-1" aria-hidden="true" tabindex="-1"></a>euclidean_dist <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) <span class="fu">sqrt</span>(<span class="fu">sum</span>((a <span class="sc">-</span> b)<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb29-2"><a href="automatically-generating-stage-descriptions.html#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="automatically-generating-stage-descriptions.html#cb29-3" aria-hidden="true" tabindex="-1"></a>cornerer <span class="ot">=</span> <span class="cf">function</span> (df, <span class="at">slight_conv=</span><span class="fl">0.01</span>, <span class="at">closeby=</span><span class="dv">25</span>){</span>
-<span id="cb29-4"><a href="automatically-generating-stage-descriptions.html#cb29-4" aria-hidden="true" tabindex="-1"></a>  df <span class="sc">%&gt;%</span></span>
-<span id="cb29-5"><a href="automatically-generating-stage-descriptions.html#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">dirChange =</span> <span class="fu">sign</span>(ConvexityIndex) <span class="sc">!=</span> <span class="fu">sign</span>(<span class="fu">lag</span>(ConvexityIndex))) <span class="sc">%&gt;%</span></span>
-<span id="cb29-6"><a href="automatically-generating-stage-descriptions.html#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">straightish =</span>  (<span class="fu">abs</span>(ConvexityIndex) <span class="sc">&lt;</span> slight_conv)) <span class="sc">%&gt;%</span></span>
-<span id="cb29-7"><a href="automatically-generating-stage-descriptions.html#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">dist =</span>  (<span class="fu">lead</span>(MidMeas)<span class="sc">-</span>MidMeas)) <span class="sc">%&gt;%</span></span>
-<span id="cb29-8"><a href="automatically-generating-stage-descriptions.html#cb29-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">nearby =</span>  dist <span class="sc">&lt;</span> closeby) <span class="sc">%&gt;%</span></span>
-<span id="cb29-9"><a href="automatically-generating-stage-descriptions.html#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">firstish =</span> <span class="sc">!</span>straightish <span class="sc">&amp;</span> </span>
-<span id="cb29-10"><a href="automatically-generating-stage-descriptions.html#cb29-10" aria-hidden="true" tabindex="-1"></a>                        ((nearby <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">lag</span>(straightish) <span class="sc">&amp;</span> <span class="fu">lag</span>(dirChange)) <span class="sc">|</span></span>
-<span id="cb29-11"><a href="automatically-generating-stage-descriptions.html#cb29-11" aria-hidden="true" tabindex="-1"></a>                        <span class="co"># We don&#39;t want the previous node nearby</span></span>
-<span id="cb29-12"><a href="automatically-generating-stage-descriptions.html#cb29-12" aria-hidden="true" tabindex="-1"></a>                        (<span class="sc">!</span><span class="fu">lag</span>(nearby)) ) )</span>
-<span id="cb29-13"><a href="automatically-generating-stage-descriptions.html#cb29-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb29-14"><a href="automatically-generating-stage-descriptions.html#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-15"><a href="automatically-generating-stage-descriptions.html#cb29-15" aria-hidden="true" tabindex="-1"></a>tight_corners <span class="ot">=</span> <span class="fu">cornerer</span>(tight_corners)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="automatically-generating-stage-descriptions.html#cb29-1" aria-hidden="true" tabindex="-1"></a>cornerer <span class="ot">=</span> <span class="cf">function</span> (df, <span class="at">slight_conv=</span><span class="fl">0.01</span>, <span class="at">closeby=</span><span class="dv">25</span>){</span>
+<span id="cb29-2"><a href="automatically-generating-stage-descriptions.html#cb29-2" aria-hidden="true" tabindex="-1"></a>  df <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="automatically-generating-stage-descriptions.html#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">dirChange =</span> <span class="fu">sign</span>(ConvexityIndex) <span class="sc">!=</span> <span class="fu">sign</span>(<span class="fu">lag</span>(ConvexityIndex))) <span class="sc">%&gt;%</span></span>
+<span id="cb29-4"><a href="automatically-generating-stage-descriptions.html#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">straightish =</span>  (<span class="fu">abs</span>(ConvexityIndex) <span class="sc">&lt;</span> slight_conv)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-5"><a href="automatically-generating-stage-descriptions.html#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">dist =</span>  (<span class="fu">lead</span>(MidMeas)<span class="sc">-</span>MidMeas)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-6"><a href="automatically-generating-stage-descriptions.html#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">nearby =</span>  dist <span class="sc">&lt;</span> closeby) <span class="sc">%&gt;%</span></span>
+<span id="cb29-7"><a href="automatically-generating-stage-descriptions.html#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">firstish =</span> <span class="sc">!</span>straightish <span class="sc">&amp;</span></span>
+<span id="cb29-8"><a href="automatically-generating-stage-descriptions.html#cb29-8" aria-hidden="true" tabindex="-1"></a>                        ((nearby <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">lag</span>(straightish) <span class="sc">&amp;</span> <span class="fu">lag</span>(dirChange)) <span class="sc">|</span></span>
+<span id="cb29-9"><a href="automatically-generating-stage-descriptions.html#cb29-9" aria-hidden="true" tabindex="-1"></a>                        <span class="co"># We don&#39;t want the previous node nearby</span></span>
+<span id="cb29-10"><a href="automatically-generating-stage-descriptions.html#cb29-10" aria-hidden="true" tabindex="-1"></a>                        (<span class="sc">!</span><span class="fu">lag</span>(nearby)) ) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">lag</span>(nearby) )</span>
+<span id="cb29-11"><a href="automatically-generating-stage-descriptions.html#cb29-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-12"><a href="automatically-generating-stage-descriptions.html#cb29-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-13"><a href="automatically-generating-stage-descriptions.html#cb29-13" aria-hidden="true" tabindex="-1"></a>tight_corners <span class="ot">=</span> <span class="fu">cornerer</span>(tight_corners)</span></code></pre></div>
 <p>Let’s see how it looks. We can also label nodes showing how far away the next node is:</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="automatically-generating-stage-descriptions.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>trj[zoom1,],</span>
 <span id="cb30-2"><a href="automatically-generating-stage-descriptions.html#cb30-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y)) <span class="sc">+</span> <span class="fu">geom_path</span>(<span class="at">color=</span><span class="st">&#39;grey&#39;</span>) <span class="sc">+</span> <span class="fu">coord_sf</span>() <span class="sc">+</span></span>
@@ -794,7 +792,7 @@ So we can probably apply a similar logic to previously to group these and identi
 <span id="cb30-9"><a href="automatically-generating-stage-descriptions.html#cb30-9" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span> (firstish) ), <span class="at">size=</span><span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb30-10"><a href="automatically-generating-stage-descriptions.html#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
 <span id="cb30-11"><a href="automatically-generating-stage-descriptions.html#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>))</span></code></pre></div>
-<p><img src="rally-stage-route-book_files/figure-html/rlft-corners-1.png" width="672" /></p>
+<p><img src="images/stage-description-rlft-corners-1.png" width="672" /></p>
 
 </div>
 </div>
