@@ -309,23 +309,28 @@ ggplot(data=trj[zoom1, ],
 
 The previous approach works to a certain extent with the limited dataset we tested it against but it feels rather contrived. Generally, just by *looking* at a curve we get a feel for how tight it is, rather than having to apply all sorts of decision-making rules and logical reasoning. Is there a simple metric we can use?
 
-One approach might be to consider using *convexity* measure, such as the one provided by the `rLFT` package. Let's see how that might work.
+One approach might be to consider using *convexity* measure, such as the one provided by the `rLFT` package. Let's see how that might work using the `rLFT::bct()` (*bounded convexity tool*) function. This function finds the curvature at regular points along a track, in the following example, every 10 meters:
 
 ```{r}
 library(rLFT)
 
-outputTable <- bct(utm_routes[1,],
-                   # distance between measurements 
-                   step = 10,
-                   window = 20, ridName = "Name")
+stepdist = 10
+window = 20
+routeConvTable <- bct(utm_routes[1,],
+                      # distance between measurements 
+                      step = stepdist,
+                      window = window, ridName = "Name")
 
-head(outputTable)
+
+head(routeConvTable)
 ```
 
 Recalling the prvious chapter:
 
 ```{r sd-convexity-route}
-tight_corners = outputTable[abs(outputTable$ConvexityIndex)>0.1,]
+corner_conv = 0.1
+
+tight_corners = routeConvTable[abs(routeConvTable$ConvexityIndex)>corner_conv,]
 tight_corners_zoom1 = tight_corners$Midpoint_Y>4964000 & tight_corners$Midpoint_Y<4965000
 
 ggplot(data=trj[zoom1, ],
@@ -350,7 +355,7 @@ tight_corners_zoom2 = tight_corners_zoom1 & tight_corners$Midpoint_X<730100
 
 ggplot(data=trj[zoom2,],
        aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
-  geom_text(data=tight_corners[tight_corners_zoom2,],
+  ggrepel::geom_text_repel(data=tight_corners[tight_corners_zoom2,],
                            aes(label = ConvexityIndex,
                                x=Midpoint_X, y=Midpoint_Y),
                            size=3) +
@@ -360,5 +365,39 @@ ggplot(data=trj[zoom2,],
   theme_classic()+
   theme(axis.text.x = element_text(angle = 45))
 ```
-So we can probably apply a similar logic to previously to group these and identify the corner entry node and the tightens or lessens etc.
+So we can probably apply a similar logic to previously to group these and identify the corner entry node, although we need to tweak the rules slightly so that we are identifying a corner entry node that is far from a previous tight corner node:
+
+```{r}
+euclidean_dist <- function(a, b) sqrt(sum((a - b)^2))
+
+cornerer = function (df, slight_conv=0.01, closeby=25){
+  df %>%
+    mutate(dirChange = sign(ConvexityIndex) != sign(lag(ConvexityIndex))) %>%
+    mutate(straightish =  (abs(ConvexityIndex) < slight_conv)) %>%
+    mutate(dist =  (lead(MidMeas)-MidMeas)) %>%
+    mutate(nearby =  dist < closeby) %>%
+    mutate(firstish = !straightish & 
+                        ((nearby & !lag(straightish) & lag(dirChange)) |
+                        # We don't want the previous node nearby
+                        (!lag(nearby)) ) )
+}
+
+tight_corners = cornerer(tight_corners)
+```
+
+Let's see how it looks. We can also label nodes showing how far away the next node is:
+
+```{r rlft-corners, warning=FALSE}
+ggplot(data=trj[zoom1,],
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
+  ggrepel::geom_text_repel(data=tight_corners[tight_corners_zoom1,],
+                           aes(label = dist,
+                               x=Midpoint_X, y=Midpoint_Y),
+                           size=3) +
+  geom_point(data=tight_corners[tight_corners_zoom1,],
+             aes(x=Midpoint_X, y=Midpoint_Y,
+                 color= (firstish) ), size=1) +
+  theme_classic()+
+  theme(axis.text.x = element_text(angle = 45))
+```
 
