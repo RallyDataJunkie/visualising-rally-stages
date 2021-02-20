@@ -179,7 +179,7 @@ One intuition behind using animal movement analysis tools to categorise rally st
 
 The [`trajr` *R* package](https://cran.r-project.org/web/packages/trajr/vignettes/trajr-vignette.html) was developed to help characterise and analyse the trajectories or paths followed by a moving animal given various location coordinates along its route.
 
-Trajectories are created using Cartesian co-ordinates, so it makes sense to use data that has been cast into UTM coordinate system as the basis for the trajectory.
+Trajectories are created using Cartesian co-ordinates, so it makes sense to use data that has been cast into UTM coordinate system as the basis for the trajectory. A two dimensional spatial `trajr` trajectory can be created by defaultfrom a two column (x/y coordinates) or three column (x/t/time) dataframe using the `trajr::TrajFromCoords()` function, r from an arbitrary dataframe by specifying column names using the *xCol*, *yCol* and *timeCol* parameters. Spatial and temporal units can also be specified using the *spatialUnits* and *timeUnits* parameters.
 
 ```{r}
 library(trajr)
@@ -787,18 +787,18 @@ The boundary convexity tool function, `rLFT::bct()` generates a convexity measur
 ```{r rlft-route}
 library(rLFT)
 
-outputTable <- bct(utm_routes[1,],
+route_convexity <- bct(utm_routes[1,],
                    # distance between measurements 
                    step = 10,
                    window = 20, ridName = "Name")
 
-head(outputTable)
+head(route_convexity)
 ```
 
 By filtering the table to rows with with a large absolute *ConvexityIndex* we can identify and label tight corners. The `ggrepel::geom_text_repel()` function attempts to minimise the extent to which labels overlap, using arrows to identify points referenced by the label where the label location is dodged away from the point:
 
 ```{r rLFT-route, message=FALSE, warning=FALSE}
-tight_corners = outputTable[abs(outputTable$ConvexityIndex)>0.45,]
+tight_corners = route_convexity[abs(route_convexity$ConvexityIndex)>0.45,]
 
 ggplot() +
   geom_sf(data=utm_routes[1,]) +
@@ -817,9 +817,41 @@ ggplot() +
 We can also get the output table as a *simple features* object where the midpoint co-ordinates are cast to a point geometry type:
 
 ```{r}
-outSF <- st_as_sf(outputTable,
+outSF <- st_as_sf(route_convexity,
                  coords = c("Midpoint_X", "Midpoint_Y"), 
                  stringsAsFactors = FALSE)
 ```
 
-The convexity measures are defined in *Albeke, S.E. et al. [Measuring boundary convexity at multiple spatial scales using a linear 'moving window' analysis: an application to coastal river otter habitat selection](https://www.d.umn.edu/biology/documents/Nibbelink2_000.pdf) Landscape Ecology 25 (2010): 1575-1587.
+The convexity measures are defined in [*Measuring boundary convexity at multiple spatial scales using a linear 'moving window' analysis: an application to coastal river otter habitat selection*](https://www.d.umn.edu/biology/documents/Nibbelink2_000.pdf), Albeke, S.E. et al., Landscape Ecology 25 (2010): 1575-1587.
+
+### Convexity as a 3D Plot
+
+To try to get a feel for how the convexity changes alobg a route, we can render a 3D plot of the of the convexity using the `rayhader::ggplot()` function.
+
+As a first step, we need to create a base *ggplot2* plot:
+
+```{r convexity_gg}
+convexity_gg = ggplot() + geom_sf(data=utm_routes[1,]) +
+  geom_point(data=route_convexity,  show.legend = FALSE,
+             size=1,
+            aes(x=Midpoint_X, y=Midpoint_Y,
+                               color=abs(ConvexityIndex)))
+
+convexity_gg
+```
+
+Then we can render it in three dimensions:
+
+```{r}
+library(rayshader)
+library(rgl)
+
+rgl::clear3d()
+plot_gg(convexity_gg, scale=1000)
+
+rgl::rglwidget()
+```
+
+
+
+
