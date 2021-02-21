@@ -1,5 +1,5 @@
 ```{r cache = T, echo = F, message=F}
-# 9Allow knitr to continue to execute even in the presence of errors
+# 29Allow 2 knitr to continue to execute even in the presence of errors
 knitr::opts_chunk$set(error = TRUE)
 knitr::opts_chunk$set(fig.path = "images/stage-description-")
 ```
@@ -181,7 +181,6 @@ We notice that we seem to be missing some corners that are perhaps not direction
 
 Let's look at the apparent turn in the middle of the straight first. If we have opposing angles from one segment to the next, then we currently class the first point as a corner because the direction has changed. But we aren't really interested in slight direction changes or even slight direction changes in the same direction. 
 
-
 ```{r sd-straightish}
 slight_gradient = 0.35
 
@@ -316,12 +315,12 @@ library(rLFT)
 
 stepdist = 10
 window = 20
-routeConvTable <- bct(utm_routes[1,],
+route_convexity <- bct(utm_routes[1,],
                       # distance between measurements 
                       step = stepdist,
                       window = window, ridName = "Name")
 
-head(routeConvTable)
+head(route_convexity)
 ```
 
 Recalling the previous chapter:
@@ -329,7 +328,7 @@ Recalling the previous chapter:
 ```{r sd-convexity-route}
 corner_conv = 0.1
 
-tight_corners = routeConvTable[abs(routeConvTable$ConvexityIndex)>corner_conv,]
+tight_corners = route_convexity[abs(route_convexity$ConvexityIndex)>corner_conv,]
 tight_corners_zoom1 = tight_corners$Midpoint_Y>4964000 & tight_corners$Midpoint_Y<4965000
 
 ggplot(data=trj[zoom1, ],
@@ -398,3 +397,161 @@ ggplot(data=trj[zoom1,],
   theme(axis.text.x = element_text(angle = 45))
 ```
 
+## Stage Segmenting
+
+One of the handy things about the `rLFT::bct()` is that it can chunk the route into very short segments. This provides us with an easy way to index into the route to generate a view over a particular section.
+
+For example, we can view the route over specfic sections given a start and finish distance into the route. Note that the route will be discretised to step lengths used by the `rLFT::bct()` function and a stylised route will be approximated along step midmeasure points:
+
+```{r example_route_section}
+segment_plot = function(start, end, title='') {
+  
+  # Create the route distance filter limits
+  segment_filter = route_convexity$MidMeas >= start &
+                    route_convexity$MidMeas <= end
+  
+  # Filter the route
+  route_segment = route_convexity[segment_filter,]
+  
+  # Generate the stylised route plot
+  ggplot(route_segment) +
+            geom_path(aes(x=Midpoint_X, y=Midpoint_Y)) +
+          geom_point(data=head(route_convexity[segment_filter,],n=1),
+                     aes(x=Midpoint_X, y=Midpoint_Y)) +
+            theme_void() +ggtitle(title)
+}
+
+# Show the first 1000m
+segment_plot(0, 1000)
+```
+
+We can automate the creation of route sections every kilometer and create a list of plots, one per kilometer section:
+
+```{r}
+segment_length = 1000
+step_length=10
+
+kms = floor(max(route_convexity$MidMeas)/segment_length)
+
+# The final section goes to the end of the route
+segment_multiplot = function(i, final=FALSE){
+  # Preface the start of the stage with a 20m lead
+  start_prefix = 2*step_length
+  start = segment_length*(i-1)-start_prefix
+  if (final) 
+    end = Inf
+  else
+    end = (segment_length*i)
+  
+  segment_plot(start, end, i)
+}
+
+# Create a list to hold each plot as a separate item
+segment_plots = list()
+
+# Iterate through each kilometer
+for (i in 1:kms){
+  # Add each plot to the plot list
+  segment_plots[[length(segment_plots) + 1]] <-
+      segment_multiplot(i, final=(i==kms))
+}
+```
+
+We can now use the `ggpubr::ggarrange()` function to display all the stage route sections in a single plot:
+
+```{r route-by-1km-section}
+library(ggpubr)
+
+ggarrange(plotlist=segment_plots,
+          ncol=5, nrow=ceiling(kms/4))
+```
+
+We can use a similar approach to create a more general function that will allow us to plot either the route, or generate a plot for each segment showing the convexity against distance into the segment:
+
+```{r}
+# Simple function to get a route segment
+get_route_segment = function (route, start, end){
+    segment_filter = route$MidMeas >= start &
+                      route$MidMeas <= end
+    
+    route[segment_filter,]
+}
+
+
+segment_plot2 = function(route, start, end, title='',
+                         typ='route', themevoid=TRUE){
+
+  # Get route segment
+  route_segment = get_route_segment(route, start, end)
+  
+  # Create plot base
+  g = ggplot(route_segment)
+  
+  if (typ=='convexity') {
+    g = g + geom_bar(aes(x=MidMeas,
+                         y=-ConvexityIndex,
+                         col=(ConvexityIndex<0)),
+                     stat='identity', show.legend = FALSE)
+  
+  } else {
+   # plot route
+   g = g + geom_path(aes(x=Midpoint_X, y=Midpoint_Y)) +
+           geom_point(data=head(route_convexity[segment_filter,], n=1),
+                      aes(x=Midpoint_X, y=Midpoint_Y)) 
+  }
+  
+  if (title!='')
+    g = g + ggtitle(title)
+  
+  if (themevoid)
+    g = g + theme_void()
+  
+  g
+}
+```
+
+Let's see what a convexity report for the first kilometer looks like:
+
+```{r convexity-first-km}
+segment_plot2(route_convexity, 0, 1000, typ='convexity')
+```
+
+So we start off with a left (we should change the colors to *port-red-left*!), a slight right, a straight, a right that tightens, a left, a straight, a nudge left and then end the kilometer with a tight right.
+
+Let's remind ourselves to see if that looks about right:
+
+``````{r convexity-first-km-route-check}
+segment_plot2(route_convexity, 0, 1000, typ='route')
+```
+
+We can use a similar approach before to automate the collection of multiple plots for each stretch of the stage:
+
+```{r}
+segment_multiplot2 = function(route, i, final=FALSE, typ='route'){
+  start = segment_length*(i-1)-step_length
+  if (final) 
+    end = Inf
+  else
+    end = (segment_length*i)
+  
+  segment_plot2(route, start, end, i, typ )
+}
+```
+
+We can now generate a plot of either the route sections, or the convexity based on distance into the route section:
+
+```{r segment-convexity-bar}
+segment_plots2 = list()
+
+# Iterate through each kilometer
+for (i in 1:(kms-1)){
+  segment_plots2[[length(segment_plots2) + 1]] <-
+    segment_multiplot2(route_convexity, i,  final= (i==kms),
+                       typ = 'convexity')
+}
+
+ggpubr::ggarrange(plotlist=segment_plots2,
+                  ncol=5, nrow=ceiling(kms/4))
+```
+
+At a glance, we can now start to identify segments of the route that contain particular sorts of feature.

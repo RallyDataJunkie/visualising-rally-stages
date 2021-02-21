@@ -1,5 +1,5 @@
 ```{r cache = T, echo = F, message=F}
-# 9Allow knitr to continue to execute even in the presence of errors
+# 9Allow 1 knitr to continue to execute even in the presence of errors
 knitr::opts_chunk$set(error = TRUE)
 knitr::opts_chunk$set(fig.path = "images/route-metrics-")
 ```
@@ -782,7 +782,7 @@ We can resample locations from the track using `amt::track_resample()`. Once aga
 
 The [`rLFT` (Linear Feature Tools) *R* package](https://cran.r-project.org/web//packages/rLFT/vignettes/rLFT_Introduction.html) was developed in order to support the processing of simple linear features.
 
-The boundary convexity tool function, `rLFT::bct()` generates a convexity measure for a sliding window of points along a route; the route must be provided in a projected (*not* geographic) coordinate system. The sign of the convexity measure identifies whether the curve is concave (negative) or convex (positive), the increasing values identifying tightness of the curve.  A normalised convexity index and a sinuosity measure  are also created.
+The boundary convexity tool function, `rLFT::bct()` generates a convexity measure for a sliding window of points along a route; the route must be provided in a projected (*not* geographic) coordinate system. The sign of the convexity measure identifies whether the curve is concave (negative value, left turn) or convex (positive value, right turn), the increasing values identifying tightness of the curve.  A normalised convexity index and a sinuosity measure  are also created.
 
 ```{r rlft-route}
 library(rLFT)
@@ -794,6 +794,33 @@ route_convexity <- bct(utm_routes[1,],
 
 head(route_convexity)
 ```
+
+We can also get the output table as a *simple features* object where the midpoint co-ordinates are cast to a point geometry type:
+
+```{r}
+outSF <- st_as_sf(route_convexity,
+                 coords = c("Midpoint_X", "Midpoint_Y"), 
+                 stringsAsFactors = FALSE)
+```
+
+The convexity measures are defined in [*Measuring boundary convexity at multiple spatial scales using a linear 'moving window' analysis: an application to coastal river otter habitat selection*](https://www.d.umn.edu/biology/documents/Nibbelink2_000.pdf), Albeke, S.E. et al., Landscape Ecology 25 (2010): 1575-1587.
+
+### Convexity Profile of a State Route
+
+We can profile the convextity of a stage roure in the terms of the convexity against the distance along the route in terms of a simple line chart. Recall that the sign of the convexity value denotes the direction of a corner (negative left, positive right).
+
+Adding a grey zone to slightly mask the 
+
+```{r curvature-profile-bar}
+ggplot(route_convexity) +
+  geom_bar(aes(x=MidMeas, y=ConvexityIndex, col=(ConvexityIndex>0)),
+           stat='identity', show.legend = FALSE) +
+  geom_rect(ymin = -0.1, ymax = 0.1, 
+            xmin = -Inf, xmax = Inf,
+            fill = 'lightgrey', alpha=0.05)
+```
+
+### Previewing Significant Corners
 
 By filtering the table to rows with with a large absolute *ConvexityIndex* we can identify and label tight corners. The `ggrepel::geom_text_repel()` function attempts to minimise the extent to which labels overlap, using arrows to identify points referenced by the label where the label location is dodged away from the point:
 
@@ -814,15 +841,6 @@ ggplot() +
   theme_classic()
 ```
 
-We can also get the output table as a *simple features* object where the midpoint co-ordinates are cast to a point geometry type:
-
-```{r}
-outSF <- st_as_sf(route_convexity,
-                 coords = c("Midpoint_X", "Midpoint_Y"), 
-                 stringsAsFactors = FALSE)
-```
-
-The convexity measures are defined in [*Measuring boundary convexity at multiple spatial scales using a linear 'moving window' analysis: an application to coastal river otter habitat selection*](https://www.d.umn.edu/biology/documents/Nibbelink2_000.pdf), Albeke, S.E. et al., Landscape Ecology 25 (2010): 1575-1587.
 
 ### Convexity as a 3D Plot
 
@@ -835,7 +853,7 @@ convexity_gg = ggplot() + geom_sf(data=utm_routes[1,]) +
   geom_point(data=route_convexity,  show.legend = FALSE,
              size=1,
             aes(x=Midpoint_X, y=Midpoint_Y,
-                               color=abs(ConvexityIndex)))
+                color=abs(ConvexityIndex)))
 
 convexity_gg
 ```
@@ -852,6 +870,5 @@ plot_gg(convexity_gg, scale=1000)
 rgl::rglwidget()
 ```
 
-
-
+Looking at these metrics over a complete route can be a little hard to decipher. However, if we segment the route into smaller sections, as we shall see in the next chapter, we will see how can start to use these metrics to describe the route in some useful detail. 
 

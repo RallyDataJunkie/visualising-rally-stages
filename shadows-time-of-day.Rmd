@@ -307,5 +307,3 @@ animation::saveGIF({
 
 knitr::include_graphics(shadow_gif)
 ```
-
-

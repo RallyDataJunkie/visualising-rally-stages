@@ -205,3 +205,7 @@ snapping-a-full-stage-route-to-the-road-network
 using-dodgr-to-represent-routes-and-road-networks
 route-stage-time-simulation
 where-next
+convexity-profile-of-a-state-route
+previewing-significant-corners
+allow-2-knitr-to-continue-to-execute-even-in-the-presence-of-errors
+stage-segmenting
