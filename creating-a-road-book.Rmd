@@ -428,10 +428,9 @@ plot(full_cropsmoothed, cex=0.5, col='red')
 plot(route_utm$geometry,  col='black', add=TRUE)
 ```
 
-A solution to this, [as suggested by `@loreabad6`](https://gist.github.com/psychemedia/ddd95de9a3fbc3c1afae85a8a7a431d8#gistcomment-3639658), is to crop the OSM routes data *before* we create the road network.
+A solution to this, [as suggested by `@loreabad6`](https://gist.github.com/psychemedia/ddd95de9a3fbc3c1afae85a8a7a431d8#gistcomment-3639658), is to crop the OSM routes data *before* we create the road network:
 
-```{r}
-# TO DO
+```{r cropped-highways-on-stage}
 stage_osm_cropped = stage_osm %>% trim_osmdata(buffered_route,
                                                exclude = T) 
 

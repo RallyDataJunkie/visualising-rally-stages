@@ -720,7 +720,7 @@ The corner <em>lessens</em> if a node isn’t firstish, is above a certain gradi
 <span id="cb23-7"><a href="automatically-generating-stage-descriptions.html#cb23-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">step =</span> stepdist,</span>
 <span id="cb23-8"><a href="automatically-generating-stage-descriptions.html#cb23-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">window =</span> window, <span class="at">ridName =</span> <span class="st">&quot;Name&quot;</span>)</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.187   0.069   0.257 
+##   0.168   0.035   0.208 
 ## [1] &quot;Features skipped due to size: &quot;
 ## logical(0)</code></pre>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="automatically-generating-stage-descriptions.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(route_convexity)</span></code></pre></div>
@@ -823,7 +823,7 @@ So we can probably apply a similar logic to previously to group these and identi
 <span id="cb31-17"><a href="automatically-generating-stage-descriptions.html#cb31-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-18"><a href="automatically-generating-stage-descriptions.html#cb31-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the first 1000m</span></span>
 <span id="cb31-19"><a href="automatically-generating-stage-descriptions.html#cb31-19" aria-hidden="true" tabindex="-1"></a><span class="fu">segment_plot</span>(<span class="dv">0</span>, <span class="dv">1000</span>)</span></code></pre></div>
-<p><img src="images/stage-description-example_route_section-1.png" width="672" /></p>
+<p><img src="images/stage-description-example-route-section-1.png" width="672" /></p>
 <p>We can automate the creation of route sections every kilometer and create a list of plots, one per kilometer section:</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="automatically-generating-stage-descriptions.html#cb32-1" aria-hidden="true" tabindex="-1"></a>segment_length <span class="ot">=</span> <span class="dv">1000</span></span>
 <span id="cb32-2"><a href="automatically-generating-stage-descriptions.html#cb32-2" aria-hidden="true" tabindex="-1"></a>step_length<span class="ot">=</span><span class="dv">10</span></span>

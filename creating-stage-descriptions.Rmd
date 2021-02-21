@@ -29,13 +29,11 @@ The FIA Safety Guidelines illustrate how speeds might be visualised over a Googl
 
 A Wikipedia page describing the [*Jemba Inertia Notes System*](https://en.wikipedia.org/wiki/Jemba_Inertia_Notes_System) gives examples of the descriptive and numerical labels that the Jemba system can generate as it converts odometry and accelerometer data into something rather more human understandable. A [visual grading](http://www.jemba.se/GradeUSA.jpg) shows how descriptive labels correspond to turn angle.
 
-
 ## Generating Stage Descriptions
 
 Being able to display route profiles on a map as colour highlighted routes is very useful and could be made more so adding the data to a *leaflet.js* extension such as [`Leaflet.Heightgraph`](https://github.com/GIScience/Leaflet.Heightgraph), which displays arbitrary traces (to integrate this in the current workflow properly would require the development of an extension to the *R* `leaflet` package).
 
 Another possibility would be to try to automate the creation of text based route descriptions ("robot journalism"), which I've crudely explored in other contexts elsewhere. The [*It Gets Faster Now*](https://itgetsfasternow.com/2021/01/19/route-preview-rallye-monte-carlo-2021/) blog publishes stage descriptions for WRC stage routes, so this could be a good place to learn tropes from.
-
 
 ## Load in Base Data 
 
@@ -161,7 +159,6 @@ g +
   geom_point( size=0.2, color='blue',
              data=trj[trj$dirChange,]) +
   theme(axis.text.x = element_text(angle = 45))
-
 ```
 Let's zoom in a bit:
 
@@ -175,7 +172,6 @@ g1 = ggplot(data=trj[zoom1, ],
 g1 +  geom_point( size=0.2, color='blue',
              data=trj[zoom1 & trj$dirChange,]) +
       theme(axis.text.x = element_text(angle = 45))
-
 ```
 We notice that we seem to be missing some corners that are perhaps not direction changes, but significant angle changes in the same direction. And we also notice a direction change flagged in what appears to be the middle of a straight.
 
@@ -403,7 +399,7 @@ One of the handy things about the `rLFT::bct()` is that it can chunk the route i
 
 For example, we can view the route over specific sections given a start and finish distance into the route. Note that the route will be discretised to step lengths used by the `rLFT::bct()` function and a stylised route will be approximated along step midmeasure points:
 
-```{r example_route_section}
+```{r example-route-section}
 segment_plot = function(start, end, title='') {
   
   # Create the route distance filter limits
@@ -520,7 +516,7 @@ So we start off with a left (*port-red-left*!), a slight right, a straight, a ri
 
 Let's remind ourselves to see if that looks about right:
 
-``````{r convexity-first-km-route-check}
+```{r convexity-first-km-route-check}
 segment_plot2(route_convexity, 0, 1000, typ='route')
 ```
 
