@@ -555,3 +555,5 @@ ggpubr::ggarrange(plotlist=segment_plots2,
 ```
 
 At a glance, we can now start to identify segments of the route that contain particular sorts of feature.
+
+For example, we can readily see that kilometers 12, 15 and 16 include significant straight stretches.
