@@ -276,7 +276,7 @@ The challenge now is this: can we map out original route on the OSM network, and
 
 ### Viewing a Buffered Area Around a Junction Node
 
-Get a (carefully selected!) node, buffer around it and see what we can see:
+Let's get a (carefully selected!) node, buffer around it and see what we can see:
 
 ```{r osm_g_fragment}
 # Find a junction on the road network
@@ -304,6 +304,7 @@ filtered3 = st_crop(route_utm,
 plot(filtered2, cex=0.5, col = 'grey', lwd = 6)
 plot(st_geometry(filtered3), cex=0.5, col='red', add=TRUE)
 ```
+
 Okay, so we have the road network and part of the stage route; the stage route passes a junction on the right.
 
 This could be promising, *if* we can find a way to reliably snap routes to OSM lines and index nodes along a route.
@@ -404,7 +405,8 @@ full_smoothed = convert(full_blended, to_spatial_smooth) %>%
 plot(full_smoothed, cex=0.5, col='red')
 plot(route_utm$geometry,  col='black', add=TRUE)
 ```
-So this *isn't* what we want. When we do the intersection, we drop the nodes outside the buffer. But what we want is for new nodes to be create where edges are cut by the filtering buffer.
+
+So this *isn't* what we want. When we do the intersection, we drop the nodes outside the buffer. But what we want is for new nodes to be created where edges are cut by the filtering buffer.
 
 This is perhaps a cropping function rather than a filter? Although cropping cuts to a rectangle, which is also not what we want...
 
@@ -426,7 +428,24 @@ plot(full_cropsmoothed, cex=0.5, col='red')
 plot(route_utm$geometry,  col='black', add=TRUE)
 ```
 
-Hmmm.. Stuck, for now...
+A solution to this, [as suggested by `@loreabad6`](https://gist.github.com/psychemedia/ddd95de9a3fbc3c1afae85a8a7a431d8#gistcomment-3639658), is to crop the OSM routes data *before* we create the road network.
+
+```{r}
+# TO DO
+stage_osm_cropped = stage_osm %>% trim_osmdata(buffered_route,
+                                               exclude = T) 
+
+stage_osm_g_cropped_utm = as_sfnetwork(stage_osm_cropped$osm_lines,
+                                   directed = FALSE) %>% 
+                          st_transform(st_crs(buffered_route_utm))
+
+# Plo the actual route
+plot(route_utm$geometry)
+
+# Overlay the cropped OSM route
+plot(stage_osm_g_cropped_utm,  col='red', add=TRUE)
+```
+
 
 ## Using `dodgr` to Represent Routes and Road Networks
 
@@ -436,8 +455,9 @@ Although most current effort appears to be being placed on development of the `s
 net = stage_osm %>% osmdata::osm_poly2line()
 
 # Optionally buffer the network
-buffered_net = net %>%
-                  osmdata::trim_osmdata (buffered_route)
+buffered_net = stage_osm %>%
+                  osmdata::trim_osmdata (buffered_route)  %>%
+                  osmdata::osm_poly2line()
 ```
 
 We can plot the lines using `ggplot2`:

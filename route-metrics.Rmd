@@ -179,7 +179,7 @@ One intuition behind using animal movement analysis tools to categorise rally st
 
 The [`trajr` *R* package](https://cran.r-project.org/web/packages/trajr/vignettes/trajr-vignette.html) was developed to help characterise and analyse the trajectories or paths followed by a moving animal given various location coordinates along its route.
 
-Trajectories are created using Cartesian co-ordinates, so it makes sense to use data that has been cast into UTM coordinate system as the basis for the trajectory. A two dimensional spatial `trajr` trajectory can be created by defaultfrom a two column (x/y coordinates) or three column (x/t/time) dataframe using the `trajr::TrajFromCoords()` function, r from an arbitrary dataframe by specifying column names using the *xCol*, *yCol* and *timeCol* parameters. Spatial and temporal units can also be specified using the *spatialUnits* and *timeUnits* parameters.
+Trajectories are created using Cartesian co-ordinates, so it makes sense to use data that has been cast into UTM coordinate system as the basis for the trajectory. A two dimensional spatial `trajr` trajectory can be created by default from a two column (x/y coordinates) or three column (x/t/time) dataframe using the `trajr::TrajFromCoords()` function, r from an arbitrary dataframe by specifying column names using the *xCol*, *yCol* and *timeCol* parameters. Spatial and temporal units can also be specified using the *spatialUnits* and *timeUnits* parameters.
 
 ```{r}
 library(trajr)
@@ -510,7 +510,7 @@ g2 = ggplot(utm_routes, aes(x=straightness,
                             y=sinuosity,
                             label = Name)) + 
         geom_point(size=1)  +
-        # hjust: left justiifcation (0), right justification (1)
+        # hjust: left justification (0), right justification (1)
         geom_text(size=3, hjust = 1, nudge_y = -0.001)
 g2
 ```
@@ -807,7 +807,7 @@ The convexity measures are defined in [*Measuring boundary convexity at multiple
 
 ### Convexity Profile of a State Route
 
-We can profile the convextity of a stage roure in the terms of the convexity against the distance along the route in terms of a simple line chart. Recall that the sign of the convexity value denotes the direction of a corner (negative left, positive right).
+We can profile the convexity of a stage route in the terms of the convexity against the distance along the route in terms of a simple line chart. Recall that the sign of the convexity value denotes the direction of a corner (negative left, positive right).
 
 Adding a grey zone to slightly mask the 
 
@@ -844,7 +844,7 @@ ggplot() +
 
 ### Convexity as a 3D Plot
 
-To try to get a feel for how the convexity changes alobg a route, we can render a 3D plot of the of the convexity using the `rayhader::ggplot()` function.
+To try to get a feel for how the convexity changes along a route, we can render a 3D plot of the of the convexity using the `rayhader::ggplot()` function.
 
 As a first step, we need to create a base *ggplot2* plot:
 
