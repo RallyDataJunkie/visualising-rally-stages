@@ -1,5 +1,7 @@
 delete_merged_file: false
 book_filename: 'rally-stage-route-book.Rmd'
+view: https://github.com/RallyDataJunkie/visualising-rally-stages/blob/master/%s
+edit: https://github.com/RallyDataJunkie/visualising-rally-stages/edit/master/%s
 output_dir: "docs"
 rmd_files:  ["index.Rmd", "welcome.Rmd", "preface.Rmd",
              "intro.Rmd",

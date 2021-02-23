@@ -556,11 +556,11 @@ For example, we can readily see that kilometers 12, 15 and 16 include significan
 
 ## Corner Severity Numbering
 
-Although they may differ in the specifics, all rally pace note systems categorise the corner severity (also referred to as the turn intensity). Many systems use a convention that numbers corner severity with a value from 1 to 6, where 1 is the most severe and 6 is the least severe; the *rallynotes.com* system, (which has the added benefit of being well documented in the *To See the Invisible* tutorial series published by the system's creator, David Nafría), uses a range from 1 to 10.
+Although they may differ in the specifics, all rally pace note systems find some way to categorise the corner severity (also referred to as the turn intensity). Many systems use a convention that numbers corner severity with a value from 1 to 6, where 1 is the most severe and 6 is the least severe; alternatively,  [*therallydriver.com* pacenotes system](http://therallydriver.com/index.php/en/to-see-the-invisible), (which has the added benefit of being well documented in the *To See the Invisible* tutorial series published by the system's creator, David Nafría), uses a range from 1 to 10.
 
 Variations on the following diagram are often used to illustrate how the numbers scheme applies to different severity corners.
 
-```{r rallynotes-corner-numbers}
+```{r therallydriver-corner-numbers}
 library(ggforce)
 # ggforce::geom_arc
 
@@ -575,7 +575,7 @@ rallynotes_arcs <- data.frame(
   n = rallynotes$n
 )
 
-# Plor a representation of corner severities
+# Plot a representation of corner severity along the route
 ggplot(rallynotes_arcs) +
   geom_arc_bar(aes(x0 = -15+r-6*n, y0 = 0, r0 = r,
                    r = r+2, start = start,
@@ -589,4 +589,46 @@ ggplot(rallynotes_arcs) +
 
 Note that with increasing number, the radius of curvature (that is, the radius of the circle describing the corner) also increases. This gives us one way of mapping from a measurement we can apply to a corner (such as its radius of curvature) to the turn severity number.
 
-Two other properties of a corner that we might attempt to describe are the *length* of the corner either as a linear distance (20m, for example) or as an *angular* distance (45 degrees, for example). The "distance" might also map on to a descriptive term, such as "long", as in "long right". Descroptive terms are more ambiguous becuase they are normative: they assume a "standard" length corner in comparison with which a "long" corner is longer. 
+Two other properties of a corner that we might attempt to describe are the *length* of the corner either as a linear distance (20m, for example) or as an *angular* distance (45 degrees, for example). The "distance" might also map on to a descriptive term, such as "long", as in "long right". Descriptive terms are more ambiguous because they are normative: they assume a "standard" length corner in comparison with which a "long" corner is longer. 
+
+```{r}
+curvature = function(x,y){
+  #729181.8, 729186.1, 729190.4
+  #4957667 , 4957676, 4957685
+  tryCatch({
+    # circlefit gives an error if we pass a straight line
+    # ALso hide the print statement in circlefit
+    pracma::circlefit(x,y)[3]
+    },
+    error = function(err) { 
+      # For a straight, return the first co-ord and Inf diameter
+      # Alternatively, pass zero diameter?
+      c(x[1], y[1], Inf)[3]})
+}
+
+curvature2 = function(x1, x2, x3, y1, y2, y3){
+  curvature(c(x1, x2, x3), c(y1, y2, y3))
+}
+
+curvatures = Vectorize(curvature2)
+
+curvatures2 = function(route,
+                       x='Midpoint_X', y='Midpoint_Y') {
+  
+                    curvatures(route[[x]],
+                               lead(route[[x]], 1),
+                               lead(route[[x]],2),
+                               route[[y]],
+                               lead(route[[y]]),
+                               lead(route[[y]],2) )
+                }
+```
+
+```{r results=FALSE}
+route_convexity$turn_intensity = curvatures2(route_convexity)
+head(route_convexity)
+```
+
+
+
+

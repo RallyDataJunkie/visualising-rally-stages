@@ -87,6 +87,15 @@ get_utm_projection = function(routes){
 utm_routes = get_utm_projection(geojson_sf)
 ```
 
+In some cases, we may want to discretise a route to smaller segment lengths. We can use the `sf::st_segmentize()` function cut a route described by a linestring into shorter connected segments. For example, we can discretise the route into segments lengths of just 1m long:
+
+```{r}
+segmented_route_utm = st_segmentize(utm_routes[1,], units::set_units(1, m))
+segmented_route_utm_coords = st_coordinates(segmented_route_utm)
+```
+
+Note that if we plot a discretised path, we may end up cutting corners that are described in the original route. Another side effect of discretisation is that the length of the discretised route may change.
+
 ## Generating Stage Route Profiles
 
 Although there are no `R` packages (yet!) that are specifically focused on representing and analysing rally stage data, there are several packages designed to support the representation and analysis of animal tracks and route trajectories. These packages are capable of loading and analysing route co-ordinate data specified in a variety of ways and have no difficulty in working with our stage route data.
@@ -816,7 +825,7 @@ The convexity measures are defined in [*Measuring boundary convexity at multiple
 
 We can profile the convexity of a stage route in the terms of the convexity against the distance along the route in terms of a simple line chart. Recall that the sign of the convexity value denotes the direction of a corner (negative left, positive right).
 
-We can add a grey bar with low alpha transpacrency to slightly mask the less sever corners:
+We can add a grey bar with low alpha transparency to slightly mask the less sever corners:
 
 ```{r curvature-profile-bar}
 ggplot(route_convexity) +
@@ -880,47 +889,47 @@ Looking at these metrics over a complete route can be a little hard to decipher.
 
 ## Finding Curvature of a Route
 
-The `pracma::circlefit()` function will attempt to calculate the center and radius of a circle from a set of locations peovided as x and y coordinate lists. We can use the radius to determine conner severity numbers that are typically used in rally pace notes.
+The `pracma::circlefit()` function will attempt to calculate the center and radius of a curvature from an arc defined by a path segment described by three or more consecutive locations provided as *x* and *y* coordinate lists. We can use the radius of curvature to determine corner severity numbers that are typically used in rally pace notes.
 
 For example, we can build on the the `rLFT` segmented route to add the radius of curvature of turns starting at each midpoint:
 
-```{r}
-# We may end up cutting corners?
-tmp = st_segmentize(utm_routes[1,], units::set_units(1, m))
-tmp2 = st_coordinates(tmp)
-nrow(tmp2)
-#22095 - 5m
-# 23110 10m
-# 21277 - 1m
-```
 
-
-```{r}
+```{r results=FALSE}
+# The curvature function takes an arc defined over
+# x and y coordinate lists
 curvature = function(x,y){
   #729181.8, 729186.1, 729190.4
   #4957667 , 4957676, 4957685
   tryCatch({
-    # circlefit gives an error if we pass a straight line
-    pracma::circlefit(x,y)[3]
+      # circlefit gives an error if we pass a straight line
+      # Also hide the print statement in circlefit
+      # circlefit() returns the x and y coords of the circle center
+      # as well as the radius of curvature
+      # We could then also calculate the angle and arc length
+      pracma::circlefit(x,y)[3]
     },
     error = function(err) { 
       # For a straight, return the first co-ord and Inf diameter
       # Alternatively, pass zero diameter?
-      c(x[1], y[1], 0)[3]})
+      c(x[1], y[1], Inf)[3]})
 }
 
 curvature2 = function(x1, x2, x3, y1, y2, y3){
   curvature(c(x1, x2, x3), c(y1, y2, y3))
 }
 
+# The base::Vectorize function provides a lazy way of 
+# vectorising a non-vectorised function
 curvatures = Vectorize(curvature2)
 
-curvature(c(729181.8, 729186.1, 729195.4),c(4957667 , 4957676, 4957685))
-
-curvature(c(729194.6, 729198.8,729199.6), c(4957694,4957703,4957713))
+# Tests
+#curvature(c(729181.8,729186.1,729195.4),c(4957667,4957676,4957685))
+#curvature(c(729194.6,729198.8,729199.6),c(4957694,4957703,4957713))
 ```
 
-```{r message=FALSE, results=FALSE}
+Let's find the radius of curvature for each 10m sampled point we obtained when finding convexity values along the route:
+
+```{r message=FALSE, warning=FALSE, results=FALSE}
 library(dplyr)
 library(pracma)
   
@@ -933,9 +942,28 @@ route_convexity$radius = curvatures(route_convexity$Midpoint_X,
                                     )
 ```
 
+Rally pace note systems tend to use a simpler numbering system to represent curvature which may be modeled by mapping the radius of curvature values to a discrete set of binned corner numbers. The [`base::cut()`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/cut) *R* function allows us to perform this mapping using custom bin widths and ordered bin labels.
+
+In the following example, we use the 10 point *turn severity* scale and associated radius of curvature values suggested in [*To see the invisible ( (Volume 1)*](http://therallydriver.com/index.php/en/to-see-the-invisible); low values represent smaller radius of curvature values and hence tighter corners.  Note that we further are labeling straights as category 11 curves.
+
 ```{r}
-head(route_convexity)
+invisible_bins = c(0, 10, 15, 20, 27.5, 35,
+                    45, 60, 77.5, 100, 175, Inf)
+
+route_convexity$invisible_ts = cut(route_convexity$radius,
+                                   breaks = invisible_bins,
+                                   labels = 1:(length(invisible_bins)-1),
+                                   ordered_result=TRUE)
 ```
+
+Let's preview the values:
+
+```{r}
+head(route_convexity[,c('ConvexityIndex',
+                        'radius', 'invisible_ts')])
+```
+
+We can visualise the turn severity values at each 10m sample point along the route:
 
 ```{r radius-example}
 radius_filter = route_convexity$radius>0 & route_convexity$radius<100
@@ -944,8 +972,30 @@ ggplot() + geom_sf(data=utm_routes[1,], color='grey') +
   geom_point(data=route_convexity[radius_filter,],
              
             aes(x=Midpoint_X, y=Midpoint_Y,
-                color=log(radius)), size=0.5) #+
-  #scale_colour_gradientn(colours = terrain.colors(10))
-
+                color=invisible_ts), size=0.5)
 ```
 
+### Estimating Speeds
+
+As well as providing an estimate of turn severity, we can also use the radius of curvature, or the turn severity index, as a crude estimate of maximum speed along that segment. Once again volume 1 of the *To see the invisible* pacenotes tutorial provides some example speeds for each turn intensity value, noting that speeds are likely different on sealed tarmac surfaces or unsealed gravel surfaces:
+
+```{r}
+# Speeds in km/h
+invisible_speeds = c(10, 40, 50, 60, 70, 80,
+                     95, 1100, 120, 130, 145)
+```
+
+We can use these speeds to model (very crudely!) expected travel times along different parts of the route, or at least provide a crude baseline estimate, as well as a crude estimate over the overall average route speed, which is often regulated under rally competition regulations.
+
+```{r}
+route_convexity$invisible_sp = cut(route_convexity$radius,
+                                   breaks = invisible_bins,
+                                   labels = invisible_speeds,
+                                   ordered_result=TRUE)
+
+# Cast speed as factor, via character, to integer
+route_convexity$invisible_sp = as.integer(as.character(route_convexity$invisible_sp))
+
+head(route_convexity[,c('ConvexityIndex', 'radius',
+                        'invisible_ts', 'invisible_sp')])
+```

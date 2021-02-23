@@ -213,3 +213,4 @@ using-rlft-for-stage-route-profiling
 convexity-profile-of-a-stage-route
 finding-curvature-of-a-route
 corner-severity-numbering
+estimating-speeds

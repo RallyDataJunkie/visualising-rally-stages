@@ -368,7 +368,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="17.8.2" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#previewing-significant-corners"><i class="fa fa-check"></i><b>17.8.2</b> Previewing Significant Corners</a></li>
 <li class="chapter" data-level="17.8.3" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#convexity-as-a-3d-plot"><i class="fa fa-check"></i><b>17.8.3</b> Convexity as a 3D Plot</a></li>
 </ul></li>
-<li class="chapter" data-level="17.9" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#finding-curvature-of-a-route"><i class="fa fa-check"></i><b>17.9</b> Finding Curvature of a Route</a></li>
+<li class="chapter" data-level="17.9" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#finding-curvature-of-a-route"><i class="fa fa-check"></i><b>17.9</b> Finding Curvature of a Route</a>
+<ul>
+<li class="chapter" data-level="17.9.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#estimating-speeds"><i class="fa fa-check"></i><b>17.9.1</b> Estimating Speeds</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="18" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html"><i class="fa fa-check"></i><b>18</b> Elevation Data Revisited</a>
 <ul>
@@ -724,7 +727,7 @@ The corner <em>opens</em> (“lessens”) if a node isn’t firstish, is above a
 <span id="cb23-7"><a href="automatically-generating-stage-descriptions.html#cb23-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">step =</span> stepdist,</span>
 <span id="cb23-8"><a href="automatically-generating-stage-descriptions.html#cb23-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">window =</span> window, <span class="at">ridName =</span> <span class="st">&quot;Name&quot;</span>)</span></code></pre></div>
 <pre><code>##    user  system elapsed 
-##   0.166   0.033   0.199 
+##   0.166   0.031   0.198 
 ## [1] &quot;Features skipped due to size: &quot;
 ## logical(0)</code></pre>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="automatically-generating-stage-descriptions.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(route_convexity)</span></code></pre></div>
@@ -937,7 +940,7 @@ So we can probably apply a similar logic to previously to group these and identi
 </div>
 <div id="corner-severity-numbering" class="section level2" number="20.7">
 <h2><span class="header-section-number">20.7</span> Corner Severity Numbering</h2>
-<p>Although they may differ in the specifics, all rally pace note systems categorise the corner severity (also referred to as the turn intensity). Many systems use a convention that numbers corner severity with a value from 1 to 6, where 1 is the most severe and 6 is the least severe; the <em>rallynotes.com</em> system, (which has the added benefit of being well documented in the <em>To See the Invisible</em> tutorial series published by the system’s creator, David Nafría), uses a range from 1 to 10.</p>
+<p>Although they may differ in the specifics, all rally pace note systems find some way to categorise the corner severity (also referred to as the turn intensity). Many systems use a convention that numbers corner severity with a value from 1 to 6, where 1 is the most severe and 6 is the least severe; alternatively, <a href="http://therallydriver.com/index.php/en/to-see-the-invisible"><em>therallydriver.com</em> pacenotes system</a>, (which has the added benefit of being well documented in the <em>To See the Invisible</em> tutorial series published by the system’s creator, David Nafría), uses a range from 1 to 10.</p>
 <p>Variations on the following diagram are often used to illustrate how the numbers scheme applies to different severity corners.</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="automatically-generating-stage-descriptions.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggforce)</span>
 <span id="cb40-2"><a href="automatically-generating-stage-descriptions.html#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ggforce::geom_arc</span></span>
@@ -953,7 +956,7 @@ So we can probably apply a similar logic to previously to group these and identi
 <span id="cb40-12"><a href="automatically-generating-stage-descriptions.html#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> rallynotes<span class="sc">$</span>n</span>
 <span id="cb40-13"><a href="automatically-generating-stage-descriptions.html#cb40-13" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb40-14"><a href="automatically-generating-stage-descriptions.html#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-15"><a href="automatically-generating-stage-descriptions.html#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Plor a representation of corner severities</span></span>
+<span id="cb40-15"><a href="automatically-generating-stage-descriptions.html#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot a representation of corner severity along the route</span></span>
 <span id="cb40-16"><a href="automatically-generating-stage-descriptions.html#cb40-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rallynotes_arcs) <span class="sc">+</span></span>
 <span id="cb40-17"><a href="automatically-generating-stage-descriptions.html#cb40-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_arc_bar</span>(<span class="fu">aes</span>(<span class="at">x0 =</span> <span class="sc">-</span><span class="dv">15</span><span class="sc">+</span>r<span class="dv">-6</span><span class="sc">*</span>n, <span class="at">y0 =</span> <span class="dv">0</span>, <span class="at">r0 =</span> r,</span>
 <span id="cb40-18"><a href="automatically-generating-stage-descriptions.html#cb40-18" aria-hidden="true" tabindex="-1"></a>                   <span class="at">r =</span> r<span class="sc">+</span><span class="dv">2</span>, <span class="at">start =</span> start,</span>
@@ -963,9 +966,41 @@ So we can probably apply a similar logic to previously to group these and identi
 <span id="cb40-22"><a href="automatically-generating-stage-descriptions.html#cb40-22" aria-hidden="true" tabindex="-1"></a>            <span class="at">size=</span><span class="dv">3</span>, <span class="at">hjust=</span><span class="st">&#39;right&#39;</span>) <span class="sc">+</span></span>
 <span id="cb40-23"><a href="automatically-generating-stage-descriptions.html#cb40-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>()<span class="sc">+</span></span>
 <span id="cb40-24"><a href="automatically-generating-stage-descriptions.html#cb40-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() </span></code></pre></div>
-<p><img src="images/stage-description-rallynotes-corner-numbers-1.png" width="672" /></p>
+<p><img src="images/stage-description-therallydriver-corner-numbers-1.png" width="672" /></p>
 <p>Note that with increasing number, the radius of curvature (that is, the radius of the circle describing the corner) also increases. This gives us one way of mapping from a measurement we can apply to a corner (such as its radius of curvature) to the turn severity number.</p>
-<p>Two other properties of a corner that we might attempt to describe are the <em>length</em> of the corner either as a linear distance (20m, for example) or as an <em>angular</em> distance (45 degrees, for example). The “distance” might also map on to a descriptive term, such as “long”, as in “long right”. Descroptive terms are more ambiguous becuase they are normative: they assume a “standard” length corner in comparison with which a “long” corner is longer.</p>
+<p>Two other properties of a corner that we might attempt to describe are the <em>length</em> of the corner either as a linear distance (20m, for example) or as an <em>angular</em> distance (45 degrees, for example). The “distance” might also map on to a descriptive term, such as “long”, as in “long right”. Descriptive terms are more ambiguous because they are normative: they assume a “standard” length corner in comparison with which a “long” corner is longer.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="automatically-generating-stage-descriptions.html#cb41-1" aria-hidden="true" tabindex="-1"></a>curvature <span class="ot">=</span> <span class="cf">function</span>(x,y){</span>
+<span id="cb41-2"><a href="automatically-generating-stage-descriptions.html#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#729181.8, 729186.1, 729190.4</span></span>
+<span id="cb41-3"><a href="automatically-generating-stage-descriptions.html#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">#4957667 , 4957676, 4957685</span></span>
+<span id="cb41-4"><a href="automatically-generating-stage-descriptions.html#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>({</span>
+<span id="cb41-5"><a href="automatically-generating-stage-descriptions.html#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># circlefit gives an error if we pass a straight line</span></span>
+<span id="cb41-6"><a href="automatically-generating-stage-descriptions.html#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ALso hide the print statement in circlefit</span></span>
+<span id="cb41-7"><a href="automatically-generating-stage-descriptions.html#cb41-7" aria-hidden="true" tabindex="-1"></a>    pracma<span class="sc">::</span><span class="fu">circlefit</span>(x,y)[<span class="dv">3</span>]</span>
+<span id="cb41-8"><a href="automatically-generating-stage-descriptions.html#cb41-8" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb41-9"><a href="automatically-generating-stage-descriptions.html#cb41-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">error =</span> <span class="cf">function</span>(err) { </span>
+<span id="cb41-10"><a href="automatically-generating-stage-descriptions.html#cb41-10" aria-hidden="true" tabindex="-1"></a>      <span class="co"># For a straight, return the first co-ord and Inf diameter</span></span>
+<span id="cb41-11"><a href="automatically-generating-stage-descriptions.html#cb41-11" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Alternatively, pass zero diameter?</span></span>
+<span id="cb41-12"><a href="automatically-generating-stage-descriptions.html#cb41-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">c</span>(x[<span class="dv">1</span>], y[<span class="dv">1</span>], <span class="cn">Inf</span>)[<span class="dv">3</span>]})</span>
+<span id="cb41-13"><a href="automatically-generating-stage-descriptions.html#cb41-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-14"><a href="automatically-generating-stage-descriptions.html#cb41-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-15"><a href="automatically-generating-stage-descriptions.html#cb41-15" aria-hidden="true" tabindex="-1"></a>curvature2 <span class="ot">=</span> <span class="cf">function</span>(x1, x2, x3, y1, y2, y3){</span>
+<span id="cb41-16"><a href="automatically-generating-stage-descriptions.html#cb41-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">curvature</span>(<span class="fu">c</span>(x1, x2, x3), <span class="fu">c</span>(y1, y2, y3))</span>
+<span id="cb41-17"><a href="automatically-generating-stage-descriptions.html#cb41-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-18"><a href="automatically-generating-stage-descriptions.html#cb41-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-19"><a href="automatically-generating-stage-descriptions.html#cb41-19" aria-hidden="true" tabindex="-1"></a>curvatures <span class="ot">=</span> <span class="fu">Vectorize</span>(curvature2)</span>
+<span id="cb41-20"><a href="automatically-generating-stage-descriptions.html#cb41-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-21"><a href="automatically-generating-stage-descriptions.html#cb41-21" aria-hidden="true" tabindex="-1"></a>curvatures2 <span class="ot">=</span> <span class="cf">function</span>(route,</span>
+<span id="cb41-22"><a href="automatically-generating-stage-descriptions.html#cb41-22" aria-hidden="true" tabindex="-1"></a>                       <span class="at">x=</span><span class="st">&#39;Midpoint_X&#39;</span>, <span class="at">y=</span><span class="st">&#39;Midpoint_Y&#39;</span>) {</span>
+<span id="cb41-23"><a href="automatically-generating-stage-descriptions.html#cb41-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb41-24"><a href="automatically-generating-stage-descriptions.html#cb41-24" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">curvatures</span>(route[[x]],</span>
+<span id="cb41-25"><a href="automatically-generating-stage-descriptions.html#cb41-25" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">lead</span>(route[[x]], <span class="dv">1</span>),</span>
+<span id="cb41-26"><a href="automatically-generating-stage-descriptions.html#cb41-26" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">lead</span>(route[[x]],<span class="dv">2</span>),</span>
+<span id="cb41-27"><a href="automatically-generating-stage-descriptions.html#cb41-27" aria-hidden="true" tabindex="-1"></a>                               route[[y]],</span>
+<span id="cb41-28"><a href="automatically-generating-stage-descriptions.html#cb41-28" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">lead</span>(route[[y]]),</span>
+<span id="cb41-29"><a href="automatically-generating-stage-descriptions.html#cb41-29" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">lead</span>(route[[y]],<span class="dv">2</span>) )</span>
+<span id="cb41-30"><a href="automatically-generating-stage-descriptions.html#cb41-30" aria-hidden="true" tabindex="-1"></a>                }</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="automatically-generating-stage-descriptions.html#cb42-1" aria-hidden="true" tabindex="-1"></a>route_convexity<span class="sc">$</span>turn_intensity <span class="ot">=</span> <span class="fu">curvatures2</span>(route_convexity)</span>
+<span id="cb42-2"><a href="automatically-generating-stage-descriptions.html#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(route_convexity)</span></code></pre></div>
 
 </div>
 </div>
@@ -1005,13 +1040,16 @@ gitbook.start({
 "family": "sans",
 "size": 2
 },
-"edit": null,
+"edit": {
+"link": "https://github.com/RallyDataJunkie/visualising-rally-stages/edit/master/creating-stage-descriptions.Rmd",
+"text": "Edit"
+},
 "history": {
 "link": null,
 "text": null
 },
 "view": {
-"link": null,
+"link": "https://github.com/RallyDataJunkie/visualising-rally-stages/blob/master/creating-stage-descriptions.Rmd",
 "text": null
 },
 "download": null,
