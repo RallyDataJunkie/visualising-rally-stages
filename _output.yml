@@ -4,8 +4,10 @@ bookdown::gitbook:
     toc:
       collapse: section
       scroll_highlight: yes
-      before: null
-      after: null
+      before: |
+        <li><a href="./">Visualising WRC Rally Stages</a></li>
+      after: |
+        <li><a href="https://https://rallydatajunkie.com/">RallyDataJunkie.com</a></li>
     toolbar:
       position: fixed
     edit : null

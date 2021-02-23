@@ -4,6 +4,8 @@ knitr::opts_chunk$set(error = TRUE)
 knitr::opts_chunk$set(fig.path = "images/stage-route-import-")
 ```
 
+# (PART) Accessing Stage Data {-}
+
 # Importing the Stage Route Data
 
 The starting point for this adventure is an XML text file downloaded from the WRC website. The file contains data that describes the stage routes for the 2021 *Rallye Monte Carlo* using the KML file format. This format ("Keyhole Markup Language") was originally developed as a way loading data into the application that became Google Earth following its acquisition by Google. KML is now an [international standard](https://www.ogc.org/standards/kml) maintained by the Open Geospatial Consortium, Inc. (OGC).

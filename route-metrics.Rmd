@@ -4,6 +4,8 @@ knitr::opts_chunk$set(error = TRUE)
 knitr::opts_chunk$set(fig.path = "images/route-metrics-")
 ```
 
+# (PART) Stage Route Metrics {-}
+
 # Stage Route Analysis
 
 This chapter introduces several ideas relating to *stage route analysis* and the generation of "stage route profiles" that describe various features of the the route, such as its twistiness. 

@@ -4,6 +4,8 @@ knitr::opts_chunk$set(error = TRUE)
 knitr::opts_chunk$set(fig.path = "images/rayshader-2d-")
 ```
 
+# (PART) Introducing `rayshader` {-}
+
 # Using `rayshader` to Render 2D Elevation and Shade Views
 
 The `rayshader` package provides a range of tools for visualising elevation rasters, and overlays placed on top of them, in both two-dimensional and three-dimensional views.
