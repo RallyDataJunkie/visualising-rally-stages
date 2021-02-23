@@ -19,7 +19,7 @@ And let's review what we actually mean by a corner...
 embed_url("https://www.youtube.com/watch?v=YXOYckDATWE")
 ```
 
-In terms of actual corners, the convexity interesting may be one of the more interesting properties. Finding a good way of representing variable radius turns (you did watch the "corners" video, didn't you?!) will also be important if we want to be able to identify "tightens" or "lessens" corner features. Any elevation changes in the vicinity of a corner are likely to be important if we are trying to characterise braking zone requirements...
+In terms of actual corners, the convexity interesting may be one of the more interesting properties. Finding a good way of representing variable radius turns (you did watch the "corners" video, didn't you?!) will also be important if we want to be able to identify "tightens" or "lessens" (that is, "opens") corner features. Any elevation changes in the vicinity of a corner are likely to be important if we are trying to characterise braking zone requirements...
 
 ## Jemba Inertia Notes System
 
@@ -142,7 +142,7 @@ g + geom_point( size=0.2, color='blue',
                color='red')
 ```
 
-If we have several consecutive points with a gradient of the *same* sign, then we might consider them to be part of the same corner, albeit one that maybe tightens or lessens. If the gradients of consecutive segments have a *different* sign, then we have a change of direction from e.g. left to right or right to left.
+If we have several consecutive points with a gradient of the *same* sign, then we might consider them to be part of the same corner, albeit one that maybe tightens or opens. If the gradients of consecutive segments have a *different* sign, then we have a change of direction from e.g. left to right or right to left.
 
 We can create a flag that identifies when the sign changes across consecutive rows of the *step_gradient* column. We can check this by lagging the contents of the *step_gradient* column by one step using the `dplyr::lag()` function and comparing its sign to the sign of the unlagged value. If we then *dplyr::lead()* the result, we can see if a change in direction happens at the end of a step:
 
@@ -248,7 +248,7 @@ ggplot(data=trj[zoom1, ],
 
 We could also then create a *!flowing & firstish* flag to provide better indexing of the starts of corners.
 
-We'd need to test the approach on further stages to see whether it gives false positives or false negatives on identifying various corners, and we'd maybe also want to try to identify tightens and lessens.
+We'd need to test the approach on further stages to see whether it gives false positives or false negatives on identifying various corners, and we'd maybe also want to try to identify tightens and opens.
 
 Let's have a go at tightens. At a first approximation, a corner *tightens* if a node isn't firstish, is above a certain gradient, is close to the previous step and the magnitude of the gradient has increased and is the same sign as the previous step:
 
@@ -264,7 +264,7 @@ ggplot(data=trj[zoom1, ],
                           shape = firstish)) +
   theme(axis.text.x = element_text(angle = 45))
 ```
-The corner *lessens* if a node isn't firstish, is above a certain gradient, is close to the previous step and the gradient is in the same direction and has decreased:
+The corner *opens* ("lessens") if a node isn't firstish, is above a certain gradient, is close to the previous step and the gradient is in the same direction and has decreased:
 
 ```{r sd-lessens}
 trj = trj %>% 
@@ -553,3 +553,40 @@ ggpubr::ggarrange(plotlist=segment_plots2,
 At a glance, we can now start to identify segments of the route that contain particular sorts of feature.
 
 For example, we can readily see that kilometers 12, 15 and 16 include significant straight stretches.
+
+## Corner Severity Numbering
+
+Although they may differ in the specifics, all rally pace note systems categorise the corner severity (also referred to as the turn intensity). Many systems use a convention that numbers corner severity with a value from 1 to 6, where 1 is the most severe and 6 is the least severe; the *rallynotes.com* system, (which has the added benefit of being well documented in the *To See the Invisible* tutorial series published by the system's creator, David Nafría), uses a range from 1 to 10.
+
+Variations on the following diagram are often used to illustrate how the numbers scheme applies to different severity corners.
+
+```{r rallynotes-corner-numbers}
+library(ggforce)
+# ggforce::geom_arc
+
+rallynotes = data.frame(n=1:10,
+                        r=c(10, 15, 20, 27.5, 35,
+                            45, 60, 77.5, 100, 175))
+
+rallynotes_arcs <- data.frame(
+  start =  -pi/2,
+  end = mapply(min, 50/rallynotes$r, pi/2), 
+  r = rallynotes$r,
+  n = rallynotes$n
+)
+
+# Plor a representation of corner severities
+ggplot(rallynotes_arcs) +
+  geom_arc_bar(aes(x0 = -15+r-6*n, y0 = 0, r0 = r,
+                   r = r+2, start = start,
+                   end = end,fill = factor(n),
+                   color = factor(n)), show.legend=FALSE) +
+  geom_text(aes(label=n, x=-15-6*n , y=-10),
+            size=3, hjust='right') +
+  coord_fixed()+
+  theme_void() 
+```
+
+Note that with increasing number, the radius of curvature (that is, the radius of the circle describing the corner) also increases. This gives us one way of mapping from a measurement we can apply to a corner (such as its radius of curvature) to the turn severity number.
+
+Two other properties of a corner that we might attempt to describe are the *length* of the corner either as a linear distance (20m, for example) or as an *angular* distance (45 degrees, for example). The "distance" might also map on to a descriptive term, such as "long", as in "long right". Descroptive terms are more ambiguous becuase they are normative: they assume a "standard" length corner in comparison with which a "long" corner is longer. 

@@ -687,8 +687,7 @@ By creating simple rules, we might be able to identify features like *tightens* 
 
 Finally, it's worth briefly mentioning a couple more `trajr` functions that may be useful when it comes to analysing telemetry data: `trajr::TrajVelocity` and `trajr:TrajAcceleration`, which estimate velocity and acceleration as vectors at each point along a trajectory. But that's for another book...
 
-
-### Using `amt` for Stage Route Profiling
+## Using `amt` for Stage Route Profiling
 
 The [`amt` (animal movement tools) *R* package](https://cran.r-project.org/web/packages/amt/index.html) was designed to support the management and analysis of animal movement data. Routes are represented as *tracks* in the form of tibbles with at least an *x_* and *y_* column and, if required, a `t_` (time) column. Consecutive rows, which might be assumed to be collected with fixed period, identify straightline *steps*. A `track_xy`track type only has coordinates, and a
 `track_xyt` track type has a timestamp associated to each coordinate pair.
@@ -778,11 +777,16 @@ utm_routes[, c('amt_sin','amt_str','amt_cumd','amt_totd','amt_int')]
 
 We can resample locations from the track using `amt::track_resample()`. Once again, if we use distance as a proxy for time, this allows us to sample by distance along the line.
 
-## Using `rLFT`` for Profiling Along a Stage Route
+## Using `rLFT` for Stage Route Profiling
 
 The [`rLFT` (Linear Feature Tools) *R* package](https://cran.r-project.org/web//packages/rLFT/vignettes/rLFT_Introduction.html) was developed in order to support the processing of simple linear features.
 
 The boundary convexity tool function, `rLFT::bct()` generates a convexity measure for a sliding window of points along a route; the route must be provided in a projected (*not* geographic) coordinate system. The sign of the convexity measure identifies whether the curve is concave (negative value, left turn) or convex (positive value, right turn), the increasing values identifying tightness of the curve.  A normalised convexity index and a sinuosity measure  are also created.
+
+The `bct()` function takes two important arguments:
+
+- the *step*, which describes the distance between measurements along the route (i.e. the distance between ample points), and
+- the *window*, which describes the size of the window (the distance along the route) used to measure the convexity value.
 
 ```{r rlft-route}
 library(rLFT)
@@ -795,7 +799,7 @@ route_convexity <- bct(utm_routes[1,],
 head(route_convexity)
 ```
 
-We can also get the output table as a *simple features* object where the midpoint co-ordinates are cast to a point geometry type:
+We can get the output table as a *simple features* object where the midpoint co-ordinates are cast to a point geometry type using the `sf:st_as_sf()` function:
 
 ```{r}
 outSF <- st_as_sf(route_convexity,
@@ -803,13 +807,16 @@ outSF <- st_as_sf(route_convexity,
                  stringsAsFactors = FALSE)
 ```
 
+We note that by sampling the actual route at 10m intervals when calculating curvature *and then recreating a route from those 10m sample points*, we may actual crop the end of tight corners as represented by the original route path. Reducing the step size would provide a more faithful route (recall, the *window* size is actual used in performing the convexity calculation). Arguably, it might make sense to use generate a smoothed route from the original route and then use a small step size over the smoothed route as the basis for all route based metrics.
+
 The convexity measures are defined in [*Measuring boundary convexity at multiple spatial scales using a linear 'moving window' analysis: an application to coastal river otter habitat selection*](https://www.d.umn.edu/biology/documents/Nibbelink2_000.pdf), Albeke, S.E. et al., Landscape Ecology 25 (2010): 1575-1587.
 
-### Convexity Profile of a State Route
+
+### Convexity Profile of a Stage Route
 
 We can profile the convexity of a stage route in the terms of the convexity against the distance along the route in terms of a simple line chart. Recall that the sign of the convexity value denotes the direction of a corner (negative left, positive right).
 
-Adding a grey zone to slightly mask the 
+We can add a grey bar with low alpha transpacrency to slightly mask the less sever corners:
 
 ```{r curvature-profile-bar}
 ggplot(route_convexity) +
@@ -841,7 +848,6 @@ ggplot() +
   theme_classic()
 ```
 
-
 ### Convexity as a 3D Plot
 
 To try to get a feel for how the convexity changes along a route, we can render a 3D plot of the of the convexity using the `rayhader::ggplot()` function.
@@ -865,10 +871,81 @@ library(rayshader)
 library(rgl)
 
 rgl::clear3d()
-plot_gg(convexity_gg, scale=1000)
+plot_gg(convexity_gg, scale=1000, raytrace = FALSE)
 
 rgl::rglwidget()
 ```
 
-Looking at these metrics over a complete route can be a little hard to decipher. However, if we segment the route into smaller sections, as we shall see in the next chapter, we will see how can start to use these metrics to describe the route in some useful detail. 
+Looking at these metrics over a complete route can be a little hard to decipher. However, if we segment the route into smaller sections, as we shall see in the next chapter, we will see how can start to use these metrics to describe the route in some useful detail.
+
+## Finding Curvature of a Route
+
+The `pracma::circlefit()` function will attempt to calculate the center and radius of a circle from a set of locations peovided as x and y coordinate lists. We can use the radius to determine conner severity numbers that are typically used in rally pace notes.
+
+For example, we can build on the the `rLFT` segmented route to add the radius of curvature of turns starting at each midpoint:
+
+```{r}
+# We may end up cutting corners?
+tmp = st_segmentize(utm_routes[1,], units::set_units(1, m))
+tmp2 = st_coordinates(tmp)
+nrow(tmp2)
+#22095 - 5m
+# 23110 10m
+# 21277 - 1m
+```
+
+
+```{r}
+curvature = function(x,y){
+  #729181.8, 729186.1, 729190.4
+  #4957667 , 4957676, 4957685
+  tryCatch({
+    # circlefit gives an error if we pass a straight line
+    pracma::circlefit(x,y)[3]
+    },
+    error = function(err) { 
+      # For a straight, return the first co-ord and Inf diameter
+      # Alternatively, pass zero diameter?
+      c(x[1], y[1], 0)[3]})
+}
+
+curvature2 = function(x1, x2, x3, y1, y2, y3){
+  curvature(c(x1, x2, x3), c(y1, y2, y3))
+}
+
+curvatures = Vectorize(curvature2)
+
+curvature(c(729181.8, 729186.1, 729195.4),c(4957667 , 4957676, 4957685))
+
+curvature(c(729194.6, 729198.8,729199.6), c(4957694,4957703,4957713))
+```
+
+```{r message=FALSE, results=FALSE}
+library(dplyr)
+library(pracma)
+  
+route_convexity$radius = curvatures(route_convexity$Midpoint_X, 
+                                    lead(route_convexity$Midpoint_X, 1),
+                                    lead(route_convexity$Midpoint_X,2),
+                                    route_convexity$Midpoint_Y,
+                                    lead(route_convexity$Midpoint_Y),
+                                    lead(route_convexity$Midpoint_Y,2)
+                                    )
+```
+
+```{r}
+head(route_convexity)
+```
+
+```{r radius-example}
+radius_filter = route_convexity$radius>0 & route_convexity$radius<100
+
+ggplot() + geom_sf(data=utm_routes[1,], color='grey') +
+  geom_point(data=route_convexity[radius_filter,],
+             
+            aes(x=Midpoint_X, y=Midpoint_Y,
+                color=log(radius)), size=0.5) #+
+  #scale_colour_gradientn(colours = terrain.colors(10))
+
+```
 
