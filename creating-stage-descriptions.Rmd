@@ -112,6 +112,10 @@ library(trajr)
 
 trj <- TrajFromCoords(as.data.frame(st_coordinates(utm_routes[1,])))
 
+# Remove duplicate x,y rows - assume non-crossing route]
+# Should probably flag this removal via a warning
+trj =  trj[!duplicated(trj[,c('x','y')]),]
+
 # displacement is a complex number, so we can get the actual distance:
 trj$distance = Mod(trj$displacement)
 
@@ -236,6 +240,18 @@ ggplot(data=trj[zoom2,],
   theme(axis.text.x = element_text(angle = 45))
 ```
 
+We can also tweak firstish to recognise significance:
+
+```{r}
+trj = trj %>%
+        mutate(firstish = (significant & !lag(significant)) |
+                            (!straightish & 
+                            ((nearby & !lag(straightish) & lag(dirChange)) |
+                            (!nearby) ) )) %>%
+        # Desensitise firstish
+        mutate(firstish = firstish & !(lag(firstish)))
+```
+
 And how about over a wider part of the stage?
 
 ```{r sd-flowing2}
@@ -266,20 +282,149 @@ ggplot(data=trj[zoom1, ],
 ```
 The corner *opens* ("lessens") if a node isn't firstish, is above a certain gradient, is close to the previous step and the gradient is in the same direction and has decreased:
 
-```{r sd-lessens}
+```{r sd-opens}
 trj = trj %>% 
-        mutate(lessens = !firstish & significant & lead(nearby) &
+        mutate(opens = !firstish & significant & lead(nearby) &
                             ((sign(lead(step_gradient))==sign(step_gradient)) & (abs(lead(stepangle)) < abs(step_gradient))))
 
 
 ggplot(data=trj[zoom1, ],
        aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
-  geom_point( size=2, aes(color = lessens,
+  geom_point( size=2, aes(color = opens,
                           shape = firstish)) +
   theme(axis.text.x = element_text(angle = 45))
 ```
 
 We might also try for "continues" if the angle is about the same gradient but not tightening.
+
+### Plotting Trajectory Segments
+
+It will be convenient to be able ot plot segments of a trajectory for particular stretches of a route, so let's create a function that helps us do that:
+
+```{r}
+trj_segment_plot = function(trj, start, end,
+                            x='x', y='y',
+                            title='', fix_coords=TRUE,
+                            rotate=NULL,
+                            gradients=0, gradient_size=2) {
+  
+  # Create the route distance filter limits
+  segment_filter = trj$cum_dist >= start &
+                    trj$cum_dist <= end
+ 
+  # Filter the route
+  route_segment = trj[segment_filter,]
+  
+  if (!is.null(rotate))
+    route_segment = TrajRotate(route_segment,
+                               angle = rotate,
+                               relative = TRUE)
+  
+  # Generate the stylised route plot
+  g = ggplot(route_segment) +
+             geom_path(aes_string(x=x, y=y)) +
+             # Add a marker to show the start of the segment
+             geom_point(data=head(route_segment,n=1),
+                        aes_string(x=x, y=y)) +
+             theme_void()
+
+  # Add a title
+  title=as.character(title)
+  if (startsWith(title,'auto::')) {
+    title = stringr::str_split(title,'::')[[1]][2]
+    title_ = paste0(start/1000, '-', end/1000, 'km')
+    if (title!='')
+      title = paste(title, title_)
+    else
+      title = title_
+  }
+  
+  if (title!='')
+    g = g + ggtitle(title)
+    
+  if (fix_coords)
+    g = g + coord_fixed()
+
+  if (gradients)
+    g = g+ geom_point(aes_string(x=x, y=y),
+                      size=gradient_size, color='blue',
+             data=route_segment[route_segment$step_gradient>gradients,]) +
+    geom_point(aes_string(x=x, y=y), size=gradient_size,
+               data=route_segment[route_segment$step_gradient<=-gradients,],
+               color='red')
+  g
+}
+```
+
+We can then plot a trajectory as follows, optionally rotatint the segment to a horizontal left-right orientation:
+
+```{r trj_segment_plot}
+# Show a specified segment
+trj_segment_plot(trj, 9000, 12500, title='auto::SS1', rotate=TRUE)
+
+```
+
+### Segmenting the Route
+
+We can automate the production of a single chart that will display the route a section at a time. This requires segmenting the route, then for each segment, generating the plot, which we add to a list of plots.
+
+```{r}
+# The final section goes to the end of the route
+trj_segment_multiplot = function(trj, i, title='',
+                                 x='x', y='y',
+                                 final=FALSE,
+                                 segment_length = 1000,
+                                 prefix_dist = 20,
+                                 gradients=0, gradient_size=1,
+                                 fix_coords=FALSE, rotate=NULL){
+  
+  # Preface the start of the stage with a 20m lead
+  start_prefix = prefix_dist
+  start = segment_length*(i-1)-start_prefix
+  if (final) 
+    end = Inf
+  else
+    end = (segment_length*i)
+  
+  trj_segment_plot(trj, start, end,  x=x, y=y,
+                   title=title,
+                   fix_coords=fix_coords,
+                   rotate=rotate,
+                   gradients=gradients, gradient_size=gradient_size)
+}
+
+# Create a list to hold each plot as a separate item
+trj_segment_plots = list()
+
+# How many kilometers does the route extend over?
+length_1km = 1000
+kms = floor(max(trj$cum_dist)/length_1km)
+
+# Iterate through each kilometer
+for (i in 1:kms){
+  # Add each plot to the plot list
+  trj_segment_plots[[length(trj_segment_plots) + 1]] <-
+      trj_segment_multiplot(trj, i,
+                            title=i, final=(i==kms),
+                            fix_coords=TRUE, rotate=0,
+                            gradients=0.2, gradient_size=1)
+}
+```
+
+We can use the `ggpubr::ggarrange()` function to plot the list of individual plots as a single image:
+
+```{r trj_1km_arrangement, warning=FALSE}
+library(ggpubr)
+
+gg = ggarrange(plotlist=trj_segment_plots,
+          ncol=5, nrow=ceiling(kms/4))
+
+annotate_figure(gg,
+               top = text_grob(utm_routes[1,]$Name, color = "black",
+                               face = "bold", size = 14))
+
+```
+
 
 ### Numbering Corners
 
@@ -400,7 +545,7 @@ One of the handy things about the `rLFT::bct()` is that it can chunk the route i
 For example, we can view the route over specific sections given a start and finish distance into the route. Note that the route will be discretised to step lengths used by the `rLFT::bct()` function and a stylised route will be approximated along step midmeasure points:
 
 ```{r example-route-section}
-segment_plot = function(start, end, title='') {
+segment_plot = function(start, end, title='', fix_coords=TRUE) {
   
   # Create the route distance filter limits
   segment_filter = route_convexity$MidMeas >= start &
@@ -410,11 +555,19 @@ segment_plot = function(start, end, title='') {
   route_segment = route_convexity[segment_filter,]
   
   # Generate the stylised route plot
-  ggplot(route_segment) +
+  g= ggplot(route_segment) +
             geom_path(aes(x=Midpoint_X, y=Midpoint_Y)) +
           geom_point(data=head(route_convexity[segment_filter,],n=1),
                      aes(x=Midpoint_X, y=Midpoint_Y)) +
-            theme_void() +ggtitle(title)
+            theme_void() 
+  
+  if (title!='')
+    g = g+ggtitle(title)
+  
+  if (fix_coords)
+    g=g+coord_fixed()
+  
+  g
 }
 
 # Show the first 1000m
@@ -439,7 +592,7 @@ segment_multiplot = function(i, final=FALSE){
   else
     end = (segment_length*i)
   
-  segment_plot(start, end, i)
+  segment_plot(start, end, i, fix_coords=TRUE)
 }
 
 # Create a list to hold each plot as a separate item
@@ -456,8 +609,6 @@ for (i in 1:kms){
 We can now use the `ggpubr::ggarrange()` function to display all the stage route sections in a single plot:
 
 ```{r route-by-1km-section}
-library(ggpubr)
-
 ggarrange(plotlist=segment_plots,
           ncol=5, nrow=ceiling(kms/4))
 ```
@@ -492,7 +643,7 @@ segment_plot2 = function(route, start, end, title='',
   } else {
    # plot route
    g = g + geom_path(aes(x=Midpoint_X, y=Midpoint_Y)) +
-           geom_point(data=head(route_convexity[segment_filter,], n=1),
+           geom_point(data=head(route_segment, n=1),
                       aes(x=Midpoint_X, y=Midpoint_Y)) 
   }
   
@@ -626,6 +777,13 @@ curvatures2 = function(route,
 
 ```{r results=FALSE}
 route_convexity$turn_intensity = curvatures2(route_convexity)
+
+
+```
+
+Preview the result:
+
+```{r}
 head(route_convexity)
 ```
 
