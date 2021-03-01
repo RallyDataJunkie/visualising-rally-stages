@@ -32,7 +32,7 @@
   
 <link rel="prev" href="creating-cropped-3d-rayshader-models.html"/>
 <link rel="next" href="composing-rayshader-stills-and-movies.html"/>
-<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -129,6 +129,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
+<li><a href="./"><strong>Visualising WRC Rally Stages</strong></a></li>
+
+<li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Index</a></li>
 <li class="chapter" data-level="" data-path="in-the-beginning.html"><a href="in-the-beginning.html"><i class="fa fa-check"></i>In the beginning…</a></li>
 <li class="chapter" data-level="" data-path="acknowledgements.html"><a href="acknowledgements.html"><i class="fa fa-check"></i>Acknowledgements</a></li>
@@ -154,6 +157,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.5" data-path="getting-started.html"><a href="getting-started.html#serving-your-own-map-tiles-and-elevation-raster-images"><i class="fa fa-check"></i><b>2.5</b> Serving Your Own Map Tiles and Elevation Raster Images</a></li>
 <li class="chapter" data-level="2.6" data-path="getting-started.html"><a href="getting-started.html#donate"><i class="fa fa-check"></i><b>2.6</b> Donate</a></li>
 </ul></li>
+<li class="part"><span><b>I Accessing Stage Data</b></span></li>
 <li class="chapter" data-level="3" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html"><i class="fa fa-check"></i><b>3</b> Importing the Stage Route Data</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="importing-the-stage-route-data.html"><a href="importing-the-stage-route-data.html#downloading-the-stage-data-file"><i class="fa fa-check"></i><b>3.1</b> Downloading the Stage Data File</a></li>
@@ -247,6 +251,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.2" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html#rendering-terrain-over-raster-images"><i class="fa fa-check"></i><b>8.2</b> Rendering Terrain Over Raster Images</a></li>
 <li class="chapter" data-level="8.3" data-path="determining-terrain-features-from-raster-data.html"><a href="determining-terrain-features-from-raster-data.html#adding-contours-to-raster-images"><i class="fa fa-check"></i><b>8.3</b> Adding Contours to <code>raster</code> Images</a></li>
 </ul></li>
+<li class="part"><span><b>II Introducing <code>rayshader</code></b></span></li>
 <li class="chapter" data-level="9" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html"><i class="fa fa-check"></i><b>9</b> Using <code>rayshader</code> to Render 2D Elevation and Shade Views</a>
 <ul>
 <li class="chapter" data-level="9.1" data-path="using-rayshader-to-render-2d-elevation-and-shade-views.html"><a href="using-rayshader-to-render-2d-elevation-and-shade-views.html#load-in-base-data-1"><i class="fa fa-check"></i><b>9.1</b> Load in Base Data</a></li>
@@ -317,6 +322,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.2" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#sunlight-times-vocabulary"><i class="fa fa-check"></i><b>15.2</b> Sunlight Times Vocabulary</a></li>
 <li class="chapter" data-level="15.3" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#finding-sunrise-and-sunset-times"><i class="fa fa-check"></i><b>15.3</b> Finding Sunrise and Sunset Times</a></li>
 <li class="chapter" data-level="15.4" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#animating-shade"><i class="fa fa-check"></i><b>15.4</b> Animating Shade</a></li>
+<li class="chapter" data-level="15.5" data-path="obtaining-shadows-for-a-particular-date-and-time.html"><a href="obtaining-shadows-for-a-particular-date-and-time.html#getting-moon-information"><i class="fa fa-check"></i><b>15.5</b> Getting Moon Information</a></li>
 </ul></li>
 <li class="chapter" data-level="16" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html"><i class="fa fa-check"></i><b>16</b> Composing <code>rayshader</code> Stills and Movies</a>
 <ul>
@@ -334,6 +340,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="16.4" data-path="composing-rayshader-stills-and-movies.html"><a href="composing-rayshader-stills-and-movies.html#making-3d-video-tracking-shots"><i class="fa fa-check"></i><b>16.4</b> Making 3D Video Tracking Shots</a></li>
 </ul></li>
+<li class="part"><span><b>III Stage Route Metrics</b></span></li>
 <li class="chapter" data-level="17" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html"><i class="fa fa-check"></i><b>17</b> Stage Route Analysis</a>
 <ul>
 <li class="chapter" data-level="17.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#load-in-base-data-8"><i class="fa fa-check"></i><b>17.1</b> Load in Base Data</a></li>
@@ -354,16 +361,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="17.5.7" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#directional-change"><i class="fa fa-check"></i><b>17.5.7</b> Directional Change</a></li>
 <li class="chapter" data-level="17.5.8" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#tracking-turning-angles"><i class="fa fa-check"></i><b>17.5.8</b> Tracking Turning Angles</a></li>
 <li class="chapter" data-level="17.5.9" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#visualising-trajectory-direction-changes"><i class="fa fa-check"></i><b>17.5.9</b> Visualising Trajectory Direction Changes</a></li>
-<li class="chapter" data-level="17.5.10" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-amt-for-stage-route-profiling"><i class="fa fa-check"></i><b>17.5.10</b> Using <code>amt</code> for Stage Route Profiling</a></li>
-<li class="chapter" data-level="17.5.11" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#creating-tracks"><i class="fa fa-check"></i><b>17.5.11</b> Creating Tracks</a></li>
-<li class="chapter" data-level="17.5.12" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#converting-to-other-track-formats"><i class="fa fa-check"></i><b>17.5.12</b> Converting to Other Track Formats</a></li>
 </ul></li>
-<li class="chapter" data-level="17.6" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-amt-for-stage-route-analysis"><i class="fa fa-check"></i><b>17.6</b> Using <code>amt</code> for Stage Route Analysis</a></li>
-<li class="chapter" data-level="17.7" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-rlft-for-profiling-along-a-stage-route"><i class="fa fa-check"></i><b>17.7</b> Using `rLFT`` for Profiling Along a Stage Route</a>
+<li class="chapter" data-level="17.6" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-amt-for-stage-route-profiling"><i class="fa fa-check"></i><b>17.6</b> Using <code>amt</code> for Stage Route Profiling</a>
 <ul>
-<li class="chapter" data-level="17.7.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#convexity-profile-of-a-state-route"><i class="fa fa-check"></i><b>17.7.1</b> Convexity Profile of a State Route</a></li>
-<li class="chapter" data-level="17.7.2" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#previewing-significant-corners"><i class="fa fa-check"></i><b>17.7.2</b> Previewing Significant Corners</a></li>
-<li class="chapter" data-level="17.7.3" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#convexity-as-a-3d-plot"><i class="fa fa-check"></i><b>17.7.3</b> Convexity as a 3D Plot</a></li>
+<li class="chapter" data-level="17.6.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#creating-tracks"><i class="fa fa-check"></i><b>17.6.1</b> Creating Tracks</a></li>
+<li class="chapter" data-level="17.6.2" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#converting-to-other-track-formats"><i class="fa fa-check"></i><b>17.6.2</b> Converting to Other Track Formats</a></li>
+</ul></li>
+<li class="chapter" data-level="17.7" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-amt-for-stage-route-analysis"><i class="fa fa-check"></i><b>17.7</b> Using <code>amt</code> for Stage Route Analysis</a></li>
+<li class="chapter" data-level="17.8" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#using-rlft-for-stage-route-profiling"><i class="fa fa-check"></i><b>17.8</b> Using <code>rLFT</code> for Stage Route Profiling</a>
+<ul>
+<li class="chapter" data-level="17.8.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#convexity-profile-of-a-stage-route"><i class="fa fa-check"></i><b>17.8.1</b> Convexity Profile of a Stage Route</a></li>
+<li class="chapter" data-level="17.8.2" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#previewing-significant-corners"><i class="fa fa-check"></i><b>17.8.2</b> Previewing Significant Corners</a></li>
+<li class="chapter" data-level="17.8.3" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#convexity-as-a-3d-plot"><i class="fa fa-check"></i><b>17.8.3</b> Convexity as a 3D Plot</a></li>
+</ul></li>
+<li class="chapter" data-level="17.9" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#finding-curvature-of-a-route"><i class="fa fa-check"></i><b>17.9</b> Finding Curvature of a Route</a>
+<ul>
+<li class="chapter" data-level="17.9.1" data-path="stage-route-analysis.html"><a href="stage-route-analysis.html#estimating-speeds"><i class="fa fa-check"></i><b>17.9.1</b> Estimating Speeds</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="18" data-path="elevation-data-revisited.html"><a href="elevation-data-revisited.html"><i class="fa fa-check"></i><b>18</b> Elevation Data Revisited</a>
@@ -410,10 +423,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="20.3" data-path="automatically-generating-stage-descriptions.html"><a href="automatically-generating-stage-descriptions.html#load-in-base-data-11"><i class="fa fa-check"></i><b>20.3</b> Load in Base Data</a></li>
 <li class="chapter" data-level="20.4" data-path="automatically-generating-stage-descriptions.html"><a href="automatically-generating-stage-descriptions.html#identifying-corners-based-on-trajr-step-gradients"><i class="fa fa-check"></i><b>20.4</b> Identifying Corners Based on <code>trajr</code> Step Gradients</a>
 <ul>
-<li class="chapter" data-level="20.4.1" data-path="automatically-generating-stage-descriptions.html"><a href="automatically-generating-stage-descriptions.html#numbering-corners"><i class="fa fa-check"></i><b>20.4.1</b> Numbering Corners</a></li>
+<li class="chapter" data-level="20.4.1" data-path="automatically-generating-stage-descriptions.html"><a href="automatically-generating-stage-descriptions.html#plotting-trajectory-segments"><i class="fa fa-check"></i><b>20.4.1</b> Plotting Trajectory Segments</a></li>
+<li class="chapter" data-level="20.4.2" data-path="automatically-generating-stage-descriptions.html"><a href="automatically-generating-stage-descriptions.html#segmenting-the-route"><i class="fa fa-check"></i><b>20.4.2</b> Segmenting the Route</a></li>
+<li class="chapter" data-level="20.4.3" data-path="automatically-generating-stage-descriptions.html"><a href="automatically-generating-stage-descriptions.html#numbering-corners"><i class="fa fa-check"></i><b>20.4.3</b> Numbering Corners</a></li>
 </ul></li>
 <li class="chapter" data-level="20.5" data-path="automatically-generating-stage-descriptions.html"><a href="automatically-generating-stage-descriptions.html#categorising-corners-using-rlft-convexity"><i class="fa fa-check"></i><b>20.5</b> Categorising Corners Using <code>rLFT</code> Convexity</a></li>
 <li class="chapter" data-level="20.6" data-path="automatically-generating-stage-descriptions.html"><a href="automatically-generating-stage-descriptions.html#stage-segmenting"><i class="fa fa-check"></i><b>20.6</b> Stage Segmenting</a></li>
+<li class="chapter" data-level="20.7" data-path="automatically-generating-stage-descriptions.html"><a href="automatically-generating-stage-descriptions.html#corner-severity-numbering"><i class="fa fa-check"></i><b>20.7</b> Corner Severity Numbering</a></li>
 </ul></li>
 <li class="chapter" data-level="21" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html"><i class="fa fa-check"></i><b>21</b> Creating A Road Book</a>
 <ul>
@@ -432,6 +448,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="21.6" data-path="creating-a-road-book.html"><a href="creating-a-road-book.html#route-stage-time-simulation"><i class="fa fa-check"></i><b>21.6</b> Route Stage Time Simulation</a></li>
 </ul></li>
 <li class="chapter" data-level="22" data-path="where-next.html"><a href="where-next.html"><i class="fa fa-check"></i><b>22</b> Where Next?</a></li>
+<li class="divider"></li>
+<li><a href="https://rallydatajunkie.com/"><em>RallyDataJunkie.com</em></a></li>
+
 </ul>
 
       </nav>
@@ -709,6 +728,69 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>## [1] TRUE</code></pre>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb34-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(shadow_gif)</span></code></pre></div>
 <p><img src="shadowmovie.gif" /><!-- --></p>
+</div>
+<div id="getting-moon-information" class="section level2" number="15.5">
+<h2><span class="header-section-number">15.5</span> Getting Moon Information</h2>
+<p>As well as getting information about sunrise and sunset, we can also get information regarding the state of the moon for a specified datetime and location.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getMoonTimes</span>(<span class="fu">as.Date</span>(<span class="st">&quot;2021-01-22&quot;</span>),</span>
+<span id="cb35-2"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb35-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">lat =</span> location_ish[<span class="dv">2</span>], <span class="at">lon =</span> <span class="sc">-</span>location_ish[<span class="dv">1</span>],</span>
+<span id="cb35-3"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb35-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">tz =</span> <span class="st">&quot;GMT&quot;</span>)</span></code></pre></div>
+<pre><code>##         date      lat      lon                rise                 set alwaysUp
+## 1 2021-01-22 44.78685 -5.90937 2021-01-22 12:25:08 2021-01-22 02:10:35    FALSE
+##   alwaysDown
+## 1      FALSE</code></pre>
+<p>We can get the phase of the moon as well:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getMoonIllumination</span>(<span class="fu">as.Date</span>(<span class="st">&quot;2021-01-22&quot;</span>))</span></code></pre></div>
+<pre><code>##         date  fraction     phase     angle
+## 1 2021-01-22 0.6073809 0.2844488 -1.879531</code></pre>
+<p>The phase value is interpreted as follows:</p>
+<ul>
+<li>0 : New Moon</li>
+<li>: Waxing Crescent</li>
+<li>0.25 : First Quarter</li>
+<li>: Waxing Gibbous</li>
+<li>0.5: Full Moon</li>
+<li>: Waning Gibbous</li>
+<li>0.75: Last Quarter</li>
+<li>: Waning Crescent</li>
+</ul>
+<p>We can use a <code>cut()</code> to map the value onto a human readable term:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-1" aria-hidden="true" tabindex="-1"></a>moon_phase <span class="ot">=</span> <span class="cf">function</span>(dt){</span>
+<span id="cb39-2"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-2" aria-hidden="true" tabindex="-1"></a>  phase <span class="ot">=</span> <span class="fu">getMoonIllumination</span>(<span class="fu">as.Date</span>(dt))<span class="sc">$</span>phase</span>
+<span id="cb39-3"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb39-4"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-4" aria-hidden="true" tabindex="-1"></a>  mp <span class="ot">=</span> <span class="fu">cut</span>(phase,</span>
+<span id="cb39-5"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-5" aria-hidden="true" tabindex="-1"></a>           <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>, <span class="dv">1</span>),</span>
+<span id="cb39-6"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&#39;New Moon&#39;</span>, <span class="st">&#39;Waxing Crescent&#39;</span>,</span>
+<span id="cb39-7"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-7" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;First Quarter&#39;</span>, <span class="st">&#39;Waxing Gibbous&#39;</span>,</span>
+<span id="cb39-8"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-8" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;Full Moon&#39;</span>, <span class="st">&#39;Waning Gibbous&#39;</span>,</span>
+<span id="cb39-9"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-9" aria-hidden="true" tabindex="-1"></a>                      <span class="st">&#39;Last Quarter&#39;</span>, <span class="st">&#39;Waning Crescent&#39;</span>),</span>
+<span id="cb39-10"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">include.lowest=</span><span class="cn">TRUE</span>)</span>
+<span id="cb39-11"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.character</span>(mp)</span>
+<span id="cb39-12"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb39-13"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-14"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb39-14" aria-hidden="true" tabindex="-1"></a><span class="fu">moon_phase</span>(<span class="fu">as.Date</span>(<span class="st">&quot;2021-02-27&quot;</span>))</span></code></pre></div>
+<pre><code>## [1] &quot;Full Moon&quot;</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-1" aria-hidden="true" tabindex="-1"></a>moon_alt_angle <span class="ot">=</span> <span class="cf">function</span>(date_time, lat, lon){</span>
+<span id="cb41-2"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-2" aria-hidden="true" tabindex="-1"></a>  moon_pos <span class="ot">=</span> suncalc<span class="sc">::</span><span class="fu">getMoonPosition</span>(<span class="at">date=</span>date_time,</span>
+<span id="cb41-3"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-3" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">lat =</span> lat,</span>
+<span id="cb41-4"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-4" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">lon =</span> lon)</span>
+<span id="cb41-5"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># recalculation into degrees and correct (north) orientation of azimuth</span></span>
+<span id="cb41-6"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-7"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert to degrees</span></span>
+<span id="cb41-8"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-8" aria-hidden="true" tabindex="-1"></a>  moonaltitude <span class="ot">=</span> moon_pos<span class="sc">$</span>altitude <span class="sc">*</span> (<span class="dv">180</span><span class="sc">/</span>pi)</span>
+<span id="cb41-9"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-9" aria-hidden="true" tabindex="-1"></a>  moonangle <span class="ot">=</span> <span class="dv">180</span> <span class="sc">+</span> moon_pos<span class="sc">$</span>azimuth <span class="sc">*</span> (<span class="dv">180</span><span class="sc">/</span>pi) <span class="co"># From North</span></span>
+<span id="cb41-10"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">altitude=</span> moonaltitude,</span>
+<span id="cb41-11"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">angle =</span> moonangle)</span>
+<span id="cb41-12"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-13"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-14"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-14" aria-hidden="true" tabindex="-1"></a><span class="fu">moon_alt_angle</span>(<span class="at">date=</span>date_time,</span>
+<span id="cb41-15"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">lat =</span> location_ish[<span class="dv">2</span>],</span>
+<span id="cb41-16"><a href="obtaining-shadows-for-a-particular-date-and-time.html#cb41-16" aria-hidden="true" tabindex="-1"></a>               <span class="at">lon =</span> <span class="sc">-</span>location_ish[<span class="dv">1</span>])</span></code></pre></div>
+<pre><code>## $altitude
+## [1] 41.50732
+## 
+## $angle
+## [1] 110.5018</code></pre>
 
 </div>
 </div>
@@ -748,13 +830,16 @@ gitbook.start({
 "family": "sans",
 "size": 2
 },
-"edit": null,
+"edit": {
+"link": "https://github.com/RallyDataJunkie/visualising-rally-stages/edit/master/shadows-time-of-day.Rmd",
+"text": "Edit"
+},
 "history": {
 "link": null,
 "text": null
 },
 "view": {
-"link": null,
+"link": "https://github.com/RallyDataJunkie/visualising-rally-stages/blob/master/shadows-time-of-day.Rmd",
 "text": null
 },
 "download": null,

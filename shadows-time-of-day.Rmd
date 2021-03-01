@@ -307,3 +307,68 @@ animation::saveGIF({
 
 knitr::include_graphics(shadow_gif)
 ```
+
+## Getting Moon Information
+
+As well as getting information about sunrise and sunset, we can also get information regarding the state of the moon for a specified datetime and location.
+
+```{r}
+getMoonTimes(as.Date("2021-01-22"),
+             lat = location_ish[2], lon = -location_ish[1],
+             tz = "GMT")
+```
+
+We can get the phase of the moon as well:
+
+```{r}
+getMoonIllumination(as.Date("2021-01-22"))
+```
+
+The phase value is interpreted as follows:
+
+- 0 : New Moon
+- : Waxing Crescent
+- 0.25 : First Quarter
+- : Waxing Gibbous
+- 0.5: Full Moon
+- : Waning Gibbous
+- 0.75: Last Quarter
+- : Waning Crescent
+
+We can use a `cut()`  to map the value onto a human readable term:
+
+```{r}
+moon_phase = function(dt){
+  phase = getMoonIllumination(as.Date(dt))$phase
+  
+  mp = cut(phase,
+           c(0, 0.1, 0.2, 0.3, 0.4, 0.6, 0.7, 0.9, 1),
+           labels = c('New Moon', 'Waxing Crescent',
+                      'First Quarter', 'Waxing Gibbous',
+                      'Full Moon', 'Waning Gibbous',
+                      'Last Quarter', 'Waning Crescent'),
+          include.lowest=TRUE)
+  as.character(mp)
+}
+
+moon_phase(as.Date("2021-02-27"))
+```
+
+```{r}
+moon_alt_angle = function(date_time, lat, lon){
+  moon_pos = suncalc::getMoonPosition(date=date_time,
+                                      lat = lat,
+                                      lon = lon)
+  # recalculation into degrees and correct (north) orientation of azimuth
+
+  # Convert to degrees
+  moonaltitude = moon_pos$altitude * (180/pi)
+  moonangle = 180 + moon_pos$azimuth * (180/pi) # From North
+  list(altitude= moonaltitude,
+       angle = moonangle)
+}
+
+moon_alt_angle(date=date_time,
+               lat = location_ish[2],
+               lon = -location_ish[1])
+```
