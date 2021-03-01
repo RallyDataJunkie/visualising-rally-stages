@@ -977,6 +977,71 @@ ggplot() + geom_sf(data=utm_routes[1,], color='grey') +
                 color=invisible_ts), size=0.5)
 ```
 
+### Percentage in Turn
+
+A really crude metric of how severe the amount of turning is over the duration of a stage might be indicated by the root mean square of the curvature:
+
+```{r}
+rms = function(x) sqrt(mean(x^2))
+
+rms(route_convexity$ConvexityIndex)
+```
+
+Another possible measure would be the percentage of time in turn, relative to a minimum amount of curvature (or maximum radius of curvature).
+
+For example, we can count the number of segments for which the convexity index is above a particular threshold:
+
+```{r}
+pc_in_turn_convexity = function(route, min_convexity=0.1) {
+   sum(route$ConvexityIndex > min_convexity) / nrow(route)
+}
+
+pc_in_turn_convexity(route_convexity)
+```
+
+Alternatively, we might calculate the percentage of segments for which the radius of curvature is less than some maximum value:
+
+```{r}
+pc_in_turn_curvature = function(route, max_curvature=80) {
+   sum(route$radius < max_curvature) / nrow(route)
+}
+
+pc_in_turn_curvature(route_convexity)
+```
+
+Another more segmented profile could give the percentage time per turn severity:
+
+```{r}
+turn_severity = route_convexity %>%
+                  group_by(invisible_ts) %>% 
+                  summarise(n = n())
+
+turn_severity$n  = turn_severity$n / nrow(route_convexity)
+```
+
+For the non-straight sections, we can plot their distribution:
+
+```{r pc_in_turn_severity_bar}
+ggplot(turn_severity[turn_severity$invisible_ts < 11,]) +
+  geom_bar(aes(x=invisible_ts, y=n),
+           stat='identity')
+```
+
+We can also compare the percentage of segments spent on the straight against the percentage involved in some sort of turn: 
+
+```{r pc_in_turn}
+pc_in_turn = route_convexity %>%
+                  # Create a logical group
+                  group_by(in_turn = invisible_ts<11) %>% 
+                  summarise(n = n())
+
+pc_in_turn$n  = pc_in_turn$n / nrow(route_convexity)
+
+ggplot(pc_in_turn) +
+  geom_bar(aes(x=in_turn, y=n),
+           stat='identity')
+```
+
 ### Estimating Speeds
 
 As well as providing an estimate of turn severity, we can also use the radius of curvature, or the turn severity index, as a crude estimate of maximum speed along that segment. Once again volume 1 of the *To see the invisible* pacenotes tutorial provides some example speeds for each turn intensity value, noting that speeds are likely different on sealed tarmac surfaces or unsealed gravel surfaces:
@@ -1001,3 +1066,20 @@ route_convexity$invisible_sp = as.integer(as.character(route_convexity$invisible
 head(route_convexity[,c('ConvexityIndex', 'radius',
                         'invisible_ts', 'invisible_sp')])
 ```
+
+From the sped estimates, can we then perform a crude time estimate for the stage time, assuming infinite acceleration and deceleration? (This may turn out to be not very realistic at all, of course!)
+
+For each segment, identify the segment transit time as the length of the segment divide by the speed:
+
+```{r}
+route_convexity$invisible_time = 10/ (route_convexity$invisible_sp * 1000 /3600)
+
+duration = sum(route_convexity$invisible_time) 
+paste0(duration %/% 60, 'm', mod(100, 60), 's' )
+#11m40s
+# Actual stage time: 12:05.7	
+# via https://www.ewrc-results.com/results/41079-rallye-automobile-de-monte-carlo-2021/?s=293051
+# Difference: (12 * 60 + 5) / (11*60+40) = 1.036, so <4% error?
+```
+
+A better approach would be to try to model acceleration and evolve the speed across each segment.

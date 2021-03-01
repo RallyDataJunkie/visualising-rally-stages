@@ -216,3 +216,5 @@ corner-severity-numbering
 estimating-speeds
 plotting-trajectory-segments
 segmenting-the-route
+getting-moon-information
+percentage-in-turn
