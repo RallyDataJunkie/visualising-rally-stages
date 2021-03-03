@@ -311,7 +311,7 @@ We can use the `trajr::TrajRediscretize` function to resample locations from the
 For example, if we discretise the route to points 500m apart as the crow flies, we note that the newly discretised route now has straight line segments between each of the sample points. This is perhaps not so good for stage route analysis, but it does provide one way of obtaining sample point locations from telemetry data. Ideally, though, sample points would be a fixed distance apart *along the route*:
 
 ```{r trajr-rediscretized}
-# Resample to step length 1
+# Resample to step length 500m
 resampled <- TrajRediscretize(trj, 500)
 plot(trj)
 
@@ -578,9 +578,15 @@ ggpubr::ggarrange(g_SS2, g_SS13)
 
 Hmm... maybe!
 
-This is perhaps useful if we try to parse it in terms of the general direction of travel over the course of the route. This may be relevant when trying to identify whether a driver might be driving into the sun, for example (recall that we can look up sun angle and elevation by date and time easily enough using the `suncalc` *R* package.
+We can also take the mean vector and turn it into polar coordinates. The angle is then the mean angle of turn (`Arg(meanTurn)`), although the magnitude (`Mod(meanTurn)`) for the relative angle summary is perhaps less useful.
 
-For example, how about if we calculate the angle relative to due North, which I think(?!) has the compass angle of 0 radians:
+Parsing the angle in terms of the general direction of travel over the course of the route provides a potential signal regarding the general compass direction of travel. This may be relevant when trying to identify whether a driver might be driving into the sun, for example (recall that we can look up sun angle and elevation by date and time easily enough using the `suncalc` *R* package.
+
+The simplest calculation is probably just to calculate the bearing between the start and the end point of the route, for example using the `geosphere::bearing()` function.
+
+Alternatively we might consider a summary statistic of the amount of turn at each step along the route.
+
+For example, we can calculate the angle of each step on a route relative to a specific compass angle, which I think(?!) has the compass angle of 0 radians for due North:
 
 ```{r}
 compass_relative_turn = function(route, angle=0) {
@@ -592,6 +598,8 @@ utm_routes['meanCompass'] = unlist(lapply(trjs,
 
 utm_routes[, c('Name', 'meanCompass')]
 ```
+
+In this case the angle will give the average compass direction of travel and the modulus may give us an indication of the straightness of travel in that direction?
 
 So... do SS2 and SS6 appear to go in different directions?
 
@@ -619,7 +627,7 @@ We can also get access to the angle of each step in a route using the `trajr::Tr
 
 ```{r}
 # Step angle in radians relative to previous
-trj$stepangle = c(NA, TrajAngles(trj, compass.direction = NULL) * 180 / pi, NA) 
+trj$stepangle = c(0, TrajAngles(trj, compass.direction = NULL) * 180 / pi, NA) 
 
 trj$cumstepangle = cumsum(c(0, TrajAngles(trj, compass.direction = NULL) * 180 / pi, NA))
 trj$stepheading = c(TrajAngles(trj, compass.direction = 0)* 180 / pi, NA) 
@@ -766,7 +774,7 @@ amt::intensity_use(amt_track)
 
 Let's generate a list of tracks, one for each stage:
 
-```{r warning=FALSE}
+```{r warning=FALSE, message=FALSE}
 to_amt_track = function(route){
   make_track(st_coordinates(route$geometry), X, Y)
 }
@@ -935,12 +943,12 @@ Let's find the radius of curvature for each 10m sampled point we obtained when f
 library(dplyr)
 library(pracma)
   
-route_convexity$radius = curvatures(route_convexity$Midpoint_X, 
-                                    lead(route_convexity$Midpoint_X, 1),
-                                    lead(route_convexity$Midpoint_X,2),
+route_convexity$radius = curvatures(lag(route_convexity$Midpoint_X), 
+                                    route_convexity$Midpoint_X,
+                                    lead(route_convexity$Midpoint_X),
+                                    lag(route_convexity$Midpoint_Y),
                                     route_convexity$Midpoint_Y,
-                                    lead(route_convexity$Midpoint_Y),
-                                    lead(route_convexity$Midpoint_Y,2)
+                                    lead(route_convexity$Midpoint_Y)
                                     )
 ```
 
@@ -1042,9 +1050,10 @@ ggplot(pc_in_turn) +
            stat='identity')
 ```
 
-### Estimating Speeds
 
-As well as providing an estimate of turn severity, we can also use the radius of curvature, or the turn severity index, as a crude estimate of maximum speed along that segment. Once again volume 1 of the *To see the invisible* pacenotes tutorial provides some example speeds for each turn intensity value, noting that speeds are likely different on sealed tarmac surfaces or unsealed gravel surfaces:
+## Estimating Speeds
+
+As well as providing an estimate of turn severity and identifying straights, we can also use the radius of curvature, or the turn severity index, as a crude estimate of maximum speed along that segment. Once again volume 1 of the *To see the invisible* pacenotes tutorial provides some example speeds for each turn intensity value, noting that speeds are likely different on sealed tarmac surfaces or unsealed gravel surfaces:
 
 ```{r}
 # Speeds in km/h
@@ -1067,7 +1076,7 @@ head(route_convexity[,c('ConvexityIndex', 'radius',
                         'invisible_ts', 'invisible_sp')])
 ```
 
-From the sped estimates, can we then perform a crude time estimate for the stage time, assuming infinite acceleration and deceleration? (This may turn out to be not very realistic at all, of course!)
+From the speed estimates, can we then perform a crude time estimate for the stage time, assuming infinite acceleration and deceleration? (This may turn out to be not very realistic at all, of course!)
 
 For each segment, identify the segment transit time as the length of the segment divide by the speed:
 
@@ -1075,11 +1084,45 @@ For each segment, identify the segment transit time as the length of the segment
 route_convexity$invisible_time = 10/ (route_convexity$invisible_sp * 1000 /3600)
 
 duration = sum(route_convexity$invisible_time) 
-paste0(duration %/% 60, 'm', mod(100, 60), 's' )
-#11m40s
+paste0(duration %/% 60, 'm', round(mod(duration, 60),1), 's' )
+#11m5s
 # Actual stage time: 12:05.7	
 # via https://www.ewrc-results.com/results/41079-rallye-automobile-de-monte-carlo-2021/?s=293051
-# Difference: (12 * 60 + 5) / (11*60+40) = 1.036, so <4% error?
+# Difference: (11*60+5) / (12 * 60 + 5)  = 0.917 so ~9% error?
 ```
 
 A better approach would be to try to model acceleration and evolve the speed across each segment.
+
+A crude acceleration model might look to accelerate up into a faster segment, and decelerate down into a slower one:
+
+```{r}
+sp = route_convexity$invisible_sp
+sp[1] = 30 # nominal starting speed
+
+# Crude acceleration / brake weights
+acc = 1
+dec = 1
+for (i in 2:(length(sp)-1)) {
+  # Accelerate up
+  if (sp[i-1]<=sp[i]) sp[i] = (sp[i-1] + acc * sp[i]) / (1+acc)
+                                  
+  # Decelerate down
+  if (sp[i]>sp[i+1]) sp[i] = (dec * sp[i] + sp[i+1]) / (1+dec)
+}
+
+route_convexity$acc_sp = sp
+route_convexity$acc_sp[length(sp)] = route_convexity$invisible_sp[length(sp)]
+
+head(route_convexity[,c('invisible_sp','acc_sp')])
+```
+
+And the new time model?
+
+```{r}
+route_convexity$invisible_time2 = 10/ (route_convexity$acc_sp * 1000 /3600)
+
+duration2 = sum(route_convexity$invisible_time2) 
+paste0(duration2 %/% 60, 'm', round(mod(duration2, 60),1), 's' )
+# 12m9.1s
+# Difference: (12*60+9) / (12 * 60 + 5)  = 1.006 so minimal % error?
+```

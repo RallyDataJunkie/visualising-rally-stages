@@ -123,7 +123,7 @@ trj$distance = Mod(trj$displacement)
 trj$cum_dist = cumsum(trj$distance)
 
 # Step angle in radians relative to previous
-trj$stepangle = c(NA, TrajAngles(trj, compass.direction = NULL) * 180 / pi, NA) 
+trj$stepangle = c(0, TrajAngles(trj, compass.direction = NULL) * 180 / pi, NA) 
 
 trj$cumstepangle = cumsum(c(0, TrajAngles(trj, compass.direction = NULL) * 180 / pi, NA))
 
@@ -183,9 +183,11 @@ Let's look at the apparent turn in the middle of the straight first. If we have 
 
 ```{r sd-straightish}
 slight_gradient = 0.35
+large_angle = 20
 
 trj = trj %>% 
-        mutate(straightish =  (abs(step_gradient) < slight_gradient))
+        mutate(straightish =  (abs(step_gradient) < slight_gradient) &
+                               (stepangle < large_angle))
 
 ggplot(data=trj[zoom1, ],
        aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
@@ -297,7 +299,64 @@ ggplot(data=trj[zoom1, ],
 
 We might also try for "continues" if the angle is about the same gradient but not tightening.
 
-### Plotting Trajectory Segments
+## Identifying Straights
+
+One of the important considerations when assessing a stage is identifying the fast areas of the stage represented by significant straights. So how can we identify a straight?
+
+One way might be to define a simple rule that identifies a straight as a sequence of `straightish` segments that appear between segments that are not `straightish`.
+
+We can create such groupings by flagging the presence of the *start* of a potential run of straightish segments. We can then number each start and propagate this run number down the following segments until the next straight segment is reached. We can then number all non-straighish elements with a "not straight" count number (e.g. *-1*). 
+
+```{r}
+trj = trj %>% mutate(startStraight = lag(!straightish, default=TRUE) & straightish) %>%
+              mutate(strcount = cumsum(startStraight))
+
+trj$strcount[!trj$straightish] = -1
+
+trj[, c('straightish', 'startStraight', 'strcount', 'distance')]
+```
+
+Having identified straights, we realise that what we are actually interested in are *long* straights. The length of each straight can be found by grouping segments by straight number and summing the distances of segments within each group:
+
+```{r}
+straight_lengths = trj %>% 
+                        # We only want straightish segments...
+                        dplyr::filter(strcount>=0) %>%
+                        # Group by straight number
+                        group_by(strcount)  %>%
+                        # Find the length of each straight
+                        summarize(strdistance = sum(distance))
+
+straight_lengths
+```
+
+Let's now filter our long straights, eg straights at least 200m long
+
+```{r}
+longstraights = straight_lengths %>%
+                        dplyr::filter(strdistance>=200)
+
+head(longstraights, n=3)
+```
+
+Let's see how those look:
+
+```{r long_straights, warning=FALSE, message=FALSE}
+ggplot(data=trj,
+       aes(x=x, y=y)) + geom_path(color='grey') + coord_sf() +
+       geom_point(data=trj[(trj$startStraight) & 
+                           (trj$strcount %in% longstraights$strcount),],
+                  aes(x=x, y=y), color='black', size=1) +
+       geom_point(data=trj[(!trj$startStraight) & 
+                           (trj$strcount %in% longstraights$strcount),],
+                  aes(x=x, y=y), color='darkgrey', size=0.5) +
+       geom_point(data=trj[(trj$firstish),],
+                  aes(x=x, y=y), color='pink', size=0.5) +
+       theme_classic() +
+       theme(axis.text.x = element_text(angle = 45)) 
+```
+
+## Plotting Trajectory Segments
 
 It will be convenient to be able ot plot segments of a trajectory for particular stretches of a route, so let's create a function that helps us do that:
 
@@ -748,7 +807,7 @@ curvature = function(x,y){
   #4957667 , 4957676, 4957685
   tryCatch({
     # circlefit gives an error if we pass a straight line
-    # ALso hide the print statement in circlefit
+    # Also hide the print statement in circlefit
     pracma::circlefit(x,y)[3]
     },
     error = function(err) { 
@@ -766,17 +825,17 @@ curvatures = Vectorize(curvature2)
 curvatures2 = function(route,
                        x='Midpoint_X', y='Midpoint_Y') {
   
-                    curvatures(route[[x]],
-                               lead(route[[x]], 1),
-                               lead(route[[x]],2),
+                    curvatures(lag(route[[x]]),
+                               route[[x]],
+                               lead(route[[x]]),
+                               lag(route[[y]]),
                                route[[y]],
-                               lead(route[[y]]),
-                               lead(route[[y]],2) )
+                               lead(route[[y]]) )
                 }
 ```
 
 ```{r results=FALSE}
-route_convexity$turn_intensity = curvatures2(route_convexity)
+route_convexity$turn_curvature = curvatures2(route_convexity)
 
 
 ```
@@ -784,9 +843,18 @@ route_convexity$turn_intensity = curvatures2(route_convexity)
 Preview the result:
 
 ```{r}
-head(route_convexity)
+head(route_convexity, c('ConvexityIndex', 'turn_curvature' ))
 ```
 
+```{r}
+ggplot(route_convexity[1:10,], aes(x=Midpoint_X, y=Midpoint_Y)) +
+         geom_path() + geom_point(aes(color=turn_curvature))
+  
+```
+```{r}
+route_convexity[1:10,]
+
+```
 
 
 
