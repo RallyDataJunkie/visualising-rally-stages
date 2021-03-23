@@ -197,6 +197,7 @@ render_highquality(hi_quality_fn, samples=200,
 
 knitr::include_graphics(hi_quality_fn)
 ```
+
 The high quality renderer provides a  wide range of controls for composing the shot we want to render. For example one or more light sources can introduced, each with its own *lightdirection*, *lightaltitude*, *lightsize*, *lightintensity* and *lightcolor* setting. A range of camera controls in addition to controls provided by `rgl` window are also available, including *camera_location* and *camera_lookat* (a custom point at which the camera is directed). Experimenting with those settings will have to wait for another day!
 
 For more discussion around rendering high quality images, see the [*`rayshader`: render_highquality#examples*](https://www.rayshader.com/reference/render_highquality.html#examples) docs.
