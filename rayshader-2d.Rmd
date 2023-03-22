@@ -16,7 +16,7 @@ In this chapter, we will learn how to view rasters in a two-dimensional view usi
 
 As ever, let's load in our stage data:
 
-```{r}
+```{r message=F, warning=F}
 geojson_filename = 'montecarlo_2021.geojson'
 geojson_sf = sf::st_read(geojson_filename)
 stage_bbox = sf::st_bbox(geojson_sf)
@@ -231,7 +231,8 @@ ray_shade_raster
 We can plot the raster using `plot_map()`:
 
 ```{r sketch-rayshade-raster-map}
-plot_map(ray_shade_raster)
+# TO DO - BROKEN?
+#plot_map(ray_shade_raster)
 ```
 
 Or plot the raster naively using a simple base `plot()`:
