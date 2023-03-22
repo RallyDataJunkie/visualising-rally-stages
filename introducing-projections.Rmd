@@ -52,6 +52,10 @@ g_ll = ggplot(coords_df, aes(x=X, y=Y)) +
 g_ll
 ```
 
+The difference in appearance relates to how we porject the coordinate system that identifies points that identifiy locations on a large spherical (ish) object – the globe – on a "flat", two dimensional display surface.
+
+*For a good review of geographical projection systems, see this set of lecture notes on [Projections and Coordinate Systems](http://courses.washington.edu/gis250/lessons/projection/) from the University of Washington course "Introduction to Geographic Information Systems in Forest Resources (ESRM250)".*
+
 To render the "geo" view, we need to map the co-ordinates to a scale with regular units, such as meters, rather than spherical coordinates, such as degrees.
 
 In the original object, we see that the coordinates reference system (CRS) is defined in terms of longitude and latitude:
