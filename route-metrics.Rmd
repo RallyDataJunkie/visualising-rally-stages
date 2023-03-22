@@ -1058,7 +1058,7 @@ As well as providing an estimate of turn severity and identifying straights, we 
 ```{r}
 # Speeds in km/h
 invisible_speeds = c(10, 40, 50, 60, 70, 80,
-                     95, 1100, 120, 130, 145)
+                     95, 110, 120, 130, 145)
 ```
 
 We can use these speeds to model (very crudely!) expected travel times along different parts of the route, or at least provide a crude baseline estimate, as well as a crude estimate over the overall average route speed, which is often regulated under rally competition regulations.
