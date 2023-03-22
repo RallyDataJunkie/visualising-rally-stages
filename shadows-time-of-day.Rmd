@@ -196,7 +196,7 @@ shadow_mapper = function(sunpos){
 So let's see if we can render an early morning view:
 
 ```{r shadow_mapper-test}
-# Create a dtae time string
+# Create a date time string
 date_time = "2021-01-22 07:30:00 UTC"
 
 sun_pos = sun_alt_angle(date=date_time,
