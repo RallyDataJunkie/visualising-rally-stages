@@ -29,7 +29,7 @@ The second approach, which we might consider to be the headless, web native appr
 # remotes::install_github("dmurdoch/rgl")
 #remotes::install_github("dmurdoch/rgl", type = 'source')
 
-# FOllowing is currently broken for me
+# The following is currently broken for me
 # install.packages("rgl", repos = "http://R-Forge.R-project.org", type = "source")
 # 
 ```
@@ -170,7 +170,10 @@ knitr::include_graphics(render_fn)
 
 We can generate high quality renderings of a model using the `rayshader::render_highquality()` function:
 
-```{r simple-hi-quality}
+```
+{r simple-hi-quality}
+
+# TO DO  - currently broken for me - seg fault crashes R
 library(rayrender)
 
 # Open a connection to the renderer
