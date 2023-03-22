@@ -156,7 +156,7 @@ m %>%
 
 ### Using `rgeos::gInterpolate` to Find the Distance Along a Route 
 
-The following provides a rather clunky workaround to finding the distance along the line from a *Spatial* object (a more streamlined approach can be found in the next chapter).
+The following provides a rather clunky workaround to finding the distance along the line from a *Spatial* object (a more streamlined approach can be found in a later chapter).
 
 I present the recipe here as a useful (useless?!) exercise in how to come up with a recipe from basic principles when you don't really know what you're doing!
 
