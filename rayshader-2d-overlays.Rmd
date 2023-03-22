@@ -63,7 +63,8 @@ We can also create a composite shadow layer constructed from several shadow oper
 # as overlays to construct views from basic parts
 shadow_layer = height_shade(elmat) %>% 
   add_overlay(sphere_shade(elmat, texture = "desert", 
-                           zscale=auto_zscale, colorintensity = 5), alphalayer=0.5) %>%
+                           zscale=auto_zscale, colorintensity = 5),
+              alphalayer=0.5) %>%
   add_shadow(lamb_shade(elmat, zscale = auto_zscale),0) %>%
   add_shadow(texture_shade(elmat,detail=8/10,contrast=9,brightness = 11), 0.1)
 ```
