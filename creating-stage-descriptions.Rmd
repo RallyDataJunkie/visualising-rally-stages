@@ -313,7 +313,8 @@ trj = trj %>% mutate(startStraight = lag(!straightish, default=TRUE) & straighti
 
 trj$strcount[!trj$straightish] = -1
 
-trj[, c('straightish', 'startStraight', 'strcount', 'distance')]
+head(trj[, c('straightish', 'startStraight', 'strcount', 'distance')],
+     n=10)
 ```
 
 Having identified straights, we realise that what we are actually interested in are *long* straights. The length of each straight can be found by grouping segments by straight number and summing the distances of segments within each group:
@@ -563,6 +564,7 @@ ggplot(data=trj[zoom2,],
   theme_classic()+
   theme(axis.text.x = element_text(angle = 45))
 ```
+
 So we can probably apply a similar logic to previously to group these and identify the corner entry node, although we need to tweak the rules slightly so that we are identifying a corner entry node that is far from a previous tight corner node:
 
 ```{r}
@@ -668,8 +670,9 @@ for (i in 1:kms){
 We can now use the `ggpubr::ggarrange()` function to display all the stage route sections in a single plot:
 
 ```{r route-by-1km-section}
+ncol = 5
 ggarrange(plotlist=segment_plots,
-          ncol=5, nrow=ceiling(kms/4))
+          ncol=ncol, nrow=ceiling(kms/ncol))
 ```
 
 We can use a similar approach to create a more general function that will allow us to plot either the route, or generate a plot for each segment showing the convexity against distance into the segment:
@@ -836,14 +839,12 @@ curvatures2 = function(route,
 
 ```{r results=FALSE}
 route_convexity$turn_curvature = curvatures2(route_convexity)
-
-
 ```
 
 Preview the result:
 
 ```{r}
-head(route_convexity, c('ConvexityIndex', 'turn_curvature' ))
+route_convexity[1:10, c('ConvexityIndex', 'turn_curvature' )]
 ```
 
 ```{r}
@@ -853,7 +854,6 @@ ggplot(route_convexity[1:10,], aes(x=Midpoint_X, y=Midpoint_Y)) +
 ```
 ```{r}
 route_convexity[1:10,]
-
 ```
 
 
