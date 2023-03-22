@@ -22,7 +22,7 @@ A secondary question might be: *can we transform a graph layout so that a spatia
 
 *Again, I haven't currently found a way to do this.*
 
-It might also be worth referring to the [*FIA Rally Safety Guidelines 2020*](https://www.fia.com/sites/default/files/2printable_rally_safety_guidelines_1.pdf) [h/t `WRCStan`] and the Motorsport UK regulations to see what constraints they place on stage design and the evaluation of rally stage routes, we well as considering what measures, if any, they take into account when assessing stage routes. It's also worth noting how the FIA regulations recommend that stage summaries provided by the Jemba system, or similar,  should be used when evailauting stage routes.
+It might also be worth referring to the [*FIA Rally Safety Guidelines 2020*](https://www.fia.com/sites/default/files/2printable_rally_safety_guidelines_1.pdf) [h/t `WRCStan`] and the Motorsport UK regulations to see what constraints they place on stage design and the evaluation of rally stage routes, we well as considering what measures, if any, they take into account when assessing stage routes. It's also worth noting how the FIA regulations recommend that stage summaries provided by the Jemba system, or similar,  should be used when evaluating stage routes.
 
 
 ## Motorsport UK Specific Regulations for Rallying
@@ -355,7 +355,7 @@ plot(filtered4, cex=0.5, col='red')
 
 In the above example we see the snapped nodes are what the `sfnetworks` docs refer to as *pseudo nodes* that have only one incoming and one outgoing edge. (I guess this means we can also use network analysis to easily identify those nodes as nodes of degree 2?) 
 
-The `sfnetworks` package provides a converter that can be applied via the `tidygraph::convert` function for cleaning ("smoothing") these pseudo nodes, `sfnetworks::to_spatial_smoot`, so let's see how that works:
+The `sfnetworks` package provides a converter that can be applied via the `tidygraph::convert` function for cleaning ("smoothing") these pseudo nodes, `sfnetworks::to_spatial_smooth`, so let's see how that works:
 
 ```{r smoothed-network, message=FALSE}
 library(tidygraph)
