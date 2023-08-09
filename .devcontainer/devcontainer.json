@@ -1,0 +1,22 @@
+// See also: https://jamesgoldie.dev/writing/dev-containers-in-r/
+{
+    "name": "Visualising Rally Stages",
+    //"image": "rocker/geospatial",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "features": {
+        "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+            "packages": "curl,nano"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "quarto.quarto"
+            ]
+        },
+        "codespaces": {
+        }
+    }
+}
