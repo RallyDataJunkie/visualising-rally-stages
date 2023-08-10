@@ -1,46 +1,58 @@
-# Image for running rayshader
-
-# This is only built for amd64
-FROM rocker/geospatial
+FROM r-base
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBIAN_FRONTEND teletype
 
-# https://github.com/fomightez/rayshader-binder/blob/master/apt.txt
+# # https://github.com/fomightez/rayshader-binder/blob/master/apt.txt
 RUN apt-get update && \
-    apt-get install -y \
-      libgdal-dev \
-      libproj-dev \
-      libgeos-dev \
-      libudunits2-dev \
-      xorg \
-      libx11-dev \
-      libglu1-mesa-dev \
-      libfreetype6-dev \
-      libavfilter-dev  \ 
-      libfreetype6-dev \
-      libfontconfig1-dev \
-      ttf-mscorefonts-installer \
-      ghostscript \
-      libmagick++-dev \
-      ffmpeg \
-      #imagemagick && \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+     apt-get install -y \
+       cmake \
+       xorg \
+       git-all \
+       libgit2-dev \
+       libharfbuzz-dev \
+       libfribidi-dev \
+       libv8-dev \
+       libprotobuf-dev \
+       protobuf-compiler \
+       libjq-dev \
+       libgsl-dev \
+       libgdal-dev \
+       libproj-dev \
+       libgeos-dev \
+       libudunits2-dev \
+       libgmp-dev \
+       libmpfr-dev \
+       libfftw3-dev \
+       libx11-dev \
+       libglu1-mesa-dev \
+       libfreetype6-dev \
+       libavfilter-dev  \ 
+       libfreetype6-dev \
+       libfontconfig1-dev \
+       #ttf-mscorefonts-installer \
+       ghostscript \
+       libmagick++-dev \
+       ffmpeg \
+       imagemagick \
+     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN R -e "install.packages('devtools')" &&\
+    R -e "install.packages('tidyverse')" && \
+    R -e "install.packages('gmp')" && \
+    R -e "install.packages('Rmpfr')" && \
     R -e "install.packages('amt')" && \
     R -e "install.packages('elevatr')" && \
     R -e "install.packages('geojsonio')" && \
     R -e "install.packages('geojsonlint')" && \
     R -e "install.packages('geosphere')" && \
-    R -e "install.packages('geoviz')" && \
+# Not available    R -e "install.packages('geoviz')" && \ 
     R -e "install.packages('ggmap')" && \
     R -e "install.packages('ggpubr')" && \
     R -e "install.packages('ggrepel')" && \
     R -e "install.packages('ggridges')" && \
-    R -e "install.packages('gl')"
-    
-RUN    R -e "install.packages('imager')" 
+ # Not available    R -e "install.packages('gl')"  && \
+    R -e "install.packages('imager')" 
 
 RUN    R -e "install.packages('jsonlite')" && \
     R -e "install.packages('leaflet')" && \
@@ -53,8 +65,8 @@ RUN    R -e "install.packages('jsonlite')" && \
     R -e "install.packages('plainview')" && \
     R -e "install.packages('plotKML')" && \
     R -e "install.packages('rasterVis')" && \
-    #R -e "install.packages('rgl')" && \
-    R -e "remotes::install_github('dmurdoch/rgl')" && \
+    R -e "install.packages('rgl')" && \
+    #R -e "remotes::install_github('dmurdoch/rgl')" && \
     R -e "install.packages('rglwidget')" && \
     R -e "install.packages('rLFT')" && \
     R -e "install.packages('spatialEco')" && \
@@ -100,14 +112,14 @@ RUN    R -e "install.packages('directlabels')"
 RUN    R -e "install.packages('cowplot')"
 RUN    R -e "install.packages('kableExtra')"
 
-# docker build -t psychemedia/rayshader .
-# docker run -d -p 8787:8787 psychemedia/rayshader
+# # docker build -t psychemedia/rayshader .
+# # docker run -d -p 8787:8787 psychemedia/rayshader
 
 
-#Headless:
-#Via Tyler Morgan-Wall
-#- Well, that's more of an rgl issue—you can still use a limited headless version (no snapshots) if you set rgl.useNULL to TRUE. You can still use render_highquality() as well as rgl's webGL functions
-#- rayshader uses rgl for 3D rendering, which doesn't support xvfb when taking snapshots
-#  - https://github.com/r-forge/rgl/blob/master/pkg/rgl/inst/todo.txt 
-#  - It's still on the projects to-do list (ctrl-f "xvfb"):
-#- SO: https://stackoverflow.com/questions/37521259/using-rgl-with-headless-display "suppose we toss Xvfb and friends in favor of Cairo and substitute plot3D for rgl"
+# #Headless:
+# #Via Tyler Morgan-Wall
+# #- Well, that's more of an rgl issue—you can still use a limited headless version (no snapshots) if you set rgl.useNULL to TRUE. You can still use render_highquality() as well as rgl's webGL functions
+# #- rayshader uses rgl for 3D rendering, which doesn't support xvfb when taking snapshots
+# #  - https://github.com/r-forge/rgl/blob/master/pkg/rgl/inst/todo.txt 
+# #  - It's still on the projects to-do list (ctrl-f "xvfb"):
+# #- SO: https://stackoverflow.com/questions/37521259/using-rgl-with-headless-display "suppose we toss Xvfb and friends in favor of Cairo and substitute plot3D for rgl"
