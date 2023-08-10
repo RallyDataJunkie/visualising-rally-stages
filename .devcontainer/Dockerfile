@@ -52,9 +52,8 @@ RUN R -e "install.packages('devtools')" &&\
     R -e "install.packages('ggrepel')" && \
     R -e "install.packages('ggridges')" && \
  # Not available    R -e "install.packages('gl')"  && \
-    R -e "install.packages('imager')" 
-
-RUN    R -e "install.packages('jsonlite')" && \
+    R -e "install.packages('imager')" && \
+    R -e "install.packages('jsonlite')" && \
     R -e "install.packages('leaflet')" && \
     R -e "install.packages('leafem')" && \
     R -e "install.packages('lwgeom')" && \
@@ -73,44 +72,42 @@ RUN    R -e "install.packages('jsonlite')" && \
     R -e "install.packages('suncalc')" && \
     R -e "install.packages('trackeR')" && \
     R -e "install.packages('trajectories')" && \
-    R -e "install.packages('trajr')" 
-
-RUN    R -e "install.packages('rayimage')" 
-RUN    R -e "install.packages('rayrender')" 
-RUN    R -e "install.packages('rayshader')"
-RUN    R -e "devtools::install_github('sckott/geoops')"
-RUN    R -e "devtools::install_github('zappingseb/rayshaderanimate')"
-
-RUN    R -e "remotes::install_github('mccarthy-m-g/embedr')" 
-RUN    R -e "install.packages('vembedr')"
-RUN    R -e "install.packages('leaflet.providers')"
-RUN    R -e "install.packages('webshot')"
-RUN    R -e "install.packages('smoothr')"
-RUN    R -e "install.packages('geodist')"
-RUN    R -e "install.packages('terra')"
-RUN    R -e "install.packages('anipaths')"
-RUN    R -e "install.packages('sfnetworks')"
-RUN    R -e "remotes::install_github('itsleeds/slopes')"
-RUN    R -e 'install.packages( "celltrackR" )'
-RUN    R -e "install.packages('riverdist')"
-RUN    R -e "install.packages('moveHMM')"
-RUN    R -e "install.packages('adehabitatLT')"
-RUN    R -e "install.packages('stplanr')"
-RUN    R -e "install.packages('tidygraph')"
-RUN    R -e "install.packages('dodgr')"
-RUN    R -e "install.packages('animation')"
-RUN    R -e "install.packages('webshot2')"
-RUN    R -e "install.packages('formattable')"
-RUN    R -e "install.packages('gt')"
-RUN    R -e "install.packages('ggforce')"
-RUN    R -e "install.packages('rLDCP')"
-RUN    R -e "install.packages('TSA')"
-RUN    R -e "install.packages('oce')"
-RUN    R -e "devtools::install_github('htmlwidgets/sparkline')"
-RUN    R -e "install.packages('gghighlight')"
-RUN    R -e "install.packages('directlabels')"
-RUN    R -e "install.packages('cowplot')"
-RUN    R -e "install.packages('kableExtra')"
+    R -e "install.packages('trajr')" && \
+    R -e "install.packages('rayimage')" && \
+    R -e "install.packages('rayrender')" && \
+    R -e "install.packages('rayshader')" && \
+    R -e "devtools::install_github('sckott/geoops')" && \
+    R -e "devtools::install_github('zappingseb/rayshaderanimate')" && \
+    R -e "remotes::install_github('mccarthy-m-g/embedr')" && \
+    R -e "install.packages('vembedr')" && \
+    R -e "install.packages('leaflet.providers')" && \
+    R -e "install.packages('webshot')" && \
+    R -e "install.packages('smoothr')" && \
+    R -e "install.packages('geodist')" && \
+    R -e "install.packages('terra')" && \
+    R -e "install.packages('anipaths')" && \
+    R -e "install.packages('sfnetworks')" && \
+    R -e "remotes::install_github('itsleeds/slopes')" && \
+    R -e "install.packages( 'celltrackR' )" && \
+    R -e "install.packages('riverdist')" && \
+    R -e "install.packages('moveHMM')" && \
+    R -e "install.packages('adehabitatLT')" && \
+    R -e "install.packages('stplanr')" && \
+    R -e "install.packages('tidygraph')" && \
+    R -e "install.packages('dodgr')" && \
+    R -e "install.packages('animation')" && \
+    R -e "install.packages('webshot2')" && \
+    R -e "install.packages('formattable')" && \
+    R -e "install.packages('gt')" && \
+    R -e "install.packages('ggforce')" && \
+    R -e "install.packages('rLDCP')" && \
+    R -e "install.packages('TSA')" && \
+    R -e "install.packages('oce')" && \
+    R -e "devtools::install_github('htmlwidgets/sparkline')" && \
+    R -e "install.packages('gghighlight')" && \
+    R -e "install.packages('directlabels')" && \
+    R -e "install.packages('cowplot')" && \
+    R -e "install.packages('kableExtra')"
 
 # # docker build -t psychemedia/rayshader .
 # # docker run -d -p 8787:8787 psychemedia/rayshader
